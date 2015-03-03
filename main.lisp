@@ -26,5 +26,6 @@
   (dotimes (y (+ 2 *HEIGHT*)) (setf (aref f y (+ 1 *WIDTH*)) 'X))
 )
 
-(print (field-create))
-
+(defparameter *field* (field-create))
+(field-init-border *field*)
+(print *field*)
