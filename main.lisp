@@ -15,17 +15,64 @@
 (defparameter *WIDTH* 7)
 (defparameter *HEIGHT* 6)
 
+(defparameter *BLACK* 'B)
+(defparameter *WHITE* 'W)
+(defparameter *EMPTY* '_)
+(defparameter *BORDER* 'X)
 
-; Quasiquoting
-(defun field-create () (make-array `( ,(+ 2 *HEIGHT*) ,(+ 2 *WIDTH*)) :initial-element 0))
+(defun create-board ()
+  (let ( (board (make-array `( ,(+ 2 *HEIGHT*) ,(+ 2 *WIDTH*)) :initial-element *EMPTY*)))
+    (dotimes (x (+ 2 *WIDTH*)) (setf (aref board 0 x) (if (= x 0) *BORDER* (- x 1))))
+    (dotimes (x (+ 2 *WIDTH*)) (setf (aref board (+ 1 *HEIGHT*) x) (if (= x 0) *BORDER* (- x 1))))
+    (dotimes (y (+ 2 *HEIGHT*)) (setf (aref board y 0) (if (= y 0) *BORDER* (- y 1))))
+    (dotimes (y (+ 2 *HEIGHT*)) (setf (aref board y (+ 1 *WIDTH*)) (if (= y 0) *BORDER* (- y 1))))
+    board
+    ))
 
-(defun field-init-border  (f)
-  (dotimes (x (+ 2 *WIDTH*)) (setf (aref f 0 x) 'X))
-  (dotimes (x (+ 2 *WIDTH*)) (setf (aref f (+ 1 *HEIGHT*) x) 'X))
-  (dotimes (y (+ 2 *HEIGHT*)) (setf (aref f y 0) 'X))
-  (dotimes (y (+ 2 *HEIGHT*)) (setf (aref f y (+ 1 *WIDTH*)) 'X))
-)
+(defun get-field (board x y)
+  (aref board (+ 1 y) (+ 1 x)))
 
-(defparameter *field* (field-create))
-(field-init-border *field*)
-(print *field*)
+; Check if a field has a given color
+(defun is-field-color-p (board x y color)
+  (eq (get-field board x y) color)
+  )
+
+
+#|
+    Calculate the total length of the line at given position and for given direction
+    x y: Starting point from which adjacent points are checked for the same color
+|#
+(defun line-length-at (board x y dx dy)
+  (let ((length 0) (color (get-field board x y))) 
+    (flet (
+	   (go (dx dy)
+	       (do
+		((curX x (+ curX dx)) (curY y (+ curY dy)))
+		((not (is-field-color-p board curX curY color)))
+		(setf length (+ length 1))
+		)))
+	  ; Body of flet
+	  (go dx dy) ; go forward
+	  (go (* -1 dx) (* -1 dy)) ; go backward
+	  (- length 1) ; start position has been accounted for two times
+	  )))
+    
+
+(defun is-four (board x y)
+  (let ((found-direction nil)
+	(directions '((N_S 0 1) (W_E 0 1) (NW_SE 1 1) (SW_NE 1 -1))))
+    (dolist (d directions)
+      (if (>= (line-length-at board x y (second d) (third d)) 4)
+	  (progn
+		 (setf found-direction (first d))
+		 (return))
+	)
+      )
+    found-direction))
+
+
+ 
+;
+; Krams
+;
+
