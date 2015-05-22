@@ -60,7 +60,7 @@
 
 (defun is-four (board x y)
   (let ((found-direction nil)
-	(directions '((N_S 0 1) (W_E 0 1) (NW_SE 1 1) (SW_NE 1 -1))))
+	(directions '((N_S 0 1) (W_E 1 0) (NW_SE 1 1) (SW_NE 1 -1))))
     (dolist (d directions)
       (if (>= (line-length-at board x y (second d) (third d)) 4)
 	  (progn
