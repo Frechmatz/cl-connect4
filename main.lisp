@@ -71,8 +71,30 @@
     found-direction))
 
 
- 
-;
-; Krams
-;
 
+
+#|
+Game REPL
+|#
+
+(defun read-cmd ()
+  (princ "Please enter a command. Available commands are")
+  (princ #\newline)
+  (princ "quit To quit the game")
+  (princ #\newline)
+  (read-from-string (concatenate 'string "(" (read-line) ")"))
+  )
+
+(defun cmd-loop ()
+  (let ((cmd (read-cmd)))
+     (cond
+     ((eq (car cmd) 'quit) (princ "Bye"))
+     (t (princ "Unknown command: ") (princ (car cmd)) (princ #\newline) (cmd-loop))
+     )))
+
+(defun lets-go()
+  (princ "Welcome to Connect4")
+  (princ #\newline)
+  (cmd-loop)
+  nil
+  )
