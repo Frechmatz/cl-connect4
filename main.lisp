@@ -29,8 +29,22 @@
     board
     ))
 
+(defun clone-board (board)
+  ;; Bozo algorithm :(
+  (let ((new-board (create-board)))
+    (dotimes (x (+ 2 *WIDTH*))
+      (dotimes (y (+ 1 *HEIGHT*))
+	(setf (aref new-board y x) (aref board y x))
+	))
+    new-board))
+
+
+
 (defun get-field (board x y)
   (aref board (+ 1 y) (+ 1 x)))
+
+(defun set-field (board x y color)
+  (setf (aref board (+ 1 y) (+ 1 x)) color))
 
 ; Check if a field has a given color
 (defun is-field-color-p (board x y color)
@@ -85,16 +99,18 @@ Game REPL
   (read-from-string (concatenate 'string "(" (read-line) ")"))
   )
 
-(defun cmd-loop ()
+(defun cmd-loop (board)
+  (princ board)
+  (princ #\newline)
   (let ((cmd (read-cmd)))
      (cond
      ((eq (car cmd) 'quit) (princ "Bye"))
-     (t (princ "Unknown command: ") (princ (car cmd)) (princ #\newline) (cmd-loop))
+     (t (princ "Unknown command: ") (princ (car cmd)) (princ #\newline) (cmd-loop board))
      )))
 
 (defun lets-go()
   (princ "Welcome to Connect4")
   (princ #\newline)
-  (cmd-loop)
+  (cmd-loop (create-board))
   nil
   )
