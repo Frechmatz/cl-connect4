@@ -44,7 +44,13 @@
   (aref board (+ 1 y) (+ 1 x)))
 
 (defun set-field (board x y color)
-  (setf (aref board (+ 1 y) (+ 1 x)) color))
+  (let ((new-board (clone-board board)))
+    (setf (aref new-board (+ 1 y) (+ 1 x)) color)
+    new-board
+    ))
+
+
+	
 
 ; Check if a field has a given color
 (defun is-field-color-p (board x y color)
@@ -73,16 +79,17 @@
     
 
 (defun is-four (board x y)
-  (let ((found-direction nil)
-	(directions '((N_S 0 1) (W_E 1 0) (NW_SE 1 1) (SW_NE 1 -1))))
-    (dolist (d directions)
-      (if (>= (line-length-at board x y (second d) (third d)) 4)
-	  (progn
-		 (setf found-direction (first d))
-		 (return))
+  (if (not (or (is-field-color-p board x y *WHITE*) (is-field-color-p board x y *BLACK*))) NIL 
+    (let ((found-direction nil)
+	  (directions '((N_S 0 1) (W_E 1 0) (NW_SE 1 1) (SW_NE 1 -1))))
+      (dolist (d directions)
+	(if (>= (line-length-at board x y (second d) (third d)) 4)
+	    (progn
+	      (setf found-direction (first d))
+	      (return))
+	  )
 	)
-      )
-    found-direction))
+      found-direction)))
 
 
 
@@ -91,26 +98,53 @@
 Game REPL
 |#
 
+(defun cmd-set-field (board x y color)
+  (if (eq color 'W) (setf board (set-field board x y *WHITE*)) (if (eq color 'B) (setf board (set-field board x y *BLACK*))))
+  board
+  )
+
+
+
 (defun read-cmd ()
-  (princ "Please enter a command. Available commands are")
-  (princ #\newline)
-  (princ "quit To quit the game")
-  (princ #\newline)
   (read-from-string (concatenate 'string "(" (read-line) ")"))
   )
 
 (defun cmd-loop (board)
-  (princ board)
-  (princ #\newline)
   (let ((cmd (read-cmd)))
      (cond
-     ((eq (car cmd) 'quit) (princ "Bye"))
-     (t (princ "Unknown command: ") (princ (car cmd)) (princ #\newline) (cmd-loop board))
+      ((eq (car cmd) 'quit) (princ "Bye."))
+      ((eq (car cmd) 'put) (setf board (cmd-set-field board (second cmd) (third cmd) (fourth cmd))) (princ board) (princ #\newline) (cmd-loop board))
+      ((eq (car cmd) 'is-white) (princ "is-white ") (princ (second cmd)) (princ " ") (princ (third cmd)) (princ ": ") (princ (is-field-color-p board (second cmd) (third cmd) *WHITE*)) (princ #\newline) (cmd-loop board))
+      ((eq (car cmd) 'is-black) (princ "is-black ") (princ (second cmd)) (princ " ") (princ (third cmd)) (princ ": ") (princ (is-field-color-p board (second cmd) (third cmd) *BLACK*)) (princ #\newline) (cmd-loop board))
+      ((eq (car cmd) 'is-four) (princ "is-four ") (princ (second cmd)) (princ " ") (princ (third cmd)) (princ ": ") (princ (is-four board (second cmd) (third cmd))) (princ #\newline) (cmd-loop board))
+      ((eq (car cmd) 'b) (princ board) (princ #\newline) (cmd-loop board))
+      (t (princ "Unknown command: ") (princ (car cmd)) (princ #\newline) (cmd-help)  (cmd-loop board))
      )))
+
+(defun cmd-help ()
+  (princ "Please enter a command. Available commands are")
+  (princ #\newline)
+  (princ "quit To quit the game")
+  (princ #\newline)
+  (princ "put x y <W | B>")
+  (princ #\newline)
+  (princ "is-white x y")
+  (princ #\newline)
+  (princ "is-black x y")
+  (princ #\newline)
+  (princ "is-four x y")
+  (princ #\newline)
+  (princ "b Print current board")
+  (princ #\newline)
+  )
 
 (defun lets-go()
   (princ "Welcome to Connect4")
   (princ #\newline)
-  (cmd-loop (create-board))
-  nil
-  )
+  (cmd-help)
+  (let ((board (create-board)))
+    (princ board)
+    (princ #\newline)
+    (cmd-loop board)
+    nil
+  ))
