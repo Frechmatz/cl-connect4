@@ -28,69 +28,100 @@
    ))
 
 
-#|
-(defun cmd-set-field (board x y color)
-  (if (eq color 'W) (setf board (set-field board x y *WHITE*)) (if (eq color 'B) (setf board (set-field board x y *BLACK*))))
-  board
-  )
-
-
-     (cond
-      ((eq (car cmd) 'quit) (princ "Bye."))
-      ((eq (car cmd) 'put) (setf board (cmd-set-field board (second cmd) (third cmd) (fourth cmd))) (princ board) (princ #\newline) (cmd-loop board))
-      ((eq (car cmd) 'is-white) (princ "is-white ") (princ (second cmd)) (princ " ") (princ (third cmd)) (princ ": ") (princ (is-field-color-p board (second cmd) (third cmd) *WHITE*)) (princ #\newline) (cmd-loop board))
-      ((eq (car cmd) 'is-black) (princ "is-black ") (princ (second cmd)) (princ " ") (princ (third cmd)) (princ ": ") (princ (is-field-color-p board (second cmd) (third cmd) *BLACK*)) (princ #\newline) (cmd-loop board))
-      ((eq (car cmd) 'is-four) (princ "is-four ") (princ (second cmd)) (princ " ") (princ (third cmd)) (princ ": ") (princ (is-four board (second cmd) (third cmd))) (princ #\newline) (cmd-loop board))
-      ((eq (car cmd) 'b) (princ board) (princ #\newline) (cmd-loop board))
-      (t (princ "Unknown command: ") (princ (car cmd)) (princ #\newline) (cmd-help)  (cmd-loop board))
-     )))
-
-|#
-
-
+;; Developer command table
 (defun create-command-table ()
   (let ((table ()))
+
+    (push (list 'board (make-instance 'command
+				      :infoFn (lambda ()
+						(princ "board")
+						(princ #\newline)
+						(princ #\tab)
+						(princ "Prints the current board")
+						(princ #\newline)
+						)
+				      :execFn (lambda (context args)
+						(princ "Called Board")
+						(princ #\newline)
+						(make-instance 'command-result :redraw-board t)
+						)
+				      )) table)
+    
     (push (list 'put (make-instance 'command
-				     :infoFn (lambda () (princ "put x y <W | B>") (princ #\newline))
-				     :execFn (lambda (context args)
-					       (princ "Called Put")
-					       (princ #\newline)
-					       (make-instance 'command-result :redraw-board t)
-					       )
-				     )) table)
+				    :infoFn (lambda ()
+					      (princ "put color x y")
+					      (princ #\newline)
+					      (princ #\tab)
+					      (princ "Puts a piece into the board at the given position. Colors are B and W")
+					      (princ #\newline)
+					      )
+				    :execFn (lambda (context args)
+					      (let ((board (slot-value context 'board)) (color nil))
+						(if (equal (first args) 'W)
+						    (setf color *WHITE*)
+						  (if (equal (first args) 'B) (setf color *BLACK*)))
+						(if (not color)
+						    (progn (princ "Invalid color") (princ #\newline))
+						  (progn 
+						    (setf board (set-field board (second args) (third args) color))
+						    (setf (slot-value context 'board) board)))
+						(make-instance 'command-result :redraw-board t)
+						))
+				    )) table)
 
     (push (list 'is-white (make-instance 'command
-				     :infoFn (lambda () (princ "is-white x y") (princ #\newline))
-				     :execFn (lambda (context args)
-					       (princ "Called IsWhite")
-					       (princ #\newline)
-					       (make-instance 'command-result :redraw-board nil)
-					       )
-				     )) table)
+					 :infoFn (lambda ()
+						   (princ "is-white x y")
+						   (princ #\newline)
+						   (princ #\tab)
+						   (princ "Checks if the piece at the given position is of color white")
+						   (princ #\newline)
+						   )
+					 :execFn (lambda (context args)
+						   (princ (is-field-color-p (slot-value context 'board) (first args) (second args) *WHITE*))
+						   (princ #\newline)
+						   (make-instance 'command-result :redraw-board nil)
+						   )
+					 )) table)
 
     (push (list 'is-black (make-instance 'command
-				     :infoFn (lambda () (princ "is-black x y") (princ #\newline))
-				     :execFn (lambda (context args)
-					       (princ "Called IsBlack")
-					       (princ #\newline)
-					       (make-instance 'command-result :redraw-board nil)
-					       )
-				     )) table)
+					 :infoFn (lambda ()
+						   (princ "is-black x y")
+						   (princ #\newline)
+						   (princ #\tab)
+						   (princ "Checks if the piece at the given position is of color black")
+						   (princ #\newline)
+
+						   )
+					 :execFn (lambda (context args)
+						   (princ (is-field-color-p (slot-value context 'board) (first args) (second args) *BLACK*))
+						   (princ #\newline)
+						   (make-instance 'command-result :redraw-board nil)
+						   )
+					 )) table)
 
     (push (list 'is-four (make-instance 'command
-				     :infoFn (lambda () (princ "is-four x y") (princ #\newline))
-				     :execFn (lambda (context args)
-					       (princ "Called IsFour")
-					       (princ #\newline)
-					       (make-instance 'command-result :redraw-board nil)
-					       )
-				     )) table)
+					:infoFn (lambda ()
+						  (princ "is-four x y")
+						  (princ #\newline)
+						  (princ #\tab)
+						  (princ "Checks if at the given position four pieces are in a line")
+						  (princ #\newline)
+						  )
+					:execFn (lambda (context args)
+						  (princ (is-four (slot-value context 'board) (first args) (second args)))
+						  (princ #\newline)
+						  (make-instance 'command-result :redraw-board nil)
+						  )
+					)) table)
 
     table
     ))
 
 
 (defun print-help-text (command-table)
+  (princ "Available commands are")
+  (princ #\newline)
   (dolist (cmd command-table)
     (funcall (slot-value (car (cdr cmd)) 'infoFn))
   ))
