@@ -12,105 +12,18 @@
 |#
 
 
-(defparameter *WIDTH* 7)
-(defparameter *HEIGHT* 6)
 
-(defparameter *BLACK* 'B)
-(defparameter *WHITE* 'W)
-(defparameter *EMPTY* '_)
-(defparameter *BORDER* 'X)
-
-(defun create-board ()
-  (let ( (board (make-array `( ,(+ 2 *HEIGHT*) ,(+ 2 *WIDTH*)) :initial-element *EMPTY*)))
-    (dotimes (x (+ 2 *WIDTH*)) (setf (aref board 0 x) (if (= x 0) *BORDER* (- x 1))))
-    (dotimes (x (+ 2 *WIDTH*)) (setf (aref board (+ 1 *HEIGHT*) x) (if (= x 0) *BORDER* (- x 1))))
-    (dotimes (y (+ 2 *HEIGHT*)) (setf (aref board y 0) (if (= y 0) *BORDER* (- y 1))))
-    (dotimes (y (+ 2 *HEIGHT*)) (setf (aref board y (+ 1 *WIDTH*)) (if (= y 0) *BORDER* (- y 1))))
-    board
-    ))
-
-(defun clone-board (board)
-  ;; Bozo algorithm :(
-  (let ((new-board (create-board)))
-    (dotimes (x (+ 2 *WIDTH*))
-      (dotimes (y (+ 1 *HEIGHT*))
-	(setf (aref new-board y x) (aref board y x))
-	))
-    new-board))
-
-
-
-(defun get-field (board x y)
-  (aref board (+ 1 y) (+ 1 x)))
-
-(defun set-field (board x y color)
-  (let ((new-board (clone-board board)))
-    (setf (aref new-board (+ 1 y) (+ 1 x)) color)
-    new-board
-    ))
-
-
-	
-
-; Check if a field has a given color
-(defun is-field-color-p (board x y color)
-  (eq (get-field board x y) color)
-  )
+(load "field.lisp")
+(load "command.lisp")
 
 
 #|
-    Calculate the total length of the line at given position and for given direction
-    x y: Starting point from which adjacent points are checked for the same color
-|#
-(defun line-length-at (board x y dx dy)
-  (let ((length 0) (color (get-field board x y))) 
-    (flet (
-	   (go (dx dy)
-	       (do
-		((curX x (+ curX dx)) (curY y (+ curY dy)))
-		((not (is-field-color-p board curX curY color)))
-		(setf length (+ length 1))
-		)))
-	  ; Body of flet
-	  (go dx dy) ; go forward
-	  (go (* -1 dx) (* -1 dy)) ; go backward
-	  (- length 1) ; start position has been accounted for two times
-	  )))
-    
-
-(defun is-four (board x y)
-  (if (not (or (is-field-color-p board x y *WHITE*) (is-field-color-p board x y *BLACK*))) NIL 
-    (let ((found-direction nil)
-	  (directions '((N_S 0 1) (W_E 1 0) (NW_SE 1 1) (SW_NE 1 -1))))
-      (dolist (d directions)
-	(if (>= (line-length-at board x y (second d) (third d)) 4)
-	    (progn
-	      (setf found-direction (first d))
-	      (return))
-	  )
-	)
-      found-direction)))
-
-
-
-
-#|
-Game REPL
-|#
-
 (defun cmd-set-field (board x y color)
   (if (eq color 'W) (setf board (set-field board x y *WHITE*)) (if (eq color 'B) (setf board (set-field board x y *BLACK*))))
   board
   )
 
 
-
-(defun read-cmd ()
-  (read-from-string (concatenate 'string "(" (read-line) ")"))
-  )
-
-(defun cmd-loop (board)
-  (let ((cmd (read-cmd)))
      (cond
       ((eq (car cmd) 'quit) (princ "Bye."))
       ((eq (car cmd) 'put) (setf board (cmd-set-field board (second cmd) (third cmd) (fourth cmd))) (princ board) (princ #\newline) (cmd-loop board))
@@ -121,30 +34,77 @@ Game REPL
       (t (princ "Unknown command: ") (princ (car cmd)) (princ #\newline) (cmd-help)  (cmd-loop board))
      )))
 
-(defun cmd-help ()
-  (princ "Please enter a command. Available commands are")
-  (princ #\newline)
-  (princ "quit To quit the game")
-  (princ #\newline)
-  (princ "put x y <W | B>")
-  (princ #\newline)
-  (princ "is-white x y")
-  (princ #\newline)
-  (princ "is-black x y")
-  (princ #\newline)
-  (princ "is-four x y")
-  (princ #\newline)
-  (princ "b Print current board")
-  (princ #\newline)
+|#
+
+
+(defun create-command-table ()
+  (let ((table ()))
+    (push (list 'put (make-instance 'command
+				     :infoFn (lambda () (princ "put x y <W | B>") (princ #\newline))
+				     :execFn (lambda (context args) (print "Called Put"))
+				     )) table)
+
+    (push (list 'is-white (make-instance 'command
+				     :infoFn (lambda () (princ "is-white x y") (princ #\newline))
+				     :execFn (lambda (context args) (print "Called IsWhite"))
+				     )) table)
+
+    (push (list 'is-black (make-instance 'command
+				     :infoFn (lambda () (princ "is-black x y") (princ #\newline))
+				     :execFn (lambda (context args) (print "Called IsBlack"))
+				     )) table)
+
+    (push (list 'is-four (make-instance 'command
+				     :infoFn (lambda () (princ "is-four x y") (princ #\newline))
+				     :execFn (lambda (context args) (print "Called IsFour"))
+				     )) table)
+
+    (push (list 'quit (make-instance 'command
+				     :infoFn (lambda () (princ "quit to quit") (princ #\newline))
+				     :execFn (lambda (context args) (print "Bye") nil)
+				     )) table)
+
+    table
+    ))
+
+
+(defun print-help-text (command-table)
+  (dolist (cmd command-table)
+    (funcall (slot-value (car (cdr cmd)) 'infoFn))
+  ))
+
+(defun read-cmd ()
+  (read-from-string (concatenate 'string "(" (read-line) ")"))
   )
+
+(defun cmd-loop (command-table)
+  (let ((board (create-board)) (cmd nil) (opcode nil) (result nil) (context nil))
+    ;; Body of let
+    (flet ((do-command ()
+		       (princ "Enter command (quit to quit, ? for help): ")
+		       ;; read command
+		       (setf cmd (read-cmd))
+		       (if (equal (car cmd) '?)
+			   (progn (print-help-text command-table) (setf result 'continue))
+			 (progn
+			   ;; get implementation of command
+			   (setf opcode (assoc (car cmd) command-table :test #'equal))
+			   ;; execute implementation
+			   (if opcode (setf result (funcall (slot-value (car (cdr opcode)) 'execFn) context (cdr cmd))) (setf result 'continue))
+			   ))
+		       result))
+	   
+	   ;; Body of flet
+	   (do ((ergebnis (do-command) (do-command)))
+	       ((not ergebnis))
+	       )
+	   )
+	  )
+    )	  
 
 (defun lets-go()
   (princ "Welcome to Connect4")
   (princ #\newline)
-  (cmd-help)
-  (let ((board (create-board)))
-    (princ board)
-    (princ #\newline)
-    (cmd-loop board)
-    nil
-  ))
+  (cmd-loop (create-command-table))
+  )
+
