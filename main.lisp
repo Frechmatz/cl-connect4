@@ -17,6 +17,17 @@
 (load "command.lisp")
 
 
+(defclass context ()
+  (
+   (board)
+   ))
+
+(defclass command-result ()
+  (
+   (redraw-board :initarg :redraw-board)
+   ))
+
+
 #|
 (defun cmd-set-field (board x y color)
   (if (eq color 'W) (setf board (set-field board x y *WHITE*)) (if (eq color 'B) (setf board (set-field board x y *BLACK*))))
@@ -41,27 +52,41 @@
   (let ((table ()))
     (push (list 'put (make-instance 'command
 				     :infoFn (lambda () (princ "put x y <W | B>") (princ #\newline))
-				     :execFn (lambda (context args) (print "Called Put"))
+				     :execFn (lambda (context args)
+					       (print "Called Put")
+					       (make-instance 'command-result :redraw-board t)
+					       )
 				     )) table)
 
     (push (list 'is-white (make-instance 'command
 				     :infoFn (lambda () (princ "is-white x y") (princ #\newline))
-				     :execFn (lambda (context args) (print "Called IsWhite"))
+				     :execFn (lambda (context args)
+					       (print "Called IsWhite")
+					       (make-instance 'command-result :redraw-board nil)
+					       )
 				     )) table)
 
     (push (list 'is-black (make-instance 'command
 				     :infoFn (lambda () (princ "is-black x y") (princ #\newline))
-				     :execFn (lambda (context args) (print "Called IsBlack"))
+				     :execFn (lambda (context args)
+					       (print "Called IsBlack")
+					       (make-instance 'command-result :redraw-board nil)
+					       )
 				     )) table)
 
     (push (list 'is-four (make-instance 'command
 				     :infoFn (lambda () (princ "is-four x y") (princ #\newline))
-				     :execFn (lambda (context args) (print "Called IsFour"))
+				     :execFn (lambda (context args)
+					       (print "Called IsFour")
+					       (make-instance 'command-result :redraw-board nil)
+					       )
 				     )) table)
 
     (push (list 'quit (make-instance 'command
 				     :infoFn (lambda () (princ "quit to quit") (princ #\newline))
-				     :execFn (lambda (context args) (print "Bye") nil)
+				     :execFn (lambda (context args)
+					       (print "Bye")
+					       nil)
 				     )) table)
 
     table
@@ -78,8 +103,11 @@
   )
 
 (defun cmd-loop (command-table)
-  (let ((board (create-board)) (cmd nil) (opcode nil) (result nil) (context nil))
+  (let ((board (create-board)) (cmd nil) (opcode nil) (result nil) (context (make-instance 'context)))
     ;; Body of let
+    (setf (slot-value context 'board) (create-board))
+    (print (slot-value context 'board))
+    (princ #\newline)
     (flet ((do-command ()
 		       (princ "Enter command (quit to quit, ? for help): ")
 		       ;; read command
@@ -90,7 +118,12 @@
 			   ;; get implementation of command
 			   (setf opcode (assoc (car cmd) command-table :test #'equal))
 			   ;; execute implementation
-			   (if opcode (setf result (funcall (slot-value (car (cdr opcode)) 'execFn) context (cdr cmd))) (setf result 'continue))
+			   (if opcode
+			       (progn
+				 (setf result (funcall (slot-value (car (cdr opcode)) 'execFn) context (cdr cmd)))
+				 (if (slot-value result 'redraw-board) (print (slot-value context 'board)))
+				 )
+			     (setf result 'continue))
 			   ))
 		       result))
 	   
