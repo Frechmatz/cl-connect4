@@ -53,7 +53,8 @@
     (push (list 'put (make-instance 'command
 				     :infoFn (lambda () (princ "put x y <W | B>") (princ #\newline))
 				     :execFn (lambda (context args)
-					       (print "Called Put")
+					       (princ "Called Put")
+					       (princ #\newline)
 					       (make-instance 'command-result :redraw-board t)
 					       )
 				     )) table)
@@ -61,7 +62,8 @@
     (push (list 'is-white (make-instance 'command
 				     :infoFn (lambda () (princ "is-white x y") (princ #\newline))
 				     :execFn (lambda (context args)
-					       (print "Called IsWhite")
+					       (princ "Called IsWhite")
+					       (princ #\newline)
 					       (make-instance 'command-result :redraw-board nil)
 					       )
 				     )) table)
@@ -69,7 +71,8 @@
     (push (list 'is-black (make-instance 'command
 				     :infoFn (lambda () (princ "is-black x y") (princ #\newline))
 				     :execFn (lambda (context args)
-					       (print "Called IsBlack")
+					       (princ "Called IsBlack")
+					       (princ #\newline)
 					       (make-instance 'command-result :redraw-board nil)
 					       )
 				     )) table)
@@ -77,16 +80,10 @@
     (push (list 'is-four (make-instance 'command
 				     :infoFn (lambda () (princ "is-four x y") (princ #\newline))
 				     :execFn (lambda (context args)
-					       (print "Called IsFour")
+					       (princ "Called IsFour")
+					       (princ #\newline)
 					       (make-instance 'command-result :redraw-board nil)
 					       )
-				     )) table)
-
-    (push (list 'quit (make-instance 'command
-				     :infoFn (lambda () (princ "quit to quit") (princ #\newline))
-				     :execFn (lambda (context args)
-					       (print "Bye")
-					       nil)
 				     )) table)
 
     table
@@ -112,16 +109,17 @@
 		       (princ "Enter command (quit to quit, ? for help): ")
 		       ;; read command
 		       (setf cmd (read-cmd))
-		       (if (equal (car cmd) '?)
-			   (progn (print-help-text command-table) (setf result 'continue))
-			 (progn
+		       (cond
+			((equal (car cmd) '?) (print-help-text command-table) (setf result 'continue))
+			((equal (car cmd) 'quit) (princ "Bye.") (princ #\newline) (setf result nil))
+			(t 
 			   ;; get implementation of command
 			   (setf opcode (assoc (car cmd) command-table :test #'equal))
 			   ;; execute implementation
 			   (if opcode
 			       (progn
 				 (setf result (funcall (slot-value (car (cdr opcode)) 'execFn) context (cdr cmd)))
-				 (if (slot-value result 'redraw-board) (print (slot-value context 'board)))
+				 (if (slot-value result 'redraw-board) (progn (print (slot-value context 'board)) (princ #\newline)))
 				 )
 			     (setf result 'continue))
 			   ))
