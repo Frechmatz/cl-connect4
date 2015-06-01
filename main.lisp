@@ -13,19 +13,12 @@
 
 
 
+(load "tools.lisp")
 (load "field.lisp")
+(load "context.lisp")
 (load "command.lisp")
-
-
-(defclass context ()
-  (
-   (board)
-   ))
-
-(defclass command-result ()
-  (
-   (redraw-board :initarg :redraw-board)
-   ))
+(load "commandresult.lisp")
+(load "classic.lisp")
 
 
 ;; Developer command table
@@ -41,12 +34,55 @@
 						(princ #\newline)
 						)
 				      :execFn (lambda (context args)
-						(princ "Called Board")
-						(princ #\newline)
 						(make-instance 'command-result :redraw-board t)
 						)
 				      )) table)
-    
+
+    (push (list 'is-field-set (make-instance 'command
+				      :infoFn (lambda ()
+						(princ "is-field-set x y")
+						(princ #\newline)
+						(princ #\tab)
+						(princ "Checks if a piece has been put into the given position")
+						(princ #\newline)
+						)
+				      :execFn (lambda (context args)
+						(princ (is-field-set (slot-value context 'board) (first args) (second args)))
+						(princ #\newline)
+						(make-instance 'command-result :redraw-board nil)
+						)
+				      )) table)
+
+    (push (list 'board-score (make-instance 'command
+				      :infoFn (lambda ()
+						(princ "board-score x y")
+						(princ #\newline)
+						(princ #\tab)
+						(princ "Calculates the field score according to the given position. The position represents the latest move.")
+						(princ #\newline)
+						)
+				      :execFn (lambda (context args)
+						(princ (board-score (slot-value context 'board) (first args) (second args)))
+						(princ #\newline)
+						(make-instance 'command-result :redraw-board nil)
+						)
+				      )) table)
+
+    (push (list 'max-line-length-at (make-instance 'command
+				      :infoFn (lambda ()
+						(princ "max-line-length-at x y")
+						(princ #\newline)
+						(princ #\tab)
+						(princ "Returns the maximum line length at the given position")
+						(princ #\newline)
+						)
+				      :execFn (lambda (context args)
+						(princ (max-line-length-at (slot-value context 'board) (first args) (second args)))
+						(princ #\newline)
+						(make-instance 'command-result :redraw-board nil)
+						)
+				      )) table)
+
     (push (list 'put (make-instance 'command
 				    :infoFn (lambda ()
 					      (princ "put color x y")
@@ -142,7 +178,7 @@
 		       (setf cmd (read-cmd))
 		       (cond
 			((equal (car cmd) '?) (print-help-text command-table) (setf result 'continue))
-			((equal (car cmd) 'quit) (princ "Bye.") (princ #\newline) (setf result nil))
+			((equal (car cmd) 'quit) (princ "Bye.") (princ #\newline) (princ "Enter (ext:quit) to exit Lisp") (princ #\newline) (setf result nil))
 			(t 
 			   ;; get implementation of command
 			   (setf opcode (assoc (car cmd) command-table :test #'equal))

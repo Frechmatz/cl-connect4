@@ -1,5 +1,10 @@
 
 
+#|
+Common 4-Connect field related functions as creating, cloning and some helpers
+|#
+
+
 (defparameter *WIDTH* 7)
 (defparameter *HEIGHT* 6)
 
@@ -7,6 +12,8 @@
 (defparameter *WHITE* 'W)
 (defparameter *EMPTY* '_)
 (defparameter *BORDER* 'X)
+(defparameter *MAX-LENGTH* 7)
+
 
 (defun create-board ()
   (let ( (board (make-array `( ,(+ 2 *HEIGHT*) ,(+ 2 *WIDTH*)) :initial-element *EMPTY*)))
@@ -26,8 +33,6 @@
 	))
     new-board))
 
-
-
 (defun get-field (board x y)
   (aref board (+ 1 y) (+ 1 x)))
 
@@ -37,17 +42,14 @@
     new-board
     ))
 
-
-	
-
-; Check if a field has a given color
+;; Check if a field has a given color
 (defun is-field-color-p (board x y color)
   (eq (get-field board x y) color)
   )
 
 
 #|
-    Calculate the total length of the line at given position and for given direction
+    Calculate the total length of the line at the given position and for given direction
     x y: Starting point from which adjacent points are checked for the same color
 |#
 (defun line-length-at (board x y dx dy)
@@ -64,21 +66,31 @@
 	  (go (* -1 dx) (* -1 dy)) ; go backward
 	  (- length 1) ; start position has been accounted for two times
 	  )))
-    
+
+(defun is-field-set (board x y)
+  (if (or (is-field-color-p board x y *WHITE*) (is-field-color-p board x y *BLACK*)) t NIL)
+  )
+
+
+(defun max-line-length-at (board x y)
+  (if (not (is-field-set board x y)) 0
+    (let (
+	  (all '())
+	  (directions '((0 1) (1 0) (1 1) (1 -1)))
+	  )
+      (dolist (d directions)
+	(push (line-length-at board x y (first d) (second d)) all)
+	)
+      (max-list-value all)
+    )
+    )
+  )
+
 
 (defun is-four (board x y)
-  (if (not (or (is-field-color-p board x y *WHITE*) (is-field-color-p board x y *BLACK*))) NIL 
-    (let ((found-direction nil)
-	  (directions '((N_S 0 1) (W_E 1 0) (NW_SE 1 1) (SW_NE 1 -1))))
-      (dolist (d directions)
-	(if (>= (line-length-at board x y (second d) (third d)) 4)
-	    (progn
-	      (setf found-direction (first d))
-	      (return))
-	  )
-	)
-      found-direction)))
-
+  (let ((l (max-line-length-at board x y)))
+    (if (>= l 4) t nil))
+  )
 
 
 
