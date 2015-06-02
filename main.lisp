@@ -21,6 +21,10 @@
 (load "classic.lisp")
 
 
+(defun parse-color (c)
+  (if (equal c 'W) *WHITE* (if (equal c 'B) *BLACK* (progn (princ "Invalid color") (princ #\newline) nil)))
+  )
+
 ;; Developer command table
 (defun create-command-table ()
   (let ((table ()))
@@ -92,19 +96,36 @@
 					      (princ #\newline)
 					      )
 				    :execFn (lambda (context args)
-					      (let ((board (slot-value context 'board)) (color nil))
-						(if (equal (first args) 'W)
-						    (setf color *WHITE*)
-						  (if (equal (first args) 'B) (setf color *BLACK*)))
-						(if (not color)
-						    (progn (princ "Invalid color") (princ #\newline))
-						  (progn 
-						    (setf board (set-field board (second args) (third args) color))
-						    (setf (slot-value context 'board) board)))
-						(make-instance 'command-result :redraw-board t)
-						))
+					      (let ((board (slot-value context 'board)) (color (parse-color (first args))))
+						(if color
+						    (progn 
+						      (setf board (set-field board (second args) (third args) color))
+						      (setf (slot-value context 'board) board)
+						      (make-instance 'command-result :redraw-board t))
+						  (make-instance 'command-result :redraw-board nil)
+						)))
 				    )) table)
 
+    (push (list 'best-move (make-instance 'command
+				    :infoFn (lambda ()
+					      (princ "best-move color")
+					      (princ #\newline)
+					      (princ #\tab)
+					      (princ "Calculates the next best move for given color. Colors are B and W")
+					      (princ #\newline)
+					      )
+				    :execFn (lambda (context args)
+					      (let ((board (slot-value context 'board)) (color (parse-color (first args))))
+						(if color
+						    (progn 
+						      (princ (best-move board color))
+						      (princ #\newline)
+						      (make-instance 'command-result :redraw-board nil))
+						  (make-instance 'command-result :redraw-board nil)
+						)))
+				    )) table)
+
+    
     (push (list 'is-white (make-instance 'command
 					 :infoFn (lambda ()
 						   (princ "is-white x y")
@@ -151,6 +172,7 @@
 						  )
 					)) table)
 
+    
     table
     ))
 
