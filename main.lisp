@@ -117,24 +117,19 @@
     ))
 
 
-(defun print-help-text (command-table)
+(defun print-help-text (command-table &optional more)
   (princ "Available commands are")
   (princ #\newline)
   (dolist (cmd command-table)
     (princ (funcall (slot-value (car (cdr cmd)) 'infoFn)))
     (princ #\newline)
-  ))
+    (if more (progn
+	       (princ #\tab)
+	       (princ (funcall (slot-value (car (cdr cmd)) 'descriptionFn)))
+	       (princ #\newline)
+	       ))
+    ))
 
-(defun print-more-help-text (command-table)
-  (princ "Available commands are")
-  (princ #\newline)
-  (dolist (cmd command-table)
-    (princ (funcall (slot-value (car (cdr cmd)) 'infoFn)))
-    (princ #\newline)
-    (princ #\tab)
-    (princ (funcall (slot-value (car (cdr cmd)) 'descriptionFn)))
-    (princ #\newline)
-  ))
 
 (defun read-cmd ()
   (read-from-string (concatenate 'string "(" (read-line) ")"))
@@ -152,7 +147,7 @@
 		       (setf cmd (read-cmd))
 		       (cond
 			((equal (car cmd) '?) (print-help-text command-table) (setf result 'continue))
-			((equal (car cmd) '--?) (print-more-help-text command-table) (setf result 'continue))
+			((equal (car cmd) '--?) (print-help-text command-table t) (setf result 'continue))
 			((equal (car cmd) 'quit) (princ "Bye.") (princ #\newline) (princ "Enter (ext:quit) to exit Lisp") (princ #\newline) (setf result nil))
 			(t 
 			   ;; get implementation of command
