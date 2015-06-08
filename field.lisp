@@ -5,14 +5,14 @@ Common 4-Connect field related functions as creating, cloning and some helpers
 |#
 
 
-(defparameter *WIDTH* 7)
-(defparameter *HEIGHT* 6)
+(defparameter *WIDTH* 5) ;; 7
+(defparameter *HEIGHT* 5) ;; 6
+(defparameter *MAX-LENGTH* 7) ;; 7
 
 (defparameter *BLACK* 'B)
 (defparameter *WHITE* 'W)
 (defparameter *EMPTY* '_)
 (defparameter *BORDER* 'X)
-(defparameter *MAX-LENGTH* 7)
 
 
 (defun create-board ()

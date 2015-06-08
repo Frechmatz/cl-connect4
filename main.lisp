@@ -81,9 +81,13 @@
 				    :execFn (lambda (context args)
 					      (let ((board (slot-value context 'board)) (color (parse-color (first args))))
 						(if color
-						    (progn 
-						      (make-instance 'command-result :redraw-board nil :message nil))
-						  (make-instance 'command-result :redraw-board nil :message (best-move board color))
+						    (progn
+						      (let ((result (best-move board color)))
+							;;(print result)
+							(setf board (set-field board (first result) (second result) color))
+							;;(setf (slot-value context 'board) board)
+							(make-instance 'command-result :redraw-board t :message result)))
+						  (make-instance 'command-result :redraw-board nil :message nil)
 						)))
 				    )) table)
 
