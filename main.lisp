@@ -84,7 +84,7 @@
 						    (progn
 						      (let ((result (best-move board color)))
 							;;(print result)
-							(setf board (set-field board (first result) (second result) color))
+							;;(setf board (set-field board (first result) (second result) color))
 							;;(setf (slot-value context 'board) board)
 							(make-instance 'command-result :redraw-board t :message result)))
 						  (make-instance 'command-result :redraw-board nil :message nil)
@@ -115,6 +115,7 @@
 						  (make-instance 'command-result :redraw-board nil :message (is-four (slot-value context 'board) (first args) (second args)))
 						  )
 					)) table)
+
 
     
     table

@@ -10,7 +10,7 @@ x y: The latest move
 |#
 (defun board-score (board x y)
   (let ((length (max-line-length-at board x y)))
-    (if (>= length 4) 1.0 (/ length *MAX-LENGTH*))
+    (if (>= length 4) 1.0 0.0)
     ))
 
 #|
@@ -30,42 +30,47 @@ board: The board
     moves
     ))
 
-(defun best-move (board color)
-  (let ((moves (generate-moves board)) (scores ()) (cur-board nil) (x nil) (y nil))
-    ;;(print moves)
-    (dolist (move moves)
-      (setf x (first move))
-      (setf y (second move))
-      (push (list x y (get-minmax board x y color 1.0 1)) scores)
-      )
-    (max-list-value scores (lambda (x) (third x)))
-    ))
-
-
 (defun invert-color (color)
    (if (eq color *WHITE*) *BLACK* *WHITE*)
    )
 
-(defun get-minmax (board x y color score-factor max-depth)
-  (let ((moves nil) (score nil) (cur-board nil))
-    ;; do current move
-    (setf cur-board (set-field board x y color))
-    (setf moves (generate-moves cur-board))
-    ;; calculate score of current move in order to determine if we should calculate possible counter-moves
-    (setf score (board-score cur-board x y))
-    (print cur-board)
-    (print color)
-    (print score)
-    (print (eq score 1.0))
-    (if (or (equal score 1.0) (not moves) (eq max-depth 0)) (* score-factor score)
-      (progn
-	;; Maximize inverted responses of the opponent (Score range of board evaluator is 0..1, thats why we need to invert)
-	(setf score -10000)
-	(dolist (move moves)
-	  (setf score (max score (get-minmax cur-board (first move) (second move) (invert-color color) (* -1.0 score-factor) (+ max-depth -1))))
-	)  
-	score
-	))))
+;; returns number of column (0..)
+(defun best-move (board color)
+  (let ((final-score (get-minmax board color nil 2)))
+    (print "Final Score")
+    (print final-score)
+    final-score
+    ))
+
+;; returns  (x min/max-score)
+(defun get-minmax (board color is-opponent max-depth)
+  (let ((moves (generate-moves board)) (cur-board nil) (scores ()) (score nil) (next-moves nil))
+    (dolist (move moves)
+	     ;; do move
+	     (setf cur-board (set-field board (first move) (second move) color))
+	     ;; calc score and next move in order to decide if a final state has been reached
+	     (setf score (board-score cur-board (first move) (second move) ))
+	     ;; invert if opponent
+	     (if is-opponent (setf score (* -1 score)))
+	     ;; todo: in die if-abfrage reinziehen
+	     (setf next-moves (generate-moves cur-board))
+	     ;; final state or no more moves or max depth
+	     (if (or (equal score 1.0) (equal score -1.0) (not next-moves) (equal max-depth 0))
+		 (progn
+		   (push (list (first move) score) scores))
+	       (progn
+		 (setf score (get-minmax cur-board (invert-color color) (not is-opponent) (+ max-depth -1)))
+		 (push (list (first move) (second score)) scores)))
+	     )
+    ;; now we have a list of (x score) tuples. Lets max/min them
+    (if is-opponent
+	    (progn
+	      (print "Minimizing")  (print scores) (setf score (min-list-value scores (lambda (x) (second x)))) (print score) score
+	      )
+	  (progn
+	    (print "Maximizing")  (print scores) (setf score (max-list-value scores (lambda (x) (second x)))) (print score) score
+	    )
+	  )))
 
 	
     
