@@ -13,6 +13,7 @@ x y: The latest move
     (if (>= length 4) 1.0 0.0)
     ))
 
+
 #|
 Returns a list of (x y) coordinates of all possible moves
 board: The board
@@ -22,6 +23,7 @@ board: The board
     (dotimes (x *WIDTH*)
       (if (not (is-field-set board x 0))
 	  (progn
+	    ;; todo: zusammenfassen und lokale Variable weg
 	    (setf depth (line-length-at board x 0 0 1))
 	    (push (list x (- depth 1)) moves)
 	    )
@@ -30,16 +32,15 @@ board: The board
     moves
     ))
 
-(defun invert-color (color)
-   (if (eq color *WHITE*) *BLACK* *WHITE*)
-   )
 
-;; returns number of column (0..)
+;; returns x y and score, e.g. (0 3 1.0) or nil
 (defun best-move (board color)
   (let ((final-score (get-minmax board color nil 2)))
     (print "Final Score")
     (print final-score)
-    final-score
+    (if final-score 
+	(list (first final-score) (+ (line-length-at board (first final-score) 0 0 1) -1) (second final-score))
+      nil)
     ))
 
 ;; returns  (x min/max-score)
@@ -63,15 +64,21 @@ board: The board
 		 (push (list (first move) (second score)) scores)))
 	     )
     ;; now we have a list of (x score) tuples. Lets max/min them
+    ;; Todo: progn raus
     (if is-opponent
 	    (progn
-	      (print "Minimizing")  (print scores) (setf score (min-list-value scores (lambda (x) (second x)))) (print score) score
+	      ;; (print "Minimizing")
+	      (setf score (reduce (lambda (best item)
+				    (if (< (second item) (second best)) item best))
+				  scores))
+	      score
 	      )
 	  (progn
-	    (print "Maximizing")  (print scores) (setf score (max-list-value scores (lambda (x) (second x)))) (print score) score
+	    ;; (print "Maximizing")
+	    (setf score (reduce (lambda (best item)
+				    (if (> (second item) (second best)) item best))
+				  scores))
+	    score
 	    )
 	  )))
 
-	
-    
-  

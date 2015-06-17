@@ -48,10 +48,10 @@ Common 4-Connect field related functions as creating, cloning and some helpers
   )
 
 
-#|
-    Calculate the total length of the line at the given position and for given direction
-    x y: Starting point from which adjacent points are checked for the same color
-|#
+;;;
+;;; Calculate the total length of the line at the given position and for given direction
+;;; x y: Starting point from which adjacent points are checked for the same color
+;;; 
 (defun line-length-at (board x y dx dy)
   (let ((length 0) (color (get-field board x y))) 
     (flet (
@@ -81,16 +81,35 @@ Common 4-Connect field related functions as creating, cloning and some helpers
       (dolist (d directions)
 	(push (line-length-at board x y (first d) (second d)) all)
 	)
-      (max-list-value all)
+      (apply #'max all)
     )
     )
   )
 
 
+;;;
+;;;
+;;;
 (defun is-four (board x y)
   (let ((l (max-line-length-at board x y)))
     (if (>= l 4) t nil))
   )
+
+;;;
+;;; Calculates the row into which a piece will fall if its thrown into the given column
+;;; returns y or nil if all fields of the column are already occupied
+;;;
+(defun find-row (board x)
+  (if (is-field-set board x 0)
+      nil
+    (+ (line-length-at board x 0 0 1) -1)
+    ))
+
+(defun invert-color (color)
+   (if (eq color *WHITE*) *BLACK* *WHITE*)
+   )
+
+
 
 
 
