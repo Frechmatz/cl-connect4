@@ -1,11 +1,11 @@
 
 
 #|
-Common 4-Connect field related functions as creating, cloning and some helpers
+Common Connect4 field related functions as creating, cloning and some helpers
 |#
 
 
-(defparameter *WIDTH* 5) ;; 7
+(defparameter *WIDTH* 7) ;; 7
 (defparameter *HEIGHT* 5) ;; 6
 (defparameter *MAX-LENGTH* 7) ;; 7
 
@@ -17,10 +17,14 @@ Common 4-Connect field related functions as creating, cloning and some helpers
 
 (defun create-board ()
   (let ( (board (make-array `( ,(+ 2 *HEIGHT*) ,(+ 2 *WIDTH*)) :initial-element *EMPTY*)))
-    (dotimes (x (+ 2 *WIDTH*)) (setf (aref board 0 x) (if (= x 0) *BORDER* (- x 1))))
-    (dotimes (x (+ 2 *WIDTH*)) (setf (aref board (+ 1 *HEIGHT*) x) (if (= x 0) *BORDER* (- x 1))))
-    (dotimes (y (+ 2 *HEIGHT*)) (setf (aref board y 0) (if (= y 0) *BORDER* (- y 1))))
-    (dotimes (y (+ 2 *HEIGHT*)) (setf (aref board y (+ 1 *WIDTH*)) (if (= y 0) *BORDER* (- y 1))))
+    (dotimes (x (+ 2 *WIDTH*))
+      (setf (aref board 0 x) *BORDER*)
+      (setf (aref board (+ *HEIGHT* 1) x) *BORDER*)
+      )
+    (dotimes (y (+ 2 *HEIGHT*))
+      (setf (aref board y 0) *BORDER*)
+      (setf (aref board y (+ *WIDTH* 1)) *BORDER*)
+      )
     board
     ))
 
@@ -110,6 +114,43 @@ Common 4-Connect field related functions as creating, cloning and some helpers
    )
 
 
+;;
+;; Board formatter
+;;
 
+(defclass cell-formats ()
+  (
+   ))
+
+(defmethod format-cell ( (formats cell-formats) board x y)
+  (get-field board x y)
+   )
+
+(defun format-board (board &optional cell-formats )
+  (if (not cell-formats) (setf cell-formats (make-instance 'cell-formats)))
+  (let ((rows '()) (footer '()) (header '() ))
+    (push *BORDER* header)
+    (push *BORDER* footer)
+    (dotimes (x *WIDTH*)
+      (push x header)
+      (push x footer))
+    (push *BORDER* header)
+    (push *BORDER* footer)
+    (push (nreverse header) rows)
+    (dotimes (y *HEIGHT*)
+      (let ((row '()))
+	(push *BORDER* row)
+	(dotimes (x *WIDTH*)
+	  (push (format-cell cell-formats board x y) row)
+	  )
+	(push *BORDER* row)
+	(push (nreverse row) rows)
+	))
+    (push (nreverse footer) rows)
+    (dolist (l (nreverse rows))
+      (princ l)
+      (princ #\newline)
+      )
+    nil))
 
 
