@@ -150,6 +150,40 @@
 				   )
 			 ) table)
 
+    (push (make-instance 'command
+			 :name 'play
+			 :infoFn (lambda () "play x")
+			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-x)))
+			 :descriptionFn (lambda () "Do a move and get computers counter move")
+			 :execFn (lambda (context x)
+				   (setf y (find-row (slot-value context 'board) x))
+				   (if (not y)
+				       (make-instance 'command-result :redraw-board nil :message "Invalid move. No place in column left.")
+				     (progn
+				       (setf board (set-field (slot-value context 'board) x y (slot-value context 'players-color)))
+				       (setf (slot-value context 'board) board)
+				       (if (is-four board x y)
+					   (make-instance 'command-result :redraw-board t :message "You have won")
+					 (progn
+					   (setf computers-color (invert-color (slot-value context 'players-color)))
+					   (setf counter-move (best-move board computers-color))
+					   (if (not counter-move)
+					       (make-instance 'command-result :redraw-board true :message "No counter move found")
+					     (progn
+					       (setf board (set-field board (first counter-move) (second counter-move) computers-color))
+					       (setf (slot-value context 'board) board)
+					       (if (is-four board (first counter-move) (second counter-move))
+						   (make-instance 'command-result :redraw-board t :message "Computer has won")
+						 (make-instance 'command-result :redraw-board t :message "Ok! Please continue"))
+					       )
+					     )
+					   )
+					 )
+				       )
+				     )
+				   )
+
+			 ) table)
     
     table
     ))
@@ -189,7 +223,7 @@
     ;; Body of let
     (setf (slot-value context 'board) (create-board))
     (setf (slot-value context 'players-color) 'W)
-    (format-board (slot-value context 'board))
+    (format-board (slot-value context 'board) (make-instance 'colorful-cell-formats))
     (princ #\newline)
     (flet ((do-command ()
 		       (princ "Enter command (quit to quit, ? for help, --? for more help): ")
@@ -208,7 +242,7 @@
 			   (setf result (make-instance 'command-result :redraw-board nil :message nil))
 			   )
 			 (if (slot-value result 'redraw-board)
-			     (progn (format-board (slot-value context 'board)) (princ #\newline)))
+			     (progn (format-board (slot-value context 'board) (make-instance 'colorful-cell-formats)) (princ #\newline)))
 			 (princ (slot-value result 'message))
 			 (princ #\newline)
 			 )
