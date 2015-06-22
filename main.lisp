@@ -158,7 +158,7 @@
 			 :execFn (lambda (context x)
 				   (setf y (find-row (slot-value context 'board) x))
 				   (if (not y)
-				       (make-instance 'command-result :redraw-board nil :message "Invalid move. No place in column left.")
+				       (make-instance 'command-result :redraw-board nil :message "Invalid move. No place left in given column")
 				     (progn
 				       (setf board (set-field (slot-value context 'board) x y (slot-value context 'players-color)))
 				       (setf (slot-value context 'board) board)
@@ -243,8 +243,7 @@
 			   )
 			 (if (slot-value result 'redraw-board)
 			     (progn (format-board (slot-value context 'board) (make-instance 'colorful-cell-formats)) (princ #\newline)))
-			 (princ (slot-value result 'message))
-			 (princ #\newline)
+			 (if (slot-value result 'message) (progn (princ (slot-value result 'message)) (princ #\newline)))
 			 )
 			)
 		       result))
@@ -262,3 +261,19 @@
   (cmd-loop (create-command-table))
   )
 
+
+(defparameter *TESTBOARD* nil)
+
+(defun test-it ()
+  (setf *testboard* (create-board))
+  (nset-field *testboard* 4 4 *WHITE*)
+  (nset-field *testboard* 3 4 *WHITE*)
+  (nset-field *testboard* 0 4 *BLACK*)
+  (nset-field *testboard* 0 3 *BLACK*)
+  (nset-field *testboard* 0 2 *WHITE*)
+  (format-board *testboard* (make-instance 'colorful-cell-formats))
+  (best-move *testboard* *BLACK*)  
+  )
+
+  
+  

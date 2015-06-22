@@ -46,6 +46,11 @@ Common Connect4 field related functions as creating, cloning and some helpers
     new-board
     ))
 
+(defun nset-field (board x y color)
+  (setf (aref board (+ 1 y) (+ 1 x)) color)
+  board
+    )
+
 ;; Check if a field has a given color
 (defun is-field-color-p (board x y color)
   (eq (get-field board x y) color)
