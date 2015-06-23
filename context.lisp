@@ -4,6 +4,8 @@
   (
    (board)
    (players-color)
+   (board-formatter-factory)
+   (command-table)
    ))
 
 

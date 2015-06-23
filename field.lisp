@@ -6,7 +6,7 @@ Common Connect4 field related functions as creating, cloning and some helpers
 
 
 (defparameter *WIDTH* 7) ;; 7
-(defparameter *HEIGHT* 5) ;; 6
+(defparameter *HEIGHT* 6) ;; 6
 (defparameter *MAX-LENGTH* 7) ;; 7
 
 (defparameter *BLACK* 'B)
