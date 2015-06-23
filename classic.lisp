@@ -43,8 +43,8 @@ board: The board
 
 
 ;; returns x y and score, e.g. (0 3 1.0) or nil
-(defun best-move (board color)
-  (let ((final-score (get-minmax board color nil 0 3)))
+(defun best-move (board color max-depth)
+  (let ((final-score (get-minmax board color nil 0 max-depth)))
     ;;(print "Final Score")
     ;;(print final-score)
     (if final-score 

@@ -131,7 +131,7 @@
 			 :descriptionFn (lambda () "Calculates the next best move for given color. Colors are B and W")
 			 :execFn (lambda (context color)
 				   (let ((board (slot-value context 'board)))
-				     (let ((result (best-move board color)))
+				     (let ((result (best-move board color (slot-value context 'difficulty-level))))
 				       (make-instance 'command-result :redraw-board t :message result)))
 				   )
 			 ) table)
@@ -187,7 +187,7 @@
 					   (make-instance 'command-result :redraw-board t :message (format nil "YOU ARE THE WINNER"))
 					 (progn
 					   (setf computers-color (invert-color (slot-value context 'players-color)))
-					   (setf counter-move (best-move board computers-color))
+					   (setf counter-move (best-move board computers-color (slot-value context 'difficulty-level)))
 					   (if (not counter-move)
 					       (make-instance 'command-result :redraw-board true :message "No counter move found")
 					     (progn
@@ -228,8 +228,8 @@
 (defun format-context (context)
   (format-board (slot-value context 'board) (funcall (slot-value context 'board-formatter-factory)))
   (princ #\newline)
-  (format t "Your color is ~a" (slot-value context 'players-color))
-  (princ #\newline)
+  (format t "Difficulty level is ~a~%" (slot-value context 'difficulty-level))
+  (format t "Your color is ~a~%" (slot-value context 'players-color))
   )
 
 ;; Todo: Reader should read first parameter as string and not as symbol
@@ -301,6 +301,7 @@
 		(setf (slot-value context 'players-color) 'W)
 		(setf (slot-value context 'board-formatter-factory) #'create-colorful-board-formatter)
 		(setf (slot-value context 'command-table) (create-command-table))
+		(setf (slot-value context 'difficulty-level) 5)
 		context
 		))))
 

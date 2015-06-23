@@ -6,6 +6,7 @@
    (players-color)
    (board-formatter-factory)
    (command-table)
+   (difficulty-level)
    ))
 
 
