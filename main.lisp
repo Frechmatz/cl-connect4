@@ -29,14 +29,22 @@
     (if (or (not elem) (funcall equalFn elem)) elem (find-element (cdr list) equalFn))
     ))
 
-;; Todo: Check min/max of value
 (defun parse-x (x)
-  (if (integerp x) x (error 'invalid-arguments :text "Not a number"))
+  (cond 
+	 ((not (integerp x)) (error 'invalid-arguments :text "Not a number"))
+	 ((> x (+ *WIDTH* -1)) (error 'invalid-arguments :text (format nil "Column number too large. Allowed values are ~a...~a" 0 (+ *WIDTH* -1))))
+	 ((< x 0) (error 'invalid-arguments :text (format nil "Column number too small. Allowed values are ~a...~a" 0 (+ *WIDTH* -1))))
+	 (t x)
+	 )
   )
 
-;; Todo: Check min/max of value
-(defun parse-y (y)
-  (if (integerp y) y (error 'invalid-arguments :text "Not a number"))
+(defun parse-y (x)
+  (cond 
+	 ((not (integerp x)) (error 'invalid-arguments :text "Not a number"))
+	 ((> x (+ *HEIGHT* -1)) (error 'invalid-arguments :text (format nil "Row number too large. Allowed values are ~a...~a" 0 (+ *HEIGHT* -1))))
+	 ((< x 0) (error 'invalid-arguments :text (format nil "Row number too small. Allowed values are ~a...~a" 0 (+ *HEIGHT* -1))))
+	 (t x)
+	 )
   )
 
 ;; Transform color symbol into attached one

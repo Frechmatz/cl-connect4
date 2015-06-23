@@ -58,61 +58,54 @@ board: The board
   ;; Todo: Randomize
   score)
 
-
-
-;; returns  (x min/max-score)
-(defun get-minmax (board color is-opponent cur-depth max-depth)
-  #|
-  (print "get-minmax called")
-  (print  color)
-  (print is-opponent)
-  (print cur-depth)
-  (print max-depth)
-  |#
-  (let ((moves (generate-moves board)) (cur-board nil) (scores ()) (score nil) (next-moves nil))
-    (dolist (move moves)
-	     ;; do move
-	     (setf cur-board (set-field board (first move) (second move) color))
-	     ;; calc score
-	     (setf score (board-score cur-board (first move) (second move) ))
-	     ;; 4 pieces in a row?
-	     (setf is-four (equal score 1.0)) 
-	     ;; adapt score to current search depth
-	     (setf score (/ score (+ cur-depth 1.0)))
-	     ;; invert if opponent
-	     (if is-opponent (setf score (* -1.0 score)))
-	     ;; final state or no more moves availabe or max depth reached
-	     (if (or is-four (not (is-move-available board)) (equal max-depth 0))
-		 (progn
-		   (push (list (first move) score) scores))
-	       (progn
-		 (setf score (get-minmax cur-board (invert-color color) (not is-opponent) (+ cur-depth 1) (+ max-depth -1)))
-		 (push (list (first move) (second score)) scores)))
-	     )
-    ;; now we have a list of (x score) tuples. Lets max/min them
-    ;; Todo: progn raus
+;; scores: list of tupels (x score)
+;; is-opponent: t -> minimize, nil -> maximize
+(defun reduce-scores (scores is-opponent &optional skip-randomizer)
+  (let ((score nil))
     (if is-opponent
-	(progn
-	  ;;(print "Minimizing")
-	  ;;(format-board board (make-instance 'colorful-cell-formats))
-	  ;;(print scores)
-	  (setf score (reduce-scores-random (lambda (best item)
-					      (if (< (second item) (second best)) item best))
-					    scores))
-	  ;;(print "Minimized Score:")
-	  ;;(print score)
-	  score
-	  )
       (progn
-	;;(print "Maximizing")
-	;;(format-board board (make-instance 'colorful-cell-formats))
-	;;(print scores)
+	;; Minimize
 	(setf score (reduce-scores-random (lambda (best item)
-					    (if (> (second item) (second best)) item best))
+					    (if (< (second item) (second best)) item best))
 					  scores))
-	;;(print "Maximized Score:")
-	;;(print score)
-	score
 	)
-      )))
+    (progn
+      ;; Maximize
+      (setf score (reduce-scores-random (lambda (best item)
+					  (if (> (second item) (second best)) item best))
+					scores))
+      ))
+    score
+    ))
+
+
+;; returns resulting tupel (x score)
+(defun get-minmax (the-board color is-opponent cur-depth max-depth)
+  ;; create clone of board that for performance reasons will be manipulated during the traversal
+  (let ((board (clone-board the-board)))
+    (labels ((get-minmax-inner (board color is-opponent cur-depth max-depth)
+				(let ((moves (generate-moves board))  (scores ()) (score nil) (next-moves nil))
+				  (dolist (move moves)
+				    (nset-field board (first move) (second move) color) ;; do move
+				    (setf score (board-score board (first move) (second move) )) ;; calc score
+				    (setf is-four (equal score 1.0)) ;; 4 pieces in a row? 
+				    (setf score (/ score (+ cur-depth 1.0))) ;; adapt score to current search depth
+				    (if is-opponent (setf score (* -1.0 score))) ;; invert score if opponents draw
+				    ;; final state or no more moves availabe or max depth reached
+				    (if (or is-four (not (is-move-available board)) (equal max-depth 0))
+					(progn
+					  (push (list (first move) score) scores)
+					  )
+				      (progn
+					(setf score (get-minmax-inner board (invert-color color) (not is-opponent) (+ cur-depth 1) (+ max-depth -1)))
+					(push (list (first move) (second score)) scores)))
+				    (nset-field board (first move) (second move) *EMPTY*) ;; undo move
+				    )
+				  ;; now we have a list of (x score) tuples. Lets max/min them
+				  (reduce-scores scores is-opponent)
+				  )))
+	    ;; body of labels
+	    (get-minmax-inner board color is-opponent cur-depth max-depth)
+	    )))
+
 
