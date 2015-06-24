@@ -53,29 +53,28 @@ board: The board
     ))
 
 ;; reduces and chooses a random score from all scores that have same the score-value as the reduced one 
-(defun reduce-scores-random (testFn scores &optional skip-randomizer)
-  (setf score (reduce testFn scores))
-  ;; Todo: Randomize
-  score)
+(defun get-random-move (moves filter-score-value)
+  (setf moves (remove-if-not (lambda (move) (equal filter-score-value (second move))) moves))
+  ;;(print "Candidates of randmizer:")
+  ;;(print moves)
+  (let ((index (/ (random (* 1000 (length moves))) 1000)))
+    ;;(format t "Index: ~a~%" index)
+    (nth (floor index) moves)
+    ))
 
-;; scores: list of tupels (x score)
+
+;; moves: list of tupels (x score)
 ;; is-opponent: t -> minimize, nil -> maximize
-(defun reduce-scores (scores is-opponent &optional skip-randomizer)
-  (let ((score nil))
-    (if is-opponent
-      (progn
-	;; Minimize
-	(setf score (reduce-scores-random (lambda (best item)
-					    (if (< (second item) (second best)) item best))
-					  scores))
-	)
-    (progn
-      ;; Maximize
-      (setf score (reduce-scores-random (lambda (best item)
-					  (if (> (second item) (second best)) item best))
-					scores))
-      ))
-    score
+;; Maximize: #'> Minimize: #'<
+;; returns move with minimum or maximum score
+(defun reduce-scores (moves is-opponent &optional skip-randomizer)
+  (let ((move nil) (fn (if is-opponent #'< #'>)))
+    (setf move (reduce (lambda (best item)
+			 (if (funcall fn (second item) (second best)) item best)) 
+		       moves))
+    (if (and move (not skip-randomizer))
+	(get-random-move moves (second move))
+      move)
     ))
 
 
