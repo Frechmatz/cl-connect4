@@ -74,54 +74,19 @@
     
     (push (make-instance 'command
 			 :name 'board
-			 :infoFn (lambda () "board")
+			 :infoFn (lambda () "board: Print current board")
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args) (parse-arguments args '()))
-			 :descriptionFn (lambda () "Prints the current board")
 			 :execFn (lambda (context)
 				   (make-instance 'command-result :redraw-board t :message nil)
 				   )
 			 ) table)
 
     (push (make-instance 'command
-			 :name 'is-field-set
-			 :infoFn (lambda () "is-field-set x y")
-			 :tags (list "DEVELOPER")
-			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-x #'parse-y)))
-			 :descriptionFn (lambda () "Checks if a piece has been put into the given position")
-			 :execFn (lambda (context x y)
-				   (make-instance 'command-result :redraw-board nil :message (is-field-set (slot-value context 'board) x y))
-				   )
-			 ) table)
-
-    (push (make-instance 'command
-			 :name 'board-score
-			 :infoFn (lambda () "board-score x y")
-			 :tags (list "DEVELOPER")
-			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-x #'parse-y)))
-			 :descriptionFn (lambda () "Calculates the field score according to the given position. This position represents the latest move.")
-			 :execFn (lambda (context x y)
-				   (make-instance 'command-result :redraw-board nil :message (board-score (slot-value context 'board) x y))
-				   )
-			 ) table)
-
-    (push (make-instance 'command
-			 :name 'max-line-length-at
-			 :infoFn (lambda () "max-line-length-at x y")
-			 :tags (list "DEVELOPER")
-			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-x #'parse-y)))
-			 :descriptionFn (lambda () "Returns the maximum line length at the given position")
-			 :execFn (lambda (context x y)
-				   (make-instance 'command-result :redraw-board nil :message (max-line-length-at (slot-value context 'board) x y))
-				   )
-			 ) table)
-
-    (push (make-instance 'command
 			 :name 'put
-			 :infoFn (lambda () "put color x y")
+			 :infoFn (lambda () "put color <column> <row>: Put a piece into the board")
 			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-color #'parse-x #'parse-y)))
 			 :tags (list "DEVELOPER")
-			 :descriptionFn (lambda () "Puts a piece into the board at the given position. Colors are B and W")
 			 :execFn (lambda (context color x y)
 				   (let ((board (slot-value context 'board)))
 				     (setf board (set-field board x y color))
@@ -133,10 +98,9 @@
 
     (push (make-instance 'command
 			 :name 'best-move
-			 :infoFn (lambda () "best-move color")
+			 :infoFn (lambda () "hint <color>: Show next move the computer would do")
 			 :tags (list "DEVELOPER")
 			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-color)))
-			 :descriptionFn (lambda () "Calculates the next best move for given color. Colors are B and W")
 			 :execFn (lambda (context color)
 				   (let ((board (slot-value context 'board)))
 				     (let ((result (best-move board color (slot-value context 'difficulty-level))))
@@ -146,33 +110,10 @@
 
     
     (push (make-instance 'command
-			 :name 'is-white
-			 :infoFn (lambda () "is-white x y")
-			 :tags (list "DEVELOPER")
-			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-x #'parse-y)))
-			 :descriptionFn (lambda () "Checks if the piece at the given position is of color white")
-			 :execFn (lambda (context x y)
-				   (make-instance 'command-result :redraw-board nil :message (is-field-color-p (slot-value context 'board) x y *WHITE*))
-				   )
-			 ) table)
-
-    (push (make-instance 'command
-			 :name 'is-black
-			 :infoFn (lambda () "is-black x y")
-			 :tags (list "DEVELOPER")
-			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-x #'parse-y)))
-			 :descriptionFn (lambda () "Checks if the piece at the given position is of color black")
-			 :execFn (lambda (context x y)
-				   (make-instance 'command-result :redraw-board nil :message (is-field-color-p (slot-value context 'board) x y *BLACK*))
-				   )
-			 ) table)
-
-    (push (make-instance 'command
 			 :name 'is-four
-			 :infoFn (lambda () "is-four x y")
+			 :infoFn (lambda () "is-four <column> <row>: Check if four pieces are in a row at the given position")
 			 :tags (list "DEVELOPER")
 			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-x #'parse-y)))
-			 :descriptionFn (lambda () "Checks if at the given position four pieces are in a line")
 			 :execFn (lambda (context x y)
 				   (make-instance 'command-result :redraw-board nil :message (is-four (slot-value context 'board) x y))
 				   )
@@ -180,10 +121,9 @@
 
     (push (make-instance 'command
 			 :name 'set-level
-			 :infoFn (lambda () "set-level n")
+			 :infoFn (lambda () "set-level <n>: Set the maximum traversal depth")
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-level)))
-			 :descriptionFn (lambda () "Sets the skill level of the computer (maximum traversal depth). Allowed value are 0..n")
 			 :execFn (lambda (context level)
 				   (setf (slot-value context 'difficulty-level) level)
 				   (make-instance 'command-result :redraw-board t :message nil)
@@ -192,10 +132,9 @@
 
     (push (make-instance 'command
 			 :name 'play
-			 :infoFn (lambda () "play column-number")
+			 :infoFn (lambda () "play <column>: Play a move and get computers counter move")
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-x)))
-			 :descriptionFn (lambda () "Do a move and get computers counter move")
 			 :execFn (lambda (context x)
 				   (let ((y nil) (board nil) (computers-color nil) (counter-move nil))
 				     (setf y (find-row (slot-value context 'board) x))
@@ -236,26 +175,21 @@
     ))
 
 
-(defun print-help-text (command-table &optional more)
-  (format t "Available commands are:~%")
+(defun print-help-text (command-table)
+  (format t "Commands:~%")
   (dolist (cmd command-table)
-    (princ (funcall (slot-value cmd 'infoFn)))
-    (princ #\newline)
-    (if more (progn
-	       (princ #\tab)
-	       (princ (funcall (slot-value cmd 'descriptionFn)))
-	       (princ #\newline)
-	       ))
+    (format t "~a~c"  (funcall (slot-value cmd 'infoFn)) #\newline)
     )
-  (if (not more) (format t "--? for more help~%"))
+  (format t "q: quit~%r: restart game~%")
   )
 
 (defun format-context (context)
-  (format-board (slot-value context 'board) (funcall (slot-value context 'board-formatter-factory)))
-  (princ #\newline)
-  (format t "Difficulty level is ~a~%" (slot-value context 'difficulty-level))
-  (format t "Your color is ~a~%" (slot-value context 'players-color))
-  )
+  (let ((formatter (funcall (slot-value context 'board-formatter-factory))))
+    (format-board (slot-value context 'board) formatter)
+    (format t "~%Level: ~a Your color: ~a~%"
+	    (slot-value context 'difficulty-level)
+	    (format-cell-value formatter (slot-value context 'players-color)))
+    ))
 
 ;; Todo: Reader should read first parameter as string and not as symbol
 (defun read-cmd ()
@@ -278,22 +212,19 @@
     (let ( (cmd nil) (opcode nil) (result nil) (command-table (slot-value context 'command-table)))
       (format-context context)
       (princ #\newline)
+      (print-help-text command-table)
       (flet ((do-command ()
-			 (princ "Enter command (q to quit, r to restart, ? for help): ")
-			 ;; read command
+			 (princ "Enter command: ")
 			 (setf cmd (read-cmd))
 			 (cond
-			  ((equal (car cmd) '?) (print-help-text command-table) (setf result 'continue))
-			  ((equal (car cmd) '--?) (print-help-text command-table t) (setf result 'continue))
+			  ((equal (car cmd) '()) (print-help-text command-table) (setf result 'continue))
 			  ((equal (car cmd) 'q) (format t "Bye.~%Enter (ext:quit) to exit clisp~%") (setf result nil))
 			  ((equal (car cmd) 'r)
 			   (setf context (funcall context-factory))
 			   (format-context context)
 			   (setf result 'continue)) 
 			  (t 
-			   ;; get implementation of command
 			   (setf opcode (find-element command-table (lambda (command) (equal (car cmd)  (slot-value command 'name)))))
-			   ;; execute implementation
 			   (if opcode
 			       (setf result (exec-command opcode context (cdr cmd)))
 			     (setf result (make-instance 'command-result :redraw-board nil :message nil))
@@ -351,21 +282,3 @@
 		context
 		))))
 
-
-#|
-(defparameter *TESTBOARD* nil)
-
-(defun test-it ()
-  (setf *testboard* (create-board))
-  (nset-field *testboard* 4 4 *WHITE*)
-  (nset-field *testboard* 3 4 *WHITE*)
-  (nset-field *testboard* 0 4 *BLACK*)
-  (nset-field *testboard* 0 3 *BLACK*)
-  (nset-field *testboard* 0 2 *WHITE*)
-  (format-board *testboard* (make-instance 'colorful-cell-formats))
-  (best-move *testboard* *BLACK*)  
-  )
-
-|#
-
-  

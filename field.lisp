@@ -127,21 +127,28 @@ Common Connect4 field related functions as creating, cloning and some helpers
   ((highlight-cells :initarg highlight-cells :initform '())
    ))
 
+(defmethod format-cell-value ( (formats cell-formats) cell-value)
+  cell-value
+  )
 
 (defmethod format-cell ( (formats cell-formats) board x y)
-  (get-field board x y)
+  (format-cell-value (get-field board x y))
    )
 
 (defclass colorful-cell-formats (cell-formats)
   ((highlight-cells :initarg highlight-cells :initform '())
    ))
 
-(defmethod format-cell ( (formats colorful-cell-formats) board x y)
+(defmethod format-cell-value ( (formats colorful-cell-formats) cell-value)
   (cond
-   ((is-field-color-p board x y *WHITE*) (format nil "~c[32mW~c[0m" #\Esc #\Esc))
-   ((is-field-color-p board x y *BLACK*) (format nil "~c[31mB~c[0m" #\Esc #\Esc))
-   (t (get-field board x y))
+   ((equal cell-value *WHITE*) (format nil "~c[32mW~c[0m" #\Esc #\Esc))
+   ((equal cell-value *BLACK*) (format nil "~c[31mB~c[0m" #\Esc #\Esc))
+   (t cell-value)
    ))
+
+(defmethod format-cell ( (formats colorful-cell-formats) board x y)
+  (format-cell-value formats (get-field board x y))
+  )
 
 
 (defun format-board (board &optional cell-formats )
