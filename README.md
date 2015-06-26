@@ -19,9 +19,9 @@ You are now ready to play.
 
 ### Screenshots
 
-![Screenshot Clisp-1](https://raw.github.com/frechmatz/connect4/master/doc/clisp1.png?raw=true)
+![Screenshot Clisp-1](https://raw.github.com/frechmatz/connect4/master/doc/clisp_1.png?raw=true)
 
-![Screenshot Clisp-2](https://raw.github.com/frechmatz/connect4/master/doc/clisp2.png?raw=true)
+![Screenshot Clisp-2](https://raw.github.com/frechmatz/connect4/master/doc/clisp_2.png?raw=true)
 
 ![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc/computerwon.png?raw=true)
 
