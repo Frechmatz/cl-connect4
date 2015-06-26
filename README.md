@@ -1,6 +1,7 @@
-# connect4
-Lisp implementation of the Connect4 game.
+# Connect4
+#### A Lisp implementation of the Connect4 game.
 
-Work in progress and not playable yet.
+### Screenshots
 
-Game REPL can be started via (lets-go)
+![Screen shot 1](https://raw.github.com/frechmatz/connect4/master/doc/computerwon.png?raw=true)
+
