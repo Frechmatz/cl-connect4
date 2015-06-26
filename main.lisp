@@ -20,9 +20,6 @@
 (load "commandresult.lisp")
 (load "classic.lisp")
 
-(defun format-player-has-won()
-  (format nil "You have won")
-  )
 
 (define-condition invalid-arguments (error)
   ((text :initarg :text :reader text)))
@@ -58,16 +55,13 @@
 	 )
   )
 
-;; Transform color symbol into attached one
-;; Todo: Study why symbols parsed by read are not attached to the context
-;; http://www.flownet.com/gat/packages.pdf
 (defun parse-color (c)
   (if (equal c 'W) *WHITE*
     (if (equal c 'B) *BLACK*
       (error 'invalid-arguments :text "Invalid color. Valid colors are W and B")
       )))
 
-;; Developer command table
+;; Command table for the game repl
 (defun create-command-table ()
   (let ((table ()))
 
@@ -97,7 +91,7 @@
 			 ) table)
 
     (push (make-instance 'command
-			 :name 'best-move
+			 :name 'hint
 			 :infoFn (lambda () "hint <color>: Show next move the computer would do")
 			 :tags (list "DEVELOPER")
 			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-color)))
@@ -191,7 +185,6 @@
 	    (format-cell-value formatter (slot-value context 'players-color)))
     ))
 
-;; Todo: Reader should read first parameter as string and not as symbol
 (defun read-cmd ()
   (read-from-string (concatenate 'string "(" (read-line) ")"))
   )
@@ -206,7 +199,7 @@
     )
 
 
-
+;; Main game repl
 (defun cmd-loop (context-factory)
   (let ((context (funcall context-factory)))
     (let ( (cmd nil) (opcode nil) (result nil) (command-table (slot-value context 'command-table)))
@@ -216,6 +209,7 @@
       (flet ((do-command ()
 			 (princ "Enter command: ")
 			 (setf cmd (read-cmd))
+			 (princ #\newline)
 			 (cond
 			  ((equal (car cmd) '()) (print-help-text command-table) (setf result 'continue))
 			  ((equal (car cmd) 'q) (format t "Bye.~%Enter (ext:quit) to exit clisp~%") (setf result nil))
