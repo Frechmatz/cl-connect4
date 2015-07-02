@@ -32,7 +32,7 @@
 ;;
 ;; Parser for row/column-numbers representing a field of the board
 ;; n: number 0..9 A..Z a..z (a == 10, b == 11, ...)
-;; Todo: Add support for numbers represented by characters, for example A == 10
+;; Todo: Add support for rows/columns represented by characters, for example a == 10
 ;; 
 (defun parse-xy (n min-n max-n)
   (cond 
@@ -53,8 +53,7 @@
 	 ((not (integerp level)) (error 'invalid-arguments :text "Not a number"))
 	 ((< level 0) (error 'invalid-arguments :text (format nil "Level value too small. Allowed values are 0...n")))  
 	 (t level)
-	 )
-  )
+	 ))
 
 (defun parse-color (c context)
   (if (equal c 'W) *WHITE*
@@ -62,11 +61,15 @@
       (error 'invalid-arguments :text "Invalid color. Valid colors are W and B")
       )))
 
-(defun parse-width-height (n context)
+;;
+;; Parser for setting dimensions of the board
+;; Values greater as 10 are currently not supported by the board formatter
+;;
+(defun parse-board-dimension (n context)
   (cond 
 	 ((not (integerp n)) (error 'invalid-arguments :text "Not a number"))
-	 ((> n 9) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are 4..9" n)))
-	 ((< n 4) (error 'invalid-arguments :text (format nil "Number too small: ~a. Allowed values are 4..9" n)))
+	 ((> n 10) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are 4..10" n)))
+	 ((< n 4) (error 'invalid-arguments :text (format nil "Number too small: ~a. Allowed values are 4..10" n)))
 	 (t n)
 	 ))
 
@@ -74,7 +77,6 @@
 (defun create-command-table ()
   (let ((table ()))
 
-    
     (push (make-instance 'command
 			 :name 'board
 			 :infoFn (lambda () "board: Print current board")
@@ -99,10 +101,10 @@
 				   )
 			 ) table)
 
-        (push (make-instance 'command
+    (push (make-instance 'command
 			 :name 'set-board-size
 			 :infoFn (lambda () "set-board-size <width> <height>: Set size of the board")
-			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-width-height #'parse-width-height) context))
+			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-board-dimension #'parse-board-dimension) context))
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :execFn (lambda (context width height)
 				   (let ((new-board (create-board width height)))
@@ -124,7 +126,6 @@
 				   )
 			 ) table)
 
-    
     (push (make-instance 'command
 			 :name 'is-four
 			 :infoFn (lambda () "is-four <column> <row>: Check if four pieces are in a row at the given position")
@@ -199,6 +200,9 @@
   (format t "q: quit~%r: restart game~%")
   )
 
+;;
+;; Print board and statuses
+;;
 (defun format-context (context)
   (let ((formatter (funcall (slot-value context 'board-formatter-factory))))
     (format-board (slot-value context 'board) formatter)
@@ -211,6 +215,9 @@
   (read-from-string (concatenate 'string "(" (read-line) ")"))
   )
 
+;;
+;; Execute a command entered into the game repl
+;;
 (defun exec-command (opcode context args)
   (setf parsed-args (handler-case (funcall (slot-value opcode 'parseArgsFn) args context)
 					 (invalid-arguments (err) err)
@@ -220,8 +227,11 @@
       (make-instance 'command-result :redraw-board nil :message (slot-value parsed-args 'text)))
     )
 
-
+;;
+;; ****************************
 ;; Main game repl
+;; ****************************
+;;
 (defun cmd-loop (context-factory)
   (let ((context (funcall context-factory)))
     (let ( (cmd nil) (opcode nil) (result nil) (command-table (slot-value context 'command-table)))
@@ -265,7 +275,6 @@
 (defun create-colorful-board-formatter ()
   (make-instance 'colorful-cell-formats))
 
-
 (defun create-default-context ()
   (let ((context (make-instance 'context)))
     (setf (slot-value context 'board) (create-board *CLASSIC-WIDTH* *CLASSIC-HEIGHT*))
@@ -279,18 +288,26 @@
     context
     ))
 
-
-;; all commands
+;;
+;; ****************************
+;; Start game in developer mode
+;; ****************************
+;;
 (defun lets-go()
   (cmd-loop (lambda ()
  	      (format t "~%~%Welcome to Connect4~%~%")
 	      (create-default-context))))
 
-;; player commands only
+;;
+;; *************************
+;; Start game in player mode
+;; *************************
+;;
 (defun lets-play()
   (cmd-loop (lambda ()
  	      (format t "~%~%Welcome to Connect4~%~%")
 	      (let ((context (create-default-context)))
+		;; filter away developer commands
 		(setf (slot-value context 'command-table)
 		      (remove-if-not (lambda (cmd)
 				       (find "PLAYER" (slot-value cmd 'tags) :test #'equal))

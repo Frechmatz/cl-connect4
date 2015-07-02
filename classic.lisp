@@ -1,26 +1,30 @@
 
 
 #|
-Implementation of the classic 4-Connect game
+Classic-Connect4 specific implementations
 |#
 
-
-;; classic size of board
+;;
+;; Board dimensions of the original game
+;;
 (defparameter *CLASSIC-WIDTH* 7) 
 (defparameter *CLASSIC-HEIGHT* 6) 
 
 ;;
 ;; Evaluate the score of the board
 ;; x y: The latest move
+;; returns 1.0 or 0.0
+;;
 (defun board-score (board x y)
   (setf length (max-line-length-at board x y))
   (if (>= length 4) 1.0 0.0)
     )
 
-
 ;;
+;; Move Generator
 ;; Returns a list of (x y) coordinates of all possible moves
 ;; board: The board
+;;
 (defun generate-moves (board)
   (let ( (moves ()) (depth 0))
     (dotimes (x (get-board-width board))
@@ -38,6 +42,7 @@ Implementation of the classic 4-Connect game
 ;;
 ;; Check if a move is available for the given board
 ;; Todo: Optimize
+;;
 (defun is-move-available (board)
   (setf move-left nil)
   (dotimes (x (get-board-width board))
@@ -49,6 +54,7 @@ Implementation of the classic 4-Connect game
 ;;
 ;; Calculate counter-move. Entry point for the game repl
 ;; returns x y and score, e.g. (0 3 0.75) or nil
+;;
 (defun best-move (board color max-depth)
   (let ((final-score (get-minmax board color nil 0 max-depth)))
      (if final-score 
@@ -57,7 +63,8 @@ Implementation of the classic 4-Connect game
     ))
 
 ;;
-;; Chooses a random move from all moves that have same the score as the given one 
+;; Chooses a random move from all moves that have same the score as the given one
+;;
 (defun get-random-move (moves filter-score-value)
   (setf moves (remove-if-not (lambda (move) (equal filter-score-value (second move))) moves))
   (let ((index (/ (random (* 1000 (length moves))) 1000)))
@@ -70,8 +77,9 @@ Implementation of the classic 4-Connect game
 ;; moves: list of tupels (x score)
 ;; is-opponent: t -> score will be minimized, nil -> score will be maximized
 ;; Maximize: #'> Minimize: #'<
-;; skip-randomizer: nil -> If there are multiple moves available choose a random one. t -> choose first one
+;; skip-randomizer: nil -> If multiple moves are available choose a random one. t -> choose first one
 ;; returns move with minimum or maximum score
+;;
 (defun reduce-scores (moves is-opponent &optional skip-randomizer)
   (let ((move nil) (fn (if is-opponent #'< #'>)))
     (setf move (reduce (lambda (best item)
@@ -82,10 +90,10 @@ Implementation of the classic 4-Connect game
       move)
     ))
 
-
 ;;
 ;; Minimax implementation
-;; returns a tupel (x score) where x represents the column and score the score for the column
+;; returns a tupel (x score) where x represents the column and score the score of the column
+;;
 (defun get-minmax (the-board color is-opponent cur-depth max-depth)
   ;; create a clone of the board that for performance reasons will be manipulated during the traversal
   (let ((board (clone-board the-board)))
@@ -107,7 +115,7 @@ Implementation of the classic 4-Connect game
 					(push (list (first move) (second score)) moves)))
 				    (nset-field board (first move) (second move) *EMPTY*) ;; undo move
 				    )
-				  ;; now we have a list of (x score) tuples. Reduce them to a final move
+				  ;; we now have a list of (x score) tuples. Reduce them to a final move
 				  (reduce-scores moves is-opponent)
 				  )))
 	    (get-minmax-inner board color is-opponent cur-depth max-depth)

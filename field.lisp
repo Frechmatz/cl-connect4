@@ -1,17 +1,22 @@
 
 
 #|
-Common Connect4 field related functions as creating, cloning and some helpers
+Common Connect4 board related functionality
+- Encapsulates the representation of the board
+- Provides functions to create, clone, access and manipulate a board
+- Provides a formatter class for pretty printing a board
 |#
-
 
 (defparameter *BLACK* 'B)
 (defparameter *WHITE* 'W)
 (defparameter *EMPTY* '_)
 (defparameter *BORDER* 'X)
 
+;;
+;; Create a board
+;; 
 (defun create-board (width height)
-;;  (let ( (board (make-array `( ,(+ 2 *HEIGHT*) ,(+ 2 *WIDTH*)) :initial-element *EMPTY*)))
+  ;;  (let ( (board (make-array `( ,(+ 2 *HEIGHT*) ,(+ 2 *WIDTH*)) :initial-element *EMPTY*)))
   (let ( (board (make-array (list (+ 2 height) (+ 2 width)) :initial-element *EMPTY*)))
     (dotimes (x (+ 2 width))
       (setf (aref board 0 x) *BORDER*)
@@ -24,6 +29,9 @@ Common Connect4 field related functions as creating, cloning and some helpers
     board
     ))
 
+;;
+;; Clone a board
+;; 
 (defun clone-board (board)
   ;; Bozo algorithm :(
   (let ((new-board (create-board (get-board-width board) (get-board-height board))))
@@ -33,12 +41,18 @@ Common Connect4 field related functions as creating, cloning and some helpers
 	))
     new-board))
 
+;;
+;; Get width of a board (1..x)
+;;
 (defun get-board-width (board)
   (+ (array-dimension board 1) -2))
 
 (defun get-max-x (board)
   (+  (get-board-width board) -1))
 
+;;
+;; Get height of a board (1..x)
+;; 
 (defun get-board-height (board)
   (+ (array-dimension board 0) -2))
 
@@ -48,18 +62,28 @@ Common Connect4 field related functions as creating, cloning and some helpers
 (defun get-field (board x y)
   (aref board (+ 1 y) (+ 1 x)))
 
+;;
+;; Clone board and set field
+;; returns new board
+;; 
 (defun set-field (board x y color)
   (let ((new-board (clone-board board)))
     (setf (aref new-board (+ 1 y) (+ 1 x)) color)
     new-board
     ))
 
+;;
+;; Set field in given board (does not clone the board)
+;; returns manipulated board
+;;
 (defun nset-field (board x y color)
   (setf (aref board (+ 1 y) (+ 1 x)) color)
   board
     )
 
+;;
 ;; Check if a field has a given color
+;;
 (defun is-field-color-p (board x y color)
   (eq (get-field board x y) color)
   )
@@ -88,7 +112,9 @@ Common Connect4 field related functions as creating, cloning and some helpers
   (if (or (is-field-color-p board x y *WHITE*) (is-field-color-p board x y *BLACK*)) t NIL)
   )
 
-
+;;
+;;
+;;
 (defun max-line-length-at (board x y)
   (if (not (is-field-set board x y)) 0
     (let (
@@ -102,7 +128,6 @@ Common Connect4 field related functions as creating, cloning and some helpers
     )
     )
   )
-
 
 ;;;
 ;;;
@@ -158,7 +183,11 @@ Common Connect4 field related functions as creating, cloning and some helpers
   (format-cell-value formats (get-field board x y))
   )
 
-
+;;
+;; Pretty print a board using a formatter
+;; This code is crap :(
+;; Todo: re-think the formatting
+;;
 (defun format-board (board &optional cell-formats )
   (if (not cell-formats) (setf cell-formats (make-instance 'cell-formats)))
   (let ((rows '()) (footer '()) (header '() ))
