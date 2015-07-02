@@ -62,6 +62,14 @@
       (error 'invalid-arguments :text "Invalid color. Valid colors are W and B")
       )))
 
+(defun parse-width-height (n context)
+  (cond 
+	 ((not (integerp n)) (error 'invalid-arguments :text "Not a number"))
+	 ((> n 9) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are 4..9" n)))
+	 ((< n 4) (error 'invalid-arguments :text (format nil "Number too small: ~a. Allowed values are 4..9" n)))
+	 (t n)
+	 ))
+
 ;; Command table for the game repl
 (defun create-command-table ()
   (let ((table ()))
@@ -86,6 +94,19 @@
 				   (let ((board (slot-value context 'board)))
 				     (setf board (set-field board x y color))
 				     (setf (slot-value context 'board) board)
+				     (make-instance 'command-result :redraw-board t :message nil)
+				     )
+				   )
+			 ) table)
+
+        (push (make-instance 'command
+			 :name 'set-board-size
+			 :infoFn (lambda () "set-board-size <width> <height>: Set size of the board")
+			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-width-height #'parse-width-height) context))
+			 :tags (list "DEVELOPER" "PLAYER")
+			 :execFn (lambda (context width height)
+				   (let ((new-board (create-board width height)))
+				     (setf (slot-value context 'board) new-board)
 				     (make-instance 'command-result :redraw-board t :message nil)
 				     )
 				   )
