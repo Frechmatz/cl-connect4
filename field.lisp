@@ -5,37 +5,45 @@ Common Connect4 field related functions as creating, cloning and some helpers
 |#
 
 
-(defparameter *WIDTH* 7) ;; 7
-(defparameter *HEIGHT* 6) ;; 6
-(defparameter *MAX-LENGTH* 7) ;; 7
-
 (defparameter *BLACK* 'B)
 (defparameter *WHITE* 'W)
 (defparameter *EMPTY* '_)
 (defparameter *BORDER* 'X)
 
-
-(defun create-board ()
-  (let ( (board (make-array `( ,(+ 2 *HEIGHT*) ,(+ 2 *WIDTH*)) :initial-element *EMPTY*)))
-    (dotimes (x (+ 2 *WIDTH*))
+(defun create-board (width height)
+;;  (let ( (board (make-array `( ,(+ 2 *HEIGHT*) ,(+ 2 *WIDTH*)) :initial-element *EMPTY*)))
+  (let ( (board (make-array (list (+ 2 height) (+ 2 width)) :initial-element *EMPTY*)))
+    (dotimes (x (+ 2 width))
       (setf (aref board 0 x) *BORDER*)
-      (setf (aref board (+ *HEIGHT* 1) x) *BORDER*)
+      (setf (aref board (+ height 1) x) *BORDER*)
       )
-    (dotimes (y (+ 2 *HEIGHT*))
+    (dotimes (y (+ 2 height))
       (setf (aref board y 0) *BORDER*)
-      (setf (aref board y (+ *WIDTH* 1)) *BORDER*)
+      (setf (aref board y (+ width 1)) *BORDER*)
       )
     board
     ))
 
 (defun clone-board (board)
   ;; Bozo algorithm :(
-  (let ((new-board (create-board)))
-    (dotimes (x (+ 2 *WIDTH*))
-      (dotimes (y (+ 1 *HEIGHT*))
+  (let ((new-board (create-board (get-board-width board) (get-board-height board))))
+    (dotimes (x (+ 2 (get-board-width board)))
+      (dotimes (y (+ 1 (get-board-height board)))
 	(setf (aref new-board y x) (aref board y x))
 	))
     new-board))
+
+(defun get-board-width (board)
+  (+ (array-dimension board 1) -2))
+
+(defun get-max-x (board)
+  (+  (get-board-width board) -1))
+
+(defun get-board-height (board)
+  (+ (array-dimension board 0) -2))
+
+(defun get-max-y (board)
+  (+  (get-board-height board) -1))
 
 (defun get-field (board x y)
   (aref board (+ 1 y) (+ 1 x)))
@@ -156,16 +164,16 @@ Common Connect4 field related functions as creating, cloning and some helpers
   (let ((rows '()) (footer '()) (header '() ))
     (push *BORDER* header)
     (push *BORDER* footer)
-    (dotimes (x *WIDTH*)
+    (dotimes (x (get-board-width board))
       (push x header)
       (push x footer))
     (push *BORDER* header)
     (push *BORDER* footer)
     (push (nreverse header) rows)
-    (dotimes (y *HEIGHT*)
+    (dotimes (y (get-board-height board))
       (let ((row '()))
 	(push *BORDER* row)
-	(dotimes (x *WIDTH*)
+	(dotimes (x (get-board-width board))
 	  (push (format-cell cell-formats board x y) row)
 	  )
 	(push *BORDER* row)

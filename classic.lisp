@@ -4,6 +4,11 @@
 Implementation of the classic 4-Connect game
 |#
 
+
+;; classic size of board
+(defparameter *CLASSIC-WIDTH* 7) 
+(defparameter *CLASSIC-HEIGHT* 6) 
+
 ;;
 ;; Evaluate the score of the board
 ;; x y: The latest move
@@ -18,7 +23,7 @@ Implementation of the classic 4-Connect game
 ;; board: The board
 (defun generate-moves (board)
   (let ( (moves ()) (depth 0))
-    (dotimes (x *WIDTH*)
+    (dotimes (x (get-board-width board))
       (if (not (is-field-set board x 0))
 	  (progn
 	    ;; todo: zusammenfassen und lokale Variable weg
@@ -35,7 +40,7 @@ Implementation of the classic 4-Connect game
 ;; Todo: Optimize
 (defun is-move-available (board)
   (setf move-left nil)
-  (dotimes (x *WIDTH*)
+  (dotimes (x (get-board-width board))
     (if (not (is-field-set board x 0)) (setf move-left t))
     )
   move-left

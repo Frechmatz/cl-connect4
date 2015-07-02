@@ -29,23 +29,24 @@
     (if (or (not elem) (funcall equalFn elem)) elem (find-element (cdr list) equalFn))
     ))
 
-(defun parse-x (x context)
+;;
+;; Parser for row/column-numbers representing a field of the board
+;; n: number 0..9 A..Z a..z (a == 10, b == 11, ...)
+;; Todo: Add support for numbers represented by characters, for example A == 10
+;; 
+(defun parse-xy (n min-n max-n)
   (cond 
-	 ((not (integerp x)) (error 'invalid-arguments :text "Not a number"))
-	 ((> x (+ *WIDTH* -1)) (error 'invalid-arguments :text (format nil "Column number too large. Allowed values are ~a...~a" 0 (+ *WIDTH* -1))))
-	 ((< x 0) (error 'invalid-arguments :text (format nil "Column number too small. Allowed values are ~a...~a" 0 (+ *WIDTH* -1))))
-	 (t x)
-	 )
-  )
+	 ((not (integerp n)) (error 'invalid-arguments :text "Not a number"))
+	 ((> n max-n) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are ~a...~a" n min-n max-n)))
+	 ((< n min-n) (error 'invalid-arguments :text (format nil "Number too small: ~a. Allowed values are ~a...~a" n min-n max-n)))
+	 (t n)
+	 ))
+
+(defun parse-x (x context)
+  (parse-xy x 0 (get-max-x (slot-value context 'board))))
 
 (defun parse-y (y context)
-  (cond 
-	 ((not (integerp y)) (error 'invalid-arguments :text "Not a number"))
-	 ((> y (+ *HEIGHT* -1)) (error 'invalid-arguments :text (format nil "Row number too large. Allowed values are ~a...~a" 0 (+ *HEIGHT* -1))))
-	 ((< y 0) (error 'invalid-arguments :text (format nil "Row number too small. Allowed values are ~a...~a" 0 (+ *HEIGHT* -1))))
-	 (t y)
-	 )
-  )
+  (parse-xy y 0 (get-max-y (slot-value context 'board))))
 
 (defun parse-level (level context)
   (cond 
@@ -246,7 +247,7 @@
 
 (defun create-default-context ()
   (let ((context (make-instance 'context)))
-    (setf (slot-value context 'board) (create-board))
+    (setf (slot-value context 'board) (create-board *CLASSIC-WIDTH* *CLASSIC-HEIGHT*))
     (setf (slot-value context 'players-color) 'W)
     (setf (slot-value context 'board-formatter-factory) #'create-colorful-board-formatter)
     (setf (slot-value context 'command-table) (create-command-table))
