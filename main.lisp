@@ -29,7 +29,7 @@
     (if (or (not elem) (funcall equalFn elem)) elem (find-element (cdr list) equalFn))
     ))
 
-(defun parse-x (x)
+(defun parse-x (x context)
   (cond 
 	 ((not (integerp x)) (error 'invalid-arguments :text "Not a number"))
 	 ((> x (+ *WIDTH* -1)) (error 'invalid-arguments :text (format nil "Column number too large. Allowed values are ~a...~a" 0 (+ *WIDTH* -1))))
@@ -38,7 +38,7 @@
 	 )
   )
 
-(defun parse-y (y)
+(defun parse-y (y context)
   (cond 
 	 ((not (integerp y)) (error 'invalid-arguments :text "Not a number"))
 	 ((> y (+ *HEIGHT* -1)) (error 'invalid-arguments :text (format nil "Row number too large. Allowed values are ~a...~a" 0 (+ *HEIGHT* -1))))
@@ -47,7 +47,7 @@
 	 )
   )
 
-(defun parse-level (level)
+(defun parse-level (level context)
   (cond 
 	 ((not (integerp level)) (error 'invalid-arguments :text "Not a number"))
 	 ((< level 0) (error 'invalid-arguments :text (format nil "Level value too small. Allowed values are 0...n")))  
@@ -55,7 +55,7 @@
 	 )
   )
 
-(defun parse-color (c)
+(defun parse-color (c context)
   (if (equal c 'W) *WHITE*
     (if (equal c 'B) *BLACK*
       (error 'invalid-arguments :text "Invalid color. Valid colors are W and B")
@@ -70,7 +70,7 @@
 			 :name 'board
 			 :infoFn (lambda () "board: Print current board")
 			 :tags (list "DEVELOPER" "PLAYER")
-			 :parseArgsFn (lambda (args) (parse-arguments args '()))
+			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 			 :execFn (lambda (context)
 				   (make-instance 'command-result :redraw-board t :message nil)
 				   )
@@ -79,7 +79,7 @@
     (push (make-instance 'command
 			 :name 'put
 			 :infoFn (lambda () "put color <column> <row>: Put a piece into the board")
-			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-color #'parse-x #'parse-y)))
+			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-color #'parse-x #'parse-y) context))
 			 :tags (list "DEVELOPER")
 			 :execFn (lambda (context color x y)
 				   (let ((board (slot-value context 'board)))
@@ -94,7 +94,7 @@
 			 :name 'hint
 			 :infoFn (lambda () "hint <color>: Show next move the computer would do")
 			 :tags (list "DEVELOPER")
-			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-color)))
+			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-color) context))
 			 :execFn (lambda (context color)
 				   (let ((board (slot-value context 'board)))
 				     (let ((result (best-move board color (slot-value context 'difficulty-level))))
@@ -107,7 +107,7 @@
 			 :name 'is-four
 			 :infoFn (lambda () "is-four <column> <row>: Check if four pieces are in a row at the given position")
 			 :tags (list "DEVELOPER")
-			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-x #'parse-y)))
+			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x #'parse-y) context))
 			 :execFn (lambda (context x y)
 				   (make-instance 'command-result :redraw-board nil :message (is-four (slot-value context 'board) x y))
 				   )
@@ -117,7 +117,7 @@
 			 :name 'set-level
 			 :infoFn (lambda () "set-level <n>: Set the maximum traversal depth")
 			 :tags (list "DEVELOPER" "PLAYER")
-			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-level)))
+			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-level) context))
 			 :execFn (lambda (context level)
 				   (setf (slot-value context 'difficulty-level) level)
 				   (make-instance 'command-result :redraw-board t :message nil)
@@ -128,7 +128,7 @@
 			 :name 'play
 			 :infoFn (lambda () "play <column>: Play a move and get computers counter move")
 			 :tags (list "DEVELOPER" "PLAYER")
-			 :parseArgsFn (lambda (args) (parse-arguments args (list #'parse-x)))
+			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x) context))
 			 :execFn (lambda (context x)
 				   (let ((y nil) (board nil) (computers-color nil) (counter-move nil))
 				     (setf y (find-row (slot-value context 'board) x))
@@ -190,7 +190,7 @@
   )
 
 (defun exec-command (opcode context args)
-  (setf parsed-args (handler-case (funcall (slot-value opcode 'parseArgsFn) args)
+  (setf parsed-args (handler-case (funcall (slot-value opcode 'parseArgsFn) args context)
 					 (invalid-arguments (err) err)
 					 ))
     (if (listp parsed-args)
