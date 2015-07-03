@@ -24,15 +24,10 @@ Classic-Connect4 specific implementations
 ;; board: The board
 ;;
 (defun generate-moves (board)
-  (let ( (moves ()) (depth 0))
+  (let ( (moves ()) (row nil))
     (dotimes (x (get-board-width board))
-      (if (not (is-field-set board x 0))
-	  (progn
-	    ;; todo: zusammenfassen und lokale Variable weg
-	    (setf depth (line-length-at board x 0 0 1 *EMPTY*))
-	    (push (list x (- depth 1)) moves)
-	    )
-	)
+      (setf row (find-row board x))
+      (if row (push (list x row) moves))
       )
     moves
     ))
