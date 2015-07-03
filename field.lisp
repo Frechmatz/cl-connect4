@@ -93,8 +93,8 @@ Common Connect4 board related functionality
 ;;; Calculate the total length of the line at the given position and for given direction
 ;;; x y: Starting point from which adjacent points are checked for the same color
 ;;; 
-(defun line-length-at (board x y dx dy)
-  (let ((length 0) (color (get-field board x y))) 
+(defun line-length-at (board x y dx dy color)
+  (let ((length 0)) 
     (flet (
 	   (go (dx dy)
 	       (do
@@ -115,25 +115,25 @@ Common Connect4 board related functionality
 ;;
 ;;
 ;;
-(defun max-line-length-at (board x y)
-  (if (not (is-field-set board x y)) 0
+(defun max-line-length-at (board x y color)
+;;  (if (not (is-field-set board x y)) 0
     (let (
 	  (all '())
 	  (directions '((0 1) (1 0) (1 1) (1 -1)))
 	  )
       (dolist (d directions)
-	(push (line-length-at board x y (first d) (second d)) all)
+	(push (line-length-at board x y (first d) (second d) color) all)
 	)
       (apply #'max all)
     )
-    )
+;;    )
   )
 
 ;;;
 ;;;
 ;;;
 (defun is-four (board x y)
-  (let ((l (max-line-length-at board x y)))
+  (let ((l (max-line-length-at board x y (get-field board x y))))
     (if (>= l 4) t nil))
   )
 
@@ -144,7 +144,7 @@ Common Connect4 board related functionality
 (defun find-row (board x)
   (if (is-field-set board x 0)
       nil
-    (+ (line-length-at board x 0 0 1) -1)
+    (+ (line-length-at board x 0 0 1 *EMPTY*) -1)
     ))
 
 (defun invert-color (color)

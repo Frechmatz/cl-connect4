@@ -29,7 +29,7 @@ Classic-Connect4 specific implementations
       (if (not (is-field-set board x 0))
 	  (progn
 	    ;; todo: zusammenfassen und lokale Variable weg
-	    (setf depth (line-length-at board x 0 0 1))
+	    (setf depth (line-length-at board x 0 0 1 *EMPTY*))
 	    (push (list x (- depth 1)) moves)
 	    )
 	)
