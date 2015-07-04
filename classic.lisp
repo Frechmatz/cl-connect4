@@ -37,12 +37,12 @@ Classic-Connect4 specific implementations
 ;; Todo: Optimize
 ;;
 (defun is-move-available (board)
-  (setf move-left nil)
-  (dotimes (x (get-board-width board))
-    (if (not (is-field-set board x 0)) (setf move-left t))
-    )
+  (let (( move-left nil))
+    (dotimes (x (get-board-width board))
+      (if (not (is-field-set board x 0)) (setf move-left t))
+      )
   move-left
-  )
+  ))
 
 ;;
 ;; Calculate counter-move. Entry point for the game repl
@@ -89,7 +89,7 @@ Classic-Connect4 specific implementations
   ;; create a clone of the board that for performance reasons will be manipulated during the traversal
   (let ((board (clone-board the-board)))
     (labels ((get-minmax-inner (board color is-opponent cur-depth max-depth)
-				(let ((generated-moves (generate-moves board))  (moves ()) (score nil) (next-moves nil))
+				(let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))
 				  (dolist (move generated-moves)
 				    (nset-field board (first move) (second move) color) ;; do move
 				    (setf score (board-score board (first move) (second move) )) ;; calc score

@@ -13,6 +13,28 @@ Common Connect4 board related functionality
 (defparameter *BORDER* 'X)
 
 ;;
+;; Get width of a board (1..x)
+;;
+(defun get-board-width (board)
+  (+ (array-dimension board 1) -2))
+
+(defun get-max-x (board)
+  (+  (get-board-width board) -1))
+
+;;
+;; Get height of a board (1..x)
+;; 
+(defun get-board-height (board)
+  (+ (array-dimension board 0) -2))
+
+(defun get-max-y (board)
+  (+  (get-board-height board) -1))
+
+(defun get-field (board x y)
+  (aref board (+ 1 y) (+ 1 x)))
+
+
+;;
 ;; Create a board
 ;; 
 (defun create-board (width height)
@@ -40,27 +62,6 @@ Common Connect4 board related functionality
 	(setf (aref new-board y x) (aref board y x))
 	))
     new-board))
-
-;;
-;; Get width of a board (1..x)
-;;
-(defun get-board-width (board)
-  (+ (array-dimension board 1) -2))
-
-(defun get-max-x (board)
-  (+  (get-board-width board) -1))
-
-;;
-;; Get height of a board (1..x)
-;; 
-(defun get-board-height (board)
-  (+ (array-dimension board 0) -2))
-
-(defun get-max-y (board)
-  (+  (get-board-height board) -1))
-
-(defun get-field (board x y)
-  (aref board (+ 1 y) (+ 1 x)))
 
 ;;
 ;; Clone board and set field
@@ -92,19 +93,24 @@ Common Connect4 board related functionality
 ;;;
 ;;; Calculate the total length of the line at the given position and for given direction
 ;;; x y: Starting point from which adjacent points are checked for the same color
-;;; 
+;;;
+(defparameter *counter* 0)
+
 (defun line-length-at (board x y dx dy color)
+  (declare (fixnum x y dx dy))
+  (setf *counter* (+ *counter* 1))
   (let ((length 0)) 
     (flet (
-	   (go (dx dy)
+	   (traverse (dx dy)
+	       (declare (fixnum dx dy))
 	       (do
 		((curX x (+ curX dx)) (curY y (+ curY dy)))
 		((not (is-field-color-p board curX curY color)))
 		(setf length (+ length 1))
 		)))
 	  ; Body of flet
-	  (go dx dy) ; go forward
-	  (go (* -1 dx) (* -1 dy)) ; go backward
+	  (traverse dx dy) ; go forward
+	  (traverse (* -1 dx) (* -1 dy)) ; go backward
 	  (- length 1) ; start position has been accounted for two times
 	  )))
 
@@ -112,21 +118,22 @@ Common Connect4 board related functionality
   (if (or (is-field-color-p board x y *WHITE*) (is-field-color-p board x y *BLACK*)) t NIL)
   )
 
+(defun is-field-empty (board x y)
+  (if (is-field-color-p board x y *EMPTY*) t nil)
+  )
+
 ;;
 ;;
 ;;
+(defparameter *DIRECTIONS* '((0 1) (1 0) (1 1) (1 -1)))
+
 (defun max-line-length-at (board x y color)
-;;  (if (not (is-field-set board x y)) 0
-    (let (
-	  (all '())
-	  (directions '((0 1) (1 0) (1 1) (1 -1)))
-	  )
-      (dolist (d directions)
+    (let ( (all '()))
+      (dolist (d *DIRECTIONS*)
 	(push (line-length-at board x y (first d) (second d) color) all)
 	)
       (apply #'max all)
     )
-;;    )
   )
 
 ;;;
@@ -142,9 +149,9 @@ Common Connect4 board related functionality
 ;;; returns y or nil if all fields of the column are already occupied
 ;;;
 (defun find-row (board x)
-  (if (is-field-set board x 0)
-      nil
-    (+ (line-length-at board x 0 0 1 *EMPTY*) -1)
+  (if (is-field-empty board x 0)
+      (+ (line-length-at board x 0 0 1 *EMPTY*) -1)
+    nil
     ))
 
 (defun invert-color (color)
@@ -165,7 +172,7 @@ Common Connect4 board related functionality
   )
 
 (defmethod format-cell ( (formats cell-formats) board x y)
-  (format-cell-value (get-field board x y))
+  (format-cell-value formats (get-field board x y))
    )
 
 (defclass colorful-cell-formats (cell-formats)

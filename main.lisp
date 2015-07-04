@@ -48,14 +48,14 @@
 (defun parse-y (y context)
   (parse-xy y 0 (get-max-y (slot-value context 'board))))
 
-(defun parse-level (level context)
+(defun parse-level (level &optional context)
   (cond 
 	 ((not (integerp level)) (error 'invalid-arguments :text "Not a number"))
 	 ((< level 0) (error 'invalid-arguments :text (format nil "Level value too small. Allowed values are 0...n")))  
 	 (t level)
 	 ))
 
-(defun parse-color (c context)
+(defun parse-color (c &optional context)
   (if (equal c 'W) *WHITE*
     (if (equal c 'B) *BLACK*
       (error 'invalid-arguments :text "Invalid color. Valid colors are W and B")
@@ -65,7 +65,7 @@
 ;; Parser for setting dimensions of the board
 ;; Values greater as 10 are currently not supported by the board formatter
 ;;
-(defun parse-board-dimension (n context)
+(defun parse-board-dimension (n &optional context)
   (cond 
 	 ((not (integerp n)) (error 'invalid-arguments :text "Not a number"))
 	 ((> n 10) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are 4..10" n)))
@@ -167,7 +167,7 @@
 					     (setf computers-color (invert-color (slot-value context 'players-color)))
 					     (setf counter-move (best-move board computers-color (slot-value context 'difficulty-level)))
 					     (if (not counter-move)
-						 (make-instance 'command-result :redraw-board true :message "No counter move found")
+						 (make-instance 'command-result :redraw-board t :message "No counter move found")
 					       (progn
 						 (setf board (set-field board (first counter-move) (second counter-move) computers-color))
 						 (setf (slot-value context 'board) board)
@@ -219,13 +219,13 @@
 ;; Execute a command entered into the game repl
 ;;
 (defun exec-command (opcode context args)
-  (setf parsed-args (handler-case (funcall (slot-value opcode 'parseArgsFn) args context)
+  (let ((parsed-args (handler-case (funcall (slot-value opcode 'parseArgsFn) args context)
 					 (invalid-arguments (err) err)
-					 ))
+					 )))
     (if (listp parsed-args)
 	(apply (slot-value opcode 'execFn) context parsed-args)
       (make-instance 'command-result :redraw-board nil :message (slot-value parsed-args 'text)))
-    )
+    ))
 
 ;;
 ;; ****************************
