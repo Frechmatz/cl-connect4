@@ -84,21 +84,23 @@ Common Connect4 board related functionality
 
 ;;
 ;; Check if a field has a given color
+;; applies border checking and returns nil if field is out of board
+;; this check is a bit costly but allows simpler implementations of
+;; board traversals
 ;;
 (defun is-field-color-p (board x y color)
-  (eq (get-field board x y) color)
-  )
+  (if (or (>= x (get-board-width board)) (>= y (get-board-height board)))
+      nil
+    (eq (get-field board x y) color)
+  ))
 
 
 ;;;
 ;;; Calculate the total length of the line at the given position and for given direction
 ;;; x y: Starting point from which adjacent points are checked for the same color
 ;;;
-(defparameter *counter* 0)
-
-(defun line-length-at (board x y dx dy color)
+(defun line-length-at-old (board x y dx dy color)
   (declare (fixnum x y dx dy))
-  (setf *counter* (+ *counter* 1))
   (let ((length 0)) 
     (flet (
 	   (traverse (dx dy)
@@ -113,6 +115,32 @@ Common Connect4 board related functionality
 	  (traverse (* -1 dx) (* -1 dy)) ; go backward
 	  (- length 1) ; start position has been accounted for two times
 	  )))
+
+(defun line-length-at (board x y dx dy color)
+  (declare (fixnum x y dx dy))
+  (let ((length 0)) 
+    (labels (
+	   (traverse (x y dx dy)
+	       (declare (fixnum x y dx dy))
+	       (if (is-field-color-p board x y color)
+		   (progn
+		     (setf length (+ length 1))
+		     ;; boundary checking is applied by is-field-color-p
+		     (traverse (+ x dx) (+ y dy) dx dy)
+		     ))))
+	    ;; body of labels
+	    ;; traverse initial direction
+	    (traverse x y dx dy)
+	    ;; traverse inverted direction
+	    ;; invert direction vector
+	    (setf dx (* dx -1))
+	    (setf dy (* dy -1))
+	    ;; forward from initial position that has already been checked and traverse once more
+	    (traverse (+ x dx) (+ y dy) dx dy)
+	    )
+    	  length
+	  ))
+
 
 (defun is-field-set (board x y)
   (if (or (is-field-color-p board x y *WHITE*) (is-field-color-p board x y *BLACK*)) t NIL)
