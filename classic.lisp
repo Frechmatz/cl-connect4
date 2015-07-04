@@ -44,42 +44,6 @@ Classic-Connect4 specific implementations
   move-left
   ))
 
-;;
-;; Calculate counter-move. Entry point for the game repl
-;; returns tupel (x y score), e.g. (0 3 0.75) or nil
-;;
-(defun best-move (board color max-depth)
-  (get-minmax board color nil 0 max-depth)
-  )
-
-;;
-;; Chooses a random move from all moves that have same the score as the given one
-;; Moves list of tupels (x y score)
-;;
-(defun get-random-move (moves filter-score-value)
-  (setf moves (remove-if-not (lambda (move) (equal filter-score-value (third move))) moves))
-  (let ((index (/ (random (* 1000 (length moves))) 1000)))
-    (nth (floor index) moves)
-    ))
-
-
-;;
-;; Reduce list of possible moves
-;; moves: list of tupels (x y score)
-;; is-opponent: t -> score will be minimized, nil -> score will be maximized
-;; Maximize: #'> Minimize: #'<
-;; skip-randomizer: nil -> If multiple moves are available choose a random one. t -> choose first one
-;; returns move with minimum or maximum score
-;;
-(defun reduce-scores (moves is-opponent &optional skip-randomizer)
-  (let ((move nil) (fn (if is-opponent #'< #'>)))
-    (setf move (reduce (lambda (best item)
-			 (if (funcall fn (third item) (third best)) item best)) 
-		       moves))
-    (if (and move (not skip-randomizer))
-	(get-random-move moves (third move))
-      move)
-    ))
 
 ;;
 ;; Minimax implementation
@@ -112,4 +76,40 @@ Classic-Connect4 specific implementations
 	    (get-minmax-inner board color is-opponent cur-depth max-depth)
 	    )))
 
+;;
+;; Chooses a random move from all moves that have same the score as the given one
+;; Moves list of tupels (x y score)
+;;
+(defun get-random-move (moves filter-score-value)
+  (setf moves (remove-if-not (lambda (move) (equal filter-score-value (third move))) moves))
+  (let ((index (/ (random (* 1000 (length moves))) 1000)))
+    (nth (floor index) moves)
+    ))
+
+
+;;
+;; Reduce list of possible moves
+;; moves: list of tupels (x y score)
+;; is-opponent: t -> score will be minimized, nil -> score will be maximized
+;; Maximize: #'> Minimize: #'<
+;; skip-randomizer: nil -> If multiple moves are available choose a random one. t -> choose first one
+;; returns move with minimum or maximum score
+;;
+(defun reduce-scores (moves is-opponent &optional skip-randomizer)
+  (let ((move nil) (fn (if is-opponent #'< #'>)))
+    (setf move (reduce (lambda (best item)
+			 (if (funcall fn (third item) (third best)) item best)) 
+		       moves))
+    (if (and move (not skip-randomizer))
+	(get-random-move moves (third move))
+      move)
+    ))
+
+;;
+;; Calculate counter-move. Entry point for the game repl
+;; returns tupel (x y score), e.g. (0 3 0.75) or nil
+;;
+(defun best-move (board color max-depth)
+  (get-minmax board color nil 0 max-depth)
+  )
 

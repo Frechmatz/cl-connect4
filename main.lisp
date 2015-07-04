@@ -239,7 +239,10 @@
       (princ #\newline)
       (print-help-text command-table)
       (flet ((do-command ()
-			 (princ "Enter command: ")
+			 (format t "Enter command: ")
+			 ;; http://stackoverflow.com/questions/8360386/sbcl-switches-print-and-read-order-lisp
+			 ;; flush output stream to console
+			 (finish-output)
 			 (setf cmd (read-cmd))
 			 (princ #\newline)
 			 (cond
@@ -270,10 +273,10 @@
   )
 
 (defun create-bw-board-formatter ()
-  (make-instance 'cell-formats))
+  (make-instance 'cell-formatter))
 
 (defun create-colorful-board-formatter ()
-  (make-instance 'colorful-cell-formats))
+  (make-instance 'colorful-cell-formatter))
 
 (defun create-default-context ()
   (let ((context (make-instance 'context)))

@@ -163,40 +163,44 @@ Common Connect4 board related functionality
 ;; Board formatter
 ;;
 
-(defclass cell-formats ()
+(defclass cell-formatter ()
   ((highlight-cells :initarg highlight-cells :initform '())
    ))
 
-(defmethod format-cell-value ( (formats cell-formats) cell-value)
+(defgeneric format-cell-value (formatter cell-value)
+  (:documentation "Formats a single cell represented by its value"))
+
+(defgeneric format-cell (formatter board x y)
+  (:documentation "Formats a single cell represented by its position within the board"))
+
+;; Default impl
+(defmethod format-cell-value ( (formatter cell-formatter) cell-value)
   cell-value
   )
 
-(defmethod format-cell ( (formats cell-formats) board x y)
-  (format-cell-value formats (get-field board x y))
+(defmethod format-cell ( (formatter cell-formatter) board x y)
+  (format-cell-value formatter (get-field board x y))
    )
 
-(defclass colorful-cell-formats (cell-formats)
+(defclass colorful-cell-formatter (cell-formatter)
   ((highlight-cells :initarg highlight-cells :initform '())
    ))
 
-(defmethod format-cell-value ( (formats colorful-cell-formats) cell-value)
+;; override simple B/W formatting
+(defmethod format-cell-value ( (formatter colorful-cell-formatter) cell-value)
   (cond
    ((equal cell-value *WHITE*) (format nil "~c[32mW~c[0m" #\Esc #\Esc))
    ((equal cell-value *BLACK*) (format nil "~c[31mB~c[0m" #\Esc #\Esc))
    (t cell-value)
    ))
 
-(defmethod format-cell ( (formats colorful-cell-formats) board x y)
-  (format-cell-value formats (get-field board x y))
-  )
-
 ;;
 ;; Pretty print a board using a formatter
 ;; This code is crap :(
 ;; Todo: re-think the formatting
 ;;
-(defun format-board (board &optional cell-formats )
-  (if (not cell-formats) (setf cell-formats (make-instance 'cell-formats)))
+(defun format-board (board &optional cell-formatter )
+  (if (not cell-formatter) (setf cell-formatter (make-instance 'cell-formatter)))
   (let ((rows '()) (footer '()) (header '() ))
     (push *BORDER* header)
     (push *BORDER* footer)
@@ -210,7 +214,7 @@ Common Connect4 board related functionality
       (let ((row '()))
 	(push *BORDER* row)
 	(dotimes (x (get-board-width board))
-	  (push (format-cell cell-formats board x y) row)
+	  (push (format-cell cell-formatter board x y) row)
 	  )
 	(push *BORDER* row)
 	(push (nreverse row) rows)
