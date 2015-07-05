@@ -48,7 +48,8 @@
 (defun parse-y (y context)
   (parse-xy y 0 (get-max-y (slot-value context 'board))))
 
-(defun parse-level (level &optional context)
+(defun parse-level (level context)
+  (declare (ignore context))
   (cond 
 	 ((not (integerp level)) (error 'invalid-arguments :text "Not a number"))
 	 ((< level 0) (error 'invalid-arguments :text (format nil "Level value too small. Allowed values are 0...n")))  
@@ -56,6 +57,7 @@
 	 ))
 
 (defun parse-color (c &optional context)
+  (declare (ignore context))
   (if (equal c 'W) *WHITE*
     (if (equal c 'B) *BLACK*
       (error 'invalid-arguments :text "Invalid color. Valid colors are W and B")
@@ -65,7 +67,8 @@
 ;; Parser for setting dimensions of the board
 ;; Values greater as 10 are currently not supported by the board formatter
 ;;
-(defun parse-board-dimension (n &optional context)
+(defun parse-board-dimension (n  context)
+  (declare (ignore context))
   (cond 
 	 ((not (integerp n)) (error 'invalid-arguments :text "Not a number"))
 	 ((> n 10) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are 4..10" n)))
@@ -83,6 +86,7 @@
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 			 :execFn (lambda (context)
+				   (declare (ignore context))
 				   (make-instance 'command-result :redraw-board t :message nil)
 				   )
 			 ) table)
