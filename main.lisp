@@ -251,7 +251,7 @@
 			 (princ #\newline)
 			 (cond
 			  ((equal (car cmd) '()) (print-help-text command-table) (setf result 'continue))
-			  ((equal (car cmd) 'q) (format t "Bye.~%Enter (ext:quit) to exit clisp~%") (setf result nil))
+			  ((equal (car cmd) 'q) (format t "Bye.~%Enter (quit) to exit lisp~%") (setf result nil))
 			  ((equal (car cmd) 'r)
 			   (setf context (funcall context-factory))
 			   (format-context context)
