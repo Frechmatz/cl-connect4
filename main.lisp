@@ -147,7 +147,7 @@
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x) context))
 			 :execFn (lambda (context x)
-				   (let ((y nil) (board nil) (computers-color nil) (counter-move nil))
+				   (let ((y nil) (board nil) (computers-color nil) (counter-move nil) (highlight-cells nil))
 				     (setf y (find-row (slot-value context 'board) x))
 				     (if (not y)
 					 (make-instance 'command-result :redraw-board nil :message "Invalid move. No place left in given column")
@@ -163,13 +163,14 @@
 					     (if (not counter-move)
 						 (make-instance 'command-result :redraw-board t :message "No counter move found")
 					       (progn
+						 (setf highlight-cells (list (list (first counter-move) (second counter-move))))
 						 (setf board (set-field board (first counter-move) (second counter-move) computers-color))
 						 (setf (slot-value context 'board) board)
 						 (if (is-four board (first counter-move) (second counter-move))
-						     (make-instance 'command-result :redraw-board t :message
+						     (make-instance 'command-result :redraw-board t :highlight-cells highlight-cells   :message
 								    (format nil "Computers move is ~a~%~a" (first counter-move)
 									    (funcall (slot-value context 'format-alert-message) "THE COMPUTER HAS WON")))
-						   (make-instance 'command-result :redraw-board t :message
+						   (make-instance 'command-result :redraw-board t  :highlight-cells highlight-cells    :message
 								  (format nil "Computers move is ~a" (first counter-move)))
 						   )
 						 )
@@ -197,8 +198,8 @@
 ;;
 ;; Print board and statuses
 ;;
-(defun format-context (context)
-  (let ((formatter (funcall (slot-value context 'board-formatter-factory))))
+(defun format-context (context &optional highlight-cells)
+  (let ((formatter (funcall (slot-value context 'board-formatter-factory) highlight-cells)))
     (format-board (slot-value context 'board) formatter)
     (format t "~%Level: ~a Your color: ~a~%"
 	    (slot-value context 'difficulty-level)
@@ -253,7 +254,7 @@
 			     (setf result (make-instance 'command-result :redraw-board nil :message nil))
 			     )
 			   (if (slot-value result 'redraw-board)
-			       (format-context context))
+			       (format-context context (slot-value result 'highlight-cells)))
 			   (if (slot-value result 'message) (progn (princ (slot-value result 'message)) (princ #\newline)))
 			   )
 			  )
@@ -266,11 +267,11 @@
     )	  
   )
 
-(defun create-bw-board-formatter ()
-  (make-instance 'cell-formatter))
+(defun create-bw-board-formatter ( &optional highlight-cells )
+  (make-instance 'cell-formatter :highlight-cells highlight-cells))
 
-(defun create-colorful-board-formatter ()
-  (make-instance 'colorful-cell-formatter))
+(defun create-colorful-board-formatter ( &optional highlight-cells)
+  (make-instance 'colorful-cell-formatter :highlight-cells highlight-cells))
 
 (defun create-default-context ()
   (let ((context (make-instance 'context)))

@@ -171,10 +171,9 @@ Common Connect4 board related functionality
 
 ;;
 ;; Board formatter
-;;
-
+;; highlight-cells: A list of (x y) tupels to be emphasized by the formatter 
 (defclass cell-formatter ()
-  ((highlight-cells :initarg highlight-cells :initform '())
+  ((highlight-cells :initarg :highlight-cells :initform '())
    ))
 
 (defgeneric format-horizontal-cell-margin(formatter)
@@ -182,6 +181,9 @@ Common Connect4 board related functionality
 
 (defgeneric format-cell-value (formatter cell-value)
   (:documentation "Formats a single cell represented by its value"))
+
+(defgeneric format-cell-value-highlighted (formatter cell-value)
+  (:documentation "Formats a single cell represented by its value as highlighted"))
 
 (defgeneric format-cell (formatter board x y)
   (:documentation "Formats a single cell represented by its position within the board"))
@@ -198,7 +200,9 @@ Common Connect4 board related functionality
 (defgeneric format-border-right (formatter y)
   (:documentation "Format the right border of given row"))
 
-;; Default impl
+(defgeneric is-highlight-cell (formatter x y)
+  (:documentation "returns t if cell is marked for high-lighting"))
+
 (defmethod format-cell-value ( (formatter cell-formatter) cell-value)
   (cond
    ((equal cell-value *WHITE*) "W")
@@ -206,12 +210,28 @@ Common Connect4 board related functionality
    (t "_")
    ))
 
+(defmethod format-cell-value-highlighted ( (formatter cell-formatter) cell-value)
+  (cond
+   ((equal cell-value *WHITE*) "W")
+   ((equal cell-value *BLACK*) "B")
+   (t "_")
+   ))
+
+(defmethod is-highlight-cell ((formatter cell-formatter) x y)
+  (let ((cells (slot-value formatter 'highlight-cells)))
+    (if (not cells) nil
+      (let ((tupel (list x y)))
+	(find-if (lambda (p) (equal p tupel)) cells)
+	))))
+
 (defmethod format-horizontal-cell-margin( (formatter cell-formatter))
   " ")
 
 (defmethod format-cell ( (formatter cell-formatter) board x y)
-  (format-cell-value formatter (get-field board x y))
-   )
+  (if (is-highlight-cell formatter x y)
+      (format-cell-value-highlighted formatter (get-field board x y))
+    (format-cell-value formatter (get-field board x y))
+   ))
 
 (defmethod format-border-top ( (formatter cell-formatter) x)
   (format nil "~1,'0x" x)
@@ -227,7 +247,7 @@ Common Connect4 board related functionality
    )
 
 (defclass colorful-cell-formatter (cell-formatter)
-  ((highlight-cells :initarg highlight-cells :initform '())
+  ((highlight-cells :initarg :highlight-cells :initform '())
    ))
 
 ;; override simple B/W formatting
@@ -235,6 +255,13 @@ Common Connect4 board related functionality
   (cond
    ((equal cell-value *WHITE*) (format nil "~c[32mW~c[0m" #\Esc #\Esc))
    ((equal cell-value *BLACK*) (format nil "~c[31mB~c[0m" #\Esc #\Esc))
+   (t "_")
+   ))
+
+(defmethod format-cell-value-highlighted ( (formatter colorful-cell-formatter) cell-value)
+  (cond
+   ((equal cell-value *WHITE*) (format nil "~c[32;1mW~c[0m" #\Esc #\Esc))
+   ((equal cell-value *BLACK*) (format nil "~c[31;1mB~c[0m" #\Esc #\Esc))
    (t "_")
    ))
 
