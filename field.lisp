@@ -98,24 +98,8 @@ Common Connect4 board related functionality
 ;;;
 ;;; Calculate the total length of the line at the given position and for given direction
 ;;; x y: Starting point from which adjacent points are checked for the same color
+;;; dx dy: Direction to traverse ("as is" and inverted)
 ;;;
-(defun line-length-at-old (board x y dx dy color)
-  (declare (fixnum x y dx dy))
-  (let ((length 0)) 
-    (flet (
-	   (traverse (dx dy)
-	       (declare (fixnum dx dy))
-	       (do
-		((curX x (+ curX dx)) (curY y (+ curY dy)))
-		((not (is-field-color-p board curX curY color)))
-		(setf length (+ length 1))
-		)))
-	  ; Body of flet
-	  (traverse dx dy) ; go forward
-	  (traverse (* -1 dx) (* -1 dy)) ; go backward
-	  (- length 1) ; start position has been accounted for two times
-	  )))
-
 (defun line-length-at (board x y dx dy color)
   (declare (fixnum x y dx dy))
   (let ((length 0)) 
@@ -128,14 +112,12 @@ Common Connect4 board related functionality
 		     ;; boundary checking is applied by is-field-color-p
 		     (traverse (+ x dx) (+ y dy) dx dy)
 		     ))))
-	    ;; body of labels
 	    ;; traverse initial direction
 	    (traverse x y dx dy)
 	    ;; traverse inverted direction
-	    ;; invert direction vector
 	    (setf dx (* dx -1))
 	    (setf dy (* dy -1))
-	    ;; forward from initial position that has already been checked and traverse once more
+	    ;; step away from initial position that has already been checked and traverse once more
 	    (traverse (+ x dx) (+ y dy) dx dy)
 	    )
     	  length
@@ -232,16 +214,16 @@ Common Connect4 board related functionality
    )
 
 (defmethod format-border-top ( (formatter cell-formatter) x)
-  (format nil "~a" x)
+  (format nil "~1,'0x" x)
    )
 (defmethod format-border-bottom ( (formatter cell-formatter) x)
-  (format nil "~a" x)
+  (format nil "~1,'0x" x)
    )
 (defmethod format-border-left ( (formatter cell-formatter) y)
-  (format nil "~a" y)
+  (format nil "~1,'0x" y)
    )
 (defmethod format-border-right ( (formatter cell-formatter) y)
-  (format nil "~a" y)
+  (format nil "~1,'0x" y)
    )
 
 (defclass colorful-cell-formatter (cell-formatter)

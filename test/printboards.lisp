@@ -2,7 +2,7 @@
 (load "testutil.lisp")
 
 
-(defun test1 ()
+(defun test-bw ()
   (let ((board
 	(create-test-board (list
 			    "......."
@@ -13,7 +13,7 @@
     (format-board board)
     ))
 
-(defun test2 ()
+(defun test-color ()
   (let ((board
 	(create-test-board (list
 			    "......."
@@ -21,5 +21,24 @@
 			    "......."
 			    "B....BB"
 			    "WbWwWBw"))))
+    (format-board board (make-instance 'colorful-cell-formatter))
+    ))
+
+(defun test-huge ()
+  (let ((board
+	(create-test-board (list
+			    "................"
+			    "................"
+			    "................"
+			    "................"
+			    "................"
+			    "................"
+			    "................"
+			    "................"
+			    "................"
+			    "................"
+			    "................"
+			    "B.............BB"
+			    "WbWw.........WBw"))))
     (format-board board (make-instance 'colorful-cell-formatter))
     ))

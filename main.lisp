@@ -29,32 +29,27 @@
     (if (or (not elem) (funcall equalFn elem)) elem (find-element (cdr list) equalFn))
     ))
 
-;;
-;; Parser for row/column-numbers representing a field of the board
 ;; n: number 0..9 A..Z a..z (a == 10, b == 11, ...)
-;; Todo: Add support for rows/columns represented by characters, for example a == 10
-;; 
-(defun parse-xy (n min-n max-n)
+(defun parse-number (n min-n max-n)
+  (if (not (integerp n))
+      (setf n (handler-case (parse-integer (format nil "~a" n) :radix 16)
+			    (parse-error  nil))))
   (cond 
 	 ((not (integerp n)) (error 'invalid-arguments :text "Not a number"))
 	 ((> n max-n) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are ~a...~a" n min-n max-n)))
 	 ((< n min-n) (error 'invalid-arguments :text (format nil "Number too small: ~a. Allowed values are ~a...~a" n min-n max-n)))
 	 (t n)
 	 ))
-
+  
 (defun parse-x (x context)
-  (parse-xy x 0 (get-max-x (slot-value context 'board))))
+  (parse-number x 0 (get-max-x (slot-value context 'board))))
 
 (defun parse-y (y context)
-  (parse-xy y 0 (get-max-y (slot-value context 'board))))
+  (parse-number y 0 (get-max-y (slot-value context 'board))))
 
 (defun parse-level (level context)
   (declare (ignore context))
-  (cond 
-	 ((not (integerp level)) (error 'invalid-arguments :text "Not a number"))
-	 ((< level 0) (error 'invalid-arguments :text (format nil "Level value too small. Allowed values are 0...n")))  
-	 (t level)
-	 ))
+  (parse-number level 0 10))
 
 (defun parse-color (c &optional context)
   (declare (ignore context))
@@ -65,16 +60,11 @@
 
 ;;
 ;; Parser for setting dimensions of the board
-;; Values greater as 10 are currently not supported by the board formatter
+;; Values greater as 16 are not supported by the board formatter
 ;;
 (defun parse-board-dimension (n  context)
   (declare (ignore context))
-  (cond 
-	 ((not (integerp n)) (error 'invalid-arguments :text "Not a number"))
-	 ((> n 10) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are 4..10" n)))
-	 ((< n 4) (error 'invalid-arguments :text (format nil "Number too small: ~a. Allowed values are 4..10" n)))
-	 (t n)
-	 ))
+  (parse-number n 4 16))
 
 ;; Command table for the game repl
 (defun create-command-table ()
@@ -93,7 +83,7 @@
 
     (push (make-instance 'command
 			 :name 'put
-			 :infoFn (lambda () "put color <column> <row>: Put a piece into the board")
+			 :infoFn (lambda () "put color <column> <row>: Put a piece into the board. column and row can be entered in hex")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-color #'parse-x #'parse-y) context))
 			 :tags (list "DEVELOPER")
 			 :execFn (lambda (context color x y)
@@ -132,7 +122,7 @@
 
     (push (make-instance 'command
 			 :name 'is-four
-			 :infoFn (lambda () "is-four <column> <row>: Check if four pieces are in a row at the given position")
+			 :infoFn (lambda () "is-four <column> <row>: Check if four pieces are in a row at given position. column and row can be entered in hex")
 			 :tags (list "DEVELOPER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x #'parse-y) context))
 			 :execFn (lambda (context x y)
@@ -153,7 +143,7 @@
 
     (push (make-instance 'command
 			 :name 'play
-			 :infoFn (lambda () "play <column>: Play a move and get computers counter move")
+			 :infoFn (lambda () "play <column>: Play a move and get computers counter move. column can be entered in hex")
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x) context))
 			 :execFn (lambda (context x)
