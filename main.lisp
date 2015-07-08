@@ -14,6 +14,7 @@
 
 
 (load "field.lisp")
+(load "boardformatter.lisp")
 (load "context.lisp")
 (load "argparser.lisp")
 (load "command.lisp")
@@ -155,8 +156,11 @@
 					 (setf board (set-field (slot-value context 'board) x y (slot-value context 'players-color)))
 					 (setf (slot-value context 'board) board)
 					 (if (is-four board x y)
-					     (make-instance 'command-result :redraw-board t :message
-							    (funcall (slot-value context 'format-alert-message) "YOU ARE THE WINNER"))
+					     (make-instance 'command-result
+							    :redraw-board t
+							    :message (funcall (slot-value context 'format-alert-message) "YOU ARE THE WINNER")
+							    :highlight-cells (max-line-at board x y (slot-value context 'players-color))
+ 							    )
 					   (progn
 					     (setf computers-color (invert-color (slot-value context 'players-color)))
 					     (setf counter-move (best-move board computers-color (slot-value context 'difficulty-level)))
@@ -167,11 +171,15 @@
 						 (setf board (set-field board (first counter-move) (second counter-move) computers-color))
 						 (setf (slot-value context 'board) board)
 						 (if (is-four board (first counter-move) (second counter-move))
-						     (make-instance 'command-result :redraw-board t :highlight-cells highlight-cells   :message
-								    (format nil "Computers move is ~a~%~a" (first counter-move)
+						     (make-instance 'command-result
+								    :redraw-board t
+								    :highlight-cells (max-line-at board (first counter-move) (second counter-move) computers-color)
+								    :message (format nil "Computers move is ~a~%~a" (first counter-move)
 									    (funcall (slot-value context 'format-alert-message) "THE COMPUTER HAS WON")))
-						   (make-instance 'command-result :redraw-board t  :highlight-cells highlight-cells    :message
-								  (format nil "Computers move is ~a" (first counter-move)))
+						   (make-instance 'command-result
+								  :redraw-board t
+								  :highlight-cells highlight-cells
+								  :message (format nil "Computers move is ~a" (first counter-move)))
 						   )
 						 )
 					       )
@@ -199,12 +207,11 @@
 ;; Print board and statuses
 ;;
 (defun format-context (context &optional highlight-cells)
-  (let ((formatter (funcall (slot-value context 'board-formatter-factory) highlight-cells)))
-    (format-board (slot-value context 'board) formatter)
+    (format-board (slot-value context 'board) (slot-value context 'cell-formatter) highlight-cells)
     (format t "~%Level: ~a Your color: ~a~%"
 	    (slot-value context 'difficulty-level)
-	    (format-cell-value formatter (slot-value context 'players-color)))
-    ))
+	    (format-cell-value (slot-value context 'cell-formatter) (slot-value context 'players-color)))
+    )
 
 (defun read-cmd ()
   (read-from-string (concatenate 'string "(" (read-line) ")"))
@@ -267,17 +274,11 @@
     )	  
   )
 
-(defun create-bw-board-formatter ( &optional highlight-cells )
-  (make-instance 'cell-formatter :highlight-cells highlight-cells))
-
-(defun create-colorful-board-formatter ( &optional highlight-cells)
-  (make-instance 'colorful-cell-formatter :highlight-cells highlight-cells))
-
 (defun create-default-context ()
   (let ((context (make-instance 'context)))
     (setf (slot-value context 'board) (create-board *CLASSIC-WIDTH* *CLASSIC-HEIGHT*))
     (setf (slot-value context 'players-color) 'W)
-    (setf (slot-value context 'board-formatter-factory) #'create-colorful-board-formatter)
+    (setf (slot-value context 'cell-formatter) (make-instance 'colorful-cell-formatter))
     (setf (slot-value context 'command-table) (create-command-table))
     (setf (slot-value context 'difficulty-level) 4)
     (setf (slot-value context 'format-alert-message)

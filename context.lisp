@@ -4,7 +4,7 @@
   (
    (board)
    (players-color)
-   (board-formatter-factory)
+   (cell-formatter)
    (command-table)
    (difficulty-level)
    (format-alert-message)
