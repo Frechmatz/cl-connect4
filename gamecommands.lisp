@@ -27,8 +27,12 @@
 (defun game-command-hint (context)
   (let ((board (slot-value context 'board)))
     (let ((result (best-move board (slot-value context 'players-color) (slot-value context 'difficulty-level))))
-      (make-instance 'command-result :redraw-board t :message result))
-  ))
+      (make-instance 'command-result
+		     :redraw-board t
+		     :message
+		     (format nil "Recommended move is column ~a with a score of ~a" (first result) (third result))
+		     ))
+    ))
 
 (defun game-command-is-four (context x y)
   (make-instance 'command-result :redraw-board nil :message (is-four (slot-value context 'board) x y))
