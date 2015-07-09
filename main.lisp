@@ -136,7 +136,15 @@
 			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 			 :execFn #'game-command-continue
 			 ) table)
-      
+
+    (push (make-instance 'command
+			 :name 'toggle-color
+			 :infoFn (lambda () "toggle-color: Toggle the players color")
+			 :tags (list "DEVELOPER" "PLAYER")
+			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
+			 :execFn #'game-command-toggle-color
+			 ) table)
+
     table
     ))
 

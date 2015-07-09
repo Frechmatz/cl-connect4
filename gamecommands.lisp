@@ -81,5 +81,8 @@
 	  (game-command-continue context)
 	  )))))
 
+(defun game-command-toggle-color (context)
+    (setf (slot-value context 'players-color) (invert-color (slot-value context 'players-color)))
+    (make-instance 'command-result :redraw-board t :message "Toggled players color")
+    )
 	
-
