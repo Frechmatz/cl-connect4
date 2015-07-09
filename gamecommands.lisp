@@ -24,9 +24,9 @@
     (make-instance 'command-result :redraw-board t :message nil)
     ))
 
-(defun game-command-hint (context color)
+(defun game-command-hint (context)
   (let ((board (slot-value context 'board)))
-    (let ((result (best-move board color (slot-value context 'difficulty-level))))
+    (let ((result (best-move board (slot-value context 'players-color) (slot-value context 'difficulty-level))))
       (make-instance 'command-result :redraw-board t :message result))
   ))
 

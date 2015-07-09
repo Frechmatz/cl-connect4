@@ -99,9 +99,9 @@
 
     (push (make-instance 'command
 			 :name 'hint
-			 :infoFn (lambda () "hint <color>: Show next move the computer would do")
-			 :tags (list "DEVELOPER")
-			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-color) context))
+			 :infoFn (lambda () "hint: Show next move the computer would do")
+			 :tags (list "DEVELOPER" "PLAYER")
+			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 			 :execFn #'game-command-hint
 			 ) table)
 
