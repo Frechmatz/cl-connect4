@@ -64,7 +64,7 @@
       )))
 
 (defun game-command-play (context x)
-  (let ((y nil) (board nil) (computers-color nil) (counter-move nil) (highlight-cells nil))
+  (let ((y nil) (board nil) )
     (setf y (find-row (slot-value context 'board) x))
     (if (not y)
 	(make-instance 'command-result :redraw-board nil :message "Invalid move. No place left in given column")
@@ -77,29 +77,9 @@
 			   :message (funcall (slot-value context 'format-alert-message) "YOU ARE THE WINNER")
 			   :highlight-cells (max-line-at board x y (slot-value context 'players-color))
 			   )
-	  (progn
-	    (setf computers-color (invert-color (slot-value context 'players-color)))
-	    (setf counter-move (best-move board computers-color (slot-value context 'difficulty-level)))
-	    (if (not counter-move)
-		(make-instance 'command-result :redraw-board t :message "No counter move found")
-	      (progn
-		(setf highlight-cells (list (list (first counter-move) (second counter-move))))
-		(setf board (set-field board (first counter-move) (second counter-move) computers-color))
-		(setf (slot-value context 'board) board)
-		(if (is-four board (first counter-move) (second counter-move))
-		    (make-instance 'command-result
-				   :redraw-board t
-				   :highlight-cells (max-line-at board (first counter-move) (second counter-move) computers-color)
-				   :message (format nil "Computers move is ~a~%~a" (first counter-move)
-						    (funcall (slot-value context 'format-alert-message) "THE COMPUTER HAS WON")))
-		  (make-instance 'command-result
-				 :redraw-board t
-				 :highlight-cells highlight-cells
-				 :message (format nil "Computers move is ~a" (first counter-move)))
-		  )
-		)
-	      )
-	    )
-	  )
-	))))
+	  ;; continue with calculation of computers answer
+	  (game-command-continue context)
+	  )))))
+
+	
 
