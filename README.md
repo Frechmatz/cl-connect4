@@ -1,5 +1,5 @@
 # Connect4
-#### A Lisp implementation of the Connect Four game with customizable board size and difficulty level.
+#### A Common Lisp implementation of the Connect Four game with customizable board size and difficulty level.
 
 ### Installation
 
