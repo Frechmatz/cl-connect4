@@ -12,7 +12,7 @@
 |#
 
 
-
+#|
 (load "field.lisp")
 (load "boardformatter.lisp")
 (load "context.lisp")
@@ -21,6 +21,7 @@
 (load "commandresult.lisp")
 (load "classic.lisp")
 (load "gamecommands.lisp")
+|#
 
 (define-condition invalid-arguments (error)
   ((text :initarg :text :reader text)))
