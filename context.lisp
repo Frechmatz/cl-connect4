@@ -5,7 +5,7 @@
    (board)
    (players-color)
    (cell-formatter)
-   (command-table)
+   (command-table-stack)
    (difficulty-level)
    (format-alert-message)
    ))

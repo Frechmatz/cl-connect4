@@ -130,7 +130,7 @@
 			 :execFn #'game-command-play
 			 ) table)
 
-  (push (make-instance 'command
+    (push (make-instance 'command
 			 :name 'continue
 			 :infoFn (lambda () "continue: Let the computer make a move")
 			 :tags (list "DEVELOPER" "PLAYER")
@@ -148,6 +148,22 @@
 
     table
     ))
+
+(defun final-state-reached-command-table ()
+  (let ((table ()))
+
+    (push (make-instance 'command
+			 :name 'r
+			 :infoFn (lambda () "Enter r to start a new game")
+			 :tags (list "DEVELOPER" "PLAYER")
+			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
+			 :execFn #'game-command-board
+			 ) table)
+
+    table
+    ))
+
+
 
 
 (defun print-help-text (command-table)
@@ -191,7 +207,7 @@
 ;;
 (defun cmd-loop (context-factory)
   (let ((context (funcall context-factory)))
-    (let ( (cmd nil) (opcode nil) (result nil) (command-table (slot-value context 'command-table)))
+    (let ( (cmd nil) (opcode nil) (result nil) (command-table (car (slot-value context 'command-table-stack))))
       (format-context context)
       (princ #\newline)
       (print-help-text command-table)
@@ -234,7 +250,7 @@
     (setf (slot-value context 'board) (create-board *CLASSIC-WIDTH* *CLASSIC-HEIGHT*))
     (setf (slot-value context 'players-color) 'W)
     (setf (slot-value context 'cell-formatter) (make-instance 'colorful-cell-formatter))
-    (setf (slot-value context 'command-table) (create-command-table))
+    (setf (slot-value context 'command-table-stack) (list (create-command-table)))
     (setf (slot-value context 'difficulty-level) 4)
     (setf (slot-value context 'format-alert-message)
 	  (lambda (msg)
@@ -261,11 +277,13 @@
   (cmd-loop (lambda ()
  	      (format t "~%~%Welcome to Connect4~%~%")
 	      (let ((context (create-default-context)))
-		;; filter away developer commands
-		(setf (slot-value context 'command-table)
-		      (remove-if-not (lambda (cmd)
-				       (find "PLAYER" (slot-value cmd 'tags) :test #'equal))
-				     (slot-value context 'command-table)))
+		(let ((cmds (car (slot-value context 'command-table-stack))))
+		  ;; filter away developer commands
+		  (setf cmds (remove-if-not (lambda (cmd)
+					      (find "PLAYER" (slot-value cmd 'tags) :test #'equal))
+					    cmds))
+		  (setf (slot-value context 'command-table-stack) (list cmds))
+		  )
 		context
 		))))
 
