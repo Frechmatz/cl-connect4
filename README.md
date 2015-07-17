@@ -3,19 +3,34 @@
 
 ### Installation
 
-The installation consists of downloading the sources.
+To use the program you need an implementation of Common Lisp such as clisp (http://www.clisp.org) or sbcl (http://www.sbcl.org).
+
+Download the project
+```bash
+git clone https://github.com/Frechmatz/connect4.git
+```
+and add connect4 to the asdf system path
 
 ### Running the program
 
-To run the program you need an implementation of Common Lisp such as clisp (http://www.clisp.org) or sbcl (http://www.sbcl.org).
-Enter into the directory where you've downloaded the sources and start the Lisp REPL. 
-On the REPL command prompt enter
+#### Using quicklisp package manager
+
+On the lisp command prompt enter
 
 ```bash
-(load "main.lisp")
+(require "connect4")
 (lets-play)
 ```
-You are now ready to play.
+
+#### Using plain asdf (doesn't require a package manager and should work out of the box with sbcl or clisp)
+
+On the lisp command prompt enter
+
+```bash
+(require "asdf")
+(asdf:load-system "connect4")
+(lets-play)
+```
 
 ### Screenshots
 
