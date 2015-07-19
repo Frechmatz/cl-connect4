@@ -11,6 +11,12 @@ Classic-Connect4 specific implementations
 (defparameter *CLASSIC-HEIGHT* 6) 
 
 ;;
+;; Skip randomizer by setting to not nil.
+;; Used for unit tests, to get reproducable results
+;;
+(defvar *classic-skip-randomizer* nil)
+
+;;
 ;; Evaluate the score of the board
 ;; x y: The latest move
 ;; returns 1.0 or 0.0
@@ -68,7 +74,7 @@ Classic-Connect4 specific implementations
     (setf move (reduce (lambda (best item)
 			 (if (funcall fn (third item) (third best)) item best)) 
 		       moves))
-    (if (and move (not skip-randomizer))
+    (if (and move (not skip-randomizer) (not *classic-skip-randomizer*))
 	(get-random-move moves (third move))
       move)
     ))
@@ -81,28 +87,28 @@ Classic-Connect4 specific implementations
   ;; create a clone of the board that for performance reasons will be manipulated during the traversal
   (let ((board (clone-board the-board)))
     (labels ((get-minmax-inner (board color is-opponent cur-depth max-depth)
-				(let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))
-				  (dolist (move generated-moves)
-				    (nset-field board (first move) (second move) color) ;; do move
-				    (setf score (board-score board (first move) (second move) )) ;; calc score
-				    (setf is-four (equal score 1.0)) ;; 4 pieces in a row? 
-				    (setf score (/ score (+ cur-depth 1.0))) ;; adapt score to current search depth
-				    (if is-opponent (setf score (* -1.0 score))) ;; invert score if opponents draw
-				    ;; final state or no more moves availabe or max depth reached
-				    (if (or is-four (not (is-move-available board)) (equal max-depth 0))
-					(progn
-					  (push (list (first move) (second move) score) moves)
-					  )
-				      (progn
-					(setf score (get-minmax-inner board (invert-color color) (not is-opponent) (+ cur-depth 1) (+ max-depth -1)))
-					(push (list (first move) (second move) (third score)) moves)))
-				    (nset-field board (first move) (second move) *EMPTY*) ;; undo move
-				    )
-				  ;; we now have a list of (x y score) tuples. Reduce them to a final move
-				  (reduce-scores moves is-opponent (if (equal cur-depth 0) nil t))
-				  )))
-	    (get-minmax-inner board color is-opponent cur-depth max-depth)
-	    )))
+	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))
+		 (dolist (move generated-moves)
+		   (nset-field board (first move) (second move) color) ;; do move
+		   (setf score (board-score board (first move) (second move) )) ;; calc score
+		   (setf is-four (equal score 1.0)) ;; 4 pieces in a row? 
+		   (setf score (/ score (+ cur-depth 1.0))) ;; adapt score to current search depth
+		   (if is-opponent (setf score (* -1.0 score))) ;; invert score if opponents draw
+		   ;; final state or no more moves availabe or max depth reached
+		   (if (or is-four (not (is-move-available board)) (equal max-depth 0))
+		       (progn
+			 (push (list (first move) (second move) score) moves)
+			 )
+		       (progn
+			 (setf score (get-minmax-inner board (invert-color color) (not is-opponent) (+ cur-depth 1) (+ max-depth -1)))
+			 (push (list (first move) (second move) (third score)) moves)))
+		   (nset-field board (first move) (second move) *EMPTY*) ;; undo move
+		   )
+		 ;; we now have a list of (x y score) tuples. Reduce them to a final move
+		 (reduce-scores moves is-opponent (if (equal cur-depth 0) nil t))
+		 )))
+      (get-minmax-inner board color is-opponent cur-depth max-depth)
+      )))
 
 
 ;;
