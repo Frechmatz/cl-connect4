@@ -26,7 +26,7 @@ or alternatively via
 (lets-play)
 ```
 
-If your terminal doesn't support colors start the game as follows
+If your terminal doesn't support ANSI color escape sequences start the game as follows
 
 ```bash
 (lets-play :colors-not-supported t)
