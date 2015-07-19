@@ -10,26 +10,26 @@ Download the project
 ```bash
 git clone https://github.com/Frechmatz/connect4.git
 ```
-and add connect4 to the asdf system path
-
-### Running the program
-
-#### Using SBCL
-
-On the lisp command prompt enter
+and add connect4 to the asdf system path. The system is loaded via
 
 ```bash
 (require "connect4")
-(lets-play)
 ```
-
-#### Using CLISP 
-
-On the lisp command prompt enter
+or alternatively via
 
 ```bash
 (asdf:load-system "connect4")
+```
+### Running the program
+
+```bash
 (lets-play)
+```
+
+If your terminal doesn't support colors start the game as follows
+
+```bash
+(lets-play :colors-not-supported t)
 ```
 
 ### Screenshots
