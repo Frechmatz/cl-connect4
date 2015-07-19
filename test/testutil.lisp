@@ -1,5 +1,5 @@
 
-(load "../field.lisp")
+(load "../board.lisp")
 
 
 (define-condition invalid-arguments (error)

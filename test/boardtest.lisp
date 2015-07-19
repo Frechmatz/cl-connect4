@@ -1,6 +1,5 @@
 
 (load "testutil.lisp")
-(load "../field.lisp")
 
 (defun test-line-length-at-1 ()
   (let ((board
