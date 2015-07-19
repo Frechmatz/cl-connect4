@@ -245,16 +245,22 @@
     )	  
   )
 
-(defun create-default-context ()
+(defun create-default-context ( &key (colors-not-supported nil))
   (let ((context (make-instance 'context)))
     (setf (slot-value context 'board) (create-board *CLASSIC-WIDTH* *CLASSIC-HEIGHT*))
     (setf (slot-value context 'players-color) 'W)
-    (setf (slot-value context 'cell-formatter) (make-instance 'colorful-cell-formatter))
+    (if (not colors-not-supported)
+	(setf (slot-value context 'cell-formatter) (make-instance 'colorful-cell-formatter))
+	(setf (slot-value context 'cell-formatter) (make-instance 'cell-formatter))
+	)
     (setf (slot-value context 'command-table-stack) (list (create-command-table)))
     (setf (slot-value context 'difficulty-level) 4)
     (setf (slot-value context 'format-alert-message)
 	  (lambda (msg)
-	    (format nil "~c[32m~a~c[0m" #\Esc msg #\Esc))) 
+	    (if (not colors-not-supported)
+		(format nil "~c[32m~a~c[0m" #\Esc msg #\Esc)
+		(format nil "~a" msg)
+		)))
     context
     ))
 
@@ -263,20 +269,20 @@
 ;; Start game in developer mode
 ;; ****************************
 ;;
-(defun lets-go()
+(defun lets-go( &key (colors-not-supported nil))
   (cmd-loop (lambda ()
  	      (format t "~%~%Welcome to Connect4~%~%")
-	      (create-default-context))))
+	      (create-default-context :colors-not-supported colors-not-supported))))
 
 ;;
 ;; *************************
 ;; Start game in player mode
 ;; *************************
 ;;
-(defun lets-play()
+(defun lets-play( &key (colors-not-supported nil))
   (cmd-loop (lambda ()
  	      (format t "~%~%Welcome to Connect4~%~%")
-	      (let ((context (create-default-context)))
+	      (let ((context (create-default-context :colors-not-supported colors-not-supported)))
 		(let ((cmds (car (slot-value context 'command-table-stack))))
 		  ;; filter away developer commands
 		  (setf cmds (remove-if-not (lambda (cmd)
