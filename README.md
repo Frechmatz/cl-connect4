@@ -4,6 +4,7 @@
 ### Installation
 
 To use the program you need an implementation of Common Lisp such as clisp (http://www.clisp.org) or sbcl (http://www.sbcl.org).
+The following instructions also assume that the quicklisp package manager has been installed.
 
 Download the project
 ```bash
@@ -13,7 +14,7 @@ and add connect4 to the asdf system path
 
 ### Running the program
 
-#### Using quicklisp package manager
+#### Using SBCL
 
 On the lisp command prompt enter
 
@@ -22,12 +23,11 @@ On the lisp command prompt enter
 (lets-play)
 ```
 
-#### Using plain asdf (doesn't require a package manager and should work out of the box with sbcl or clisp)
+#### Using CLISP 
 
 On the lisp command prompt enter
 
 ```bash
-(require "asdf")
 (asdf:load-system "connect4")
 (lets-play)
 ```
