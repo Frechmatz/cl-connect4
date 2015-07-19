@@ -34,9 +34,5 @@ If your terminal doesn't support colors start the game as follows
 
 ### Screenshots
 
-![Screenshot Clisp-1](https://raw.github.com/frechmatz/connect4/master/doc/clisp_1_2.jpg)
-
-![Screenshot Clisp-2](https://raw.github.com/frechmatz/connect4/master/doc/clisp_2_2.jpg)
-
 ![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc/computerwon_2.jpg)
 
