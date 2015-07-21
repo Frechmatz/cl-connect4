@@ -13,4 +13,4 @@
    (:file "command" )
    (:file "commandresult" )
    (:file "classic" :depends-on ("board"))
-   (:file "gamecommands" :depends-on ("board" "context" "commandresult"))))
+   (:file "gamecommands" :depends-on ("board"))))

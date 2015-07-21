@@ -11,18 +11,6 @@
                                                          
 |#
 
-
-#|
-(load "field.lisp")
-(load "boardformatter.lisp")
-(load "context.lisp")
-(load "argparser.lisp")
-(load "command.lisp")
-(load "commandresult.lisp")
-(load "classic.lisp")
-(load "gamecommands.lisp")
-|#
-
 (define-condition invalid-arguments (error)
   ((text :initarg :text :reader text)))
 
@@ -79,7 +67,9 @@
 			 :infoFn (lambda () "board: Print current board")
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
-			 :execFn #'game-command-board
+			 :execFn (lambda (cb context)
+				   (declare (ignore context))
+				   (funcall cb nil t nil nil))
 			 ) table)
 
     (push (make-instance 'command
@@ -87,7 +77,9 @@
 			 :infoFn (lambda () "put color <column> <row>: Put a piece into the board. column and row can be entered in hex")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-color #'parse-x #'parse-y) context))
 			 :tags (list "DEVELOPER")
-			 :execFn #'game-command-put
+			 :execFn (lambda (cb context color x y)
+				   (funcall cb (setf (slot-value context 'board) (game-command-put (slot-value context 'board) color x y)) t nil nil)
+				   )
 			 ) table)
 
     (push (make-instance 'command
@@ -95,7 +87,9 @@
 			 :infoFn (lambda () "set-board-size <width> <height>: Set size of the board")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-board-dimension #'parse-board-dimension) context))
 			 :tags (list "DEVELOPER" "PLAYER")
-			 :execFn #'game-command-set-board-size
+			 :execFn (lambda (cb context width height)
+				   (declare (ignore context))
+				   (funcall cb (create-board width height) t nil nil))
 			 ) table)
 
     (push (make-instance 'command
@@ -103,15 +97,11 @@
 			 :infoFn (lambda () "hint: Show next move the computer would do")
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
-			 :execFn #'game-command-hint
-			 ) table)
-
-    (push (make-instance 'command
-			 :name 'is-four
-			 :infoFn (lambda () "is-four <column> <row>: Check if four pieces are in a row at given position. column and row can be entered in hex")
-			 :tags (list "DEVELOPER")
-			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x #'parse-y) context))
-			 :execFn #'game-command-is-four
+			 :execFn (lambda (cb context)
+				   (let ((result (best-move (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
+				     (funcall cb nil nil
+					      (format nil "Recommended move is column ~a with a score of ~a" (first result) (third result))
+					      nil)))
 			 ) table)
 
     (push (make-instance 'command
@@ -119,7 +109,9 @@
 			 :infoFn (lambda () "set-level <n>: Set the maximum traversal depth")
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-level) context))
-			 :execFn #'game-command-set-level
+			 :execFn (lambda (cb context level)
+				   (setf (slot-value context 'difficulty-level) level)
+				   (funcall cb nil t nil nil))
 			 ) table)
 
     (push (make-instance 'command
@@ -127,28 +119,50 @@
 			 :infoFn (lambda () "play <column>: Play a move and get computers counter move. column can be entered in hex")
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x) context))
-			 :execFn #'game-command-play
+			 :execFn (lambda (cb context x)
+				   (let ((players-color (slot-value context 'players-color))
+					 (computers-color (invert-color (slot-value context 'players-color)))
+					 (difficulty-level (slot-value context 'difficulty-level))
+					 (board (slot-value context 'board))
+					 )
+				     (game-command-throw-piece
+				      board players-color x
+				      (lambda (x y board)
+					(if (not board)
+					    (funcall cb nil nil "Invalid move. No place left in given column" nil)
+					    (progn
+					      (if (is-four board x y)
+						  (funcall cb board t "YOU ARE THE WINNER" (max-line-at board x y players-color))
+						  (progn
+						    (game-command-play
+						     board computers-color difficulty-level
+						     (lambda (counter-x counter-y counter-score counter-board)
+						       (declare (ignore counter-score))
+						       (if (not counter-board)
+							   (funcall cb board t "No counter move found" (list (list x y)))
+							   (if (is-four counter-board counter-x counter-y)
+							       (funcall cb counter-board t "COMPUTER HAS WON"
+									(max-line-at counter-board counter-x counter-y computers-color))
+							       (funcall cb counter-board t (format nil "Computers move is ~a" counter-x) (list (list counter-x counter-y)))
+							       ))))))))))))
 			 ) table)
 
-    (push (make-instance 'command
-			 :name 'continue
-			 :infoFn (lambda () "continue: Let the computer make a move")
-			 :tags (list "DEVELOPER" "PLAYER")
-			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
-			 :execFn #'game-command-continue
-			 ) table)
 
     (push (make-instance 'command
 			 :name 'toggle-color
 			 :infoFn (lambda () "toggle-color: Toggle the players color")
 			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
-			 :execFn #'game-command-toggle-color
+			 ;; todo anpassen
+			 :execFn (lambda (cb context)
+				   (setf (slot-value context 'players-color) (invert-color (slot-value context 'players-color)))
+				   (funcall cb nil t nil nil))
 			 ) table)
 
     table
     ))
 
+#|
 (defun final-state-reached-command-table ()
   (let ((table ()))
 
@@ -162,6 +176,7 @@
 
     table
     ))
+|#
 
 
 
@@ -190,15 +205,25 @@
 
 ;;
 ;; Execute a command entered into the game repl
+;; cb => f( 
 ;;
 (defun exec-command (opcode context args)
   (let ((parsed-args (handler-case (funcall (slot-value opcode 'parseArgsFn) args context)
 					 (invalid-arguments (err) err)
 					 )))
     (if (listp parsed-args)
-	(apply (slot-value opcode 'execFn) context parsed-args)
-      (make-instance 'command-result :redraw-board nil :message (slot-value parsed-args 'text)))
-    ))
+	(apply (slot-value opcode 'execFn)
+	       (lambda (new-board force-redraw-board message highlight-cells)
+		 (if new-board
+		     (progn
+		       (setf (slot-value context 'board) new-board)
+		       (make-instance 'command-result :redraw-board t :message message :highlight-cells highlight-cells)
+		       )
+		     (make-instance 'command-result :redraw-board force-redraw-board :message message :highlight-cells nil)))
+	       context
+	       parsed-args))))
+
+
 
 ;;
 ;; ****************************
@@ -213,8 +238,6 @@
       (print-help-text command-table)
       (flet ((do-command ()
 			 (format t "Enter command: ")
-			 ;; http://stackoverflow.com/questions/8360386/sbcl-switches-print-and-read-order-lisp
-			 ;; flush output stream to console
 			 (finish-output)
 			 (setf cmd (read-cmd))
 			 (princ #\newline)
