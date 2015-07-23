@@ -123,28 +123,25 @@
 				   (let ((players-color (slot-value context 'players-color))
 					 (computers-color (invert-color (slot-value context 'players-color)))
 					 (difficulty-level (slot-value context 'difficulty-level))
-					 (board (slot-value context 'board))
 					 )
 				     (game-command-throw-piece
-				      board players-color x
+				      (slot-value context 'board) players-color x
 				      (lambda (x y board)
 					(if (not board)
 					    (funcall cb nil nil "Invalid move. No place left in given column" nil)
-					    (progn
-					      (if (is-four board x y)
-						  (funcall cb board t "YOU ARE THE WINNER" (max-line-at board x y players-color))
-						  (progn
-						    (game-command-play
-						     board computers-color difficulty-level
-						     (lambda (counter-x counter-y counter-score counter-board)
-						       (declare (ignore counter-score))
-						       (if (not counter-board)
-							   (funcall cb board t "No counter move found" (list (list x y)))
-							   (if (is-four counter-board counter-x counter-y)
-							       (funcall cb counter-board t "COMPUTER HAS WON"
-									(max-line-at counter-board counter-x counter-y computers-color))
-							       (funcall cb counter-board t (format nil "Computers move is ~a" counter-x) (list (list counter-x counter-y)))
-							       ))))))))))))
+					    (if (is-four board x y)
+						(funcall cb board nil "YOU ARE THE WINNER" (max-line-at board x y players-color))
+						(game-command-play
+						 board computers-color difficulty-level
+						 (lambda (counter-x counter-y counter-score counter-board)
+						   (declare (ignore counter-score))
+						   (if (not counter-board)
+						       (funcall cb board nil "No counter move found" (list (list x y)))
+						       (if (is-four counter-board counter-x counter-y)
+							   (funcall cb counter-board t "COMPUTER HAS WON"
+								    (max-line-at counter-board counter-x counter-y computers-color))
+							   (funcall cb counter-board t (format nil "Computers move is ~a" counter-x) (list (list counter-x counter-y)))
+							   ))))))))))
 			 ) table)
 
 
@@ -202,6 +199,7 @@
 (defun read-cmd ()
   (read-from-string (concatenate 'string "(" (read-line) ")"))
   )
+
 
 ;;
 ;; Execute a command entered into the game repl
