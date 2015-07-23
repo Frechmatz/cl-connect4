@@ -231,6 +231,7 @@
 ;; Main game repl
 ;; ****************************
 ;;
+;;
 (defun cmd-loop (context-factory)
   (let ((context (funcall context-factory)))
     (let ( (cmd nil) (opcode nil) (result nil) (command-table (car (slot-value context 'command-table-stack))))
