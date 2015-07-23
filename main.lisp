@@ -123,6 +123,7 @@
 				   (let ((players-color (slot-value context 'players-color))
 					 (computers-color (invert-color (slot-value context 'players-color)))
 					 (difficulty-level (slot-value context 'difficulty-level))
+
 					 )
 				     (game-command-throw-piece
 				      (slot-value context 'board) players-color x
@@ -219,8 +220,10 @@
 		       )
 		     (make-instance 'command-result :redraw-board force-redraw-board :message message :highlight-cells nil)))
 	       context
-	       parsed-args))))
-
+	       parsed-args)
+	(progn
+	  (make-instance 'command-result :redraw-board nil :message (slot-value parsed-args 'text) :highlight-cells nil)
+	))))
 
 
 ;;
