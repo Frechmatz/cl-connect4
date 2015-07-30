@@ -65,7 +65,6 @@
     (push (make-instance 'command
 			 :name 'board
 			 :infoFn (lambda () "board: Print current board")
-			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 			 :execFn (lambda (cb context)
 				   (declare (ignore context))
@@ -73,20 +72,9 @@
 			 ) table)
 
     (push (make-instance 'command
-			 :name 'put
-			 :infoFn (lambda () "put color <column> <row>: Put a piece into the board. column and row can be entered in hex")
-			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-color #'parse-x #'parse-y) context))
-			 :tags (list "DEVELOPER")
-			 :execFn (lambda (cb context color x y)
-				   (funcall cb (setf (slot-value context 'board) (game-command-put (slot-value context 'board) color x y)) t nil nil)
-				   )
-			 ) table)
-
-    (push (make-instance 'command
 			 :name 'set-board-size
 			 :infoFn (lambda () "set-board-size <width> <height>: Set size of the board")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-board-dimension #'parse-board-dimension) context))
-			 :tags (list "DEVELOPER" "PLAYER")
 			 :execFn (lambda (cb context width height)
 				   (declare (ignore context))
 				   (funcall cb (create-board width height) t nil nil))
@@ -95,7 +83,6 @@
     (push (make-instance 'command
 			 :name 'hint
 			 :infoFn (lambda () "hint: Show next move the computer would do")
-			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 			 :execFn (lambda (cb context)
 				   (let ((result (best-move (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
@@ -107,7 +94,6 @@
     (push (make-instance 'command
 			 :name 'set-level
 			 :infoFn (lambda () "set-level <n>: Set the maximum traversal depth")
-			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-level) context))
 			 :execFn (lambda (cb context level)
 				   (setf (slot-value context 'difficulty-level) level)
@@ -117,7 +103,6 @@
     (push (make-instance 'command
 			 :name 'play
 			 :infoFn (lambda () "play <column>: Play a move and get computers counter move. column can be entered in hex")
-			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x) context))
 			 :execFn (lambda (cb context x)
 				   (let ((players-color (slot-value context 'players-color))
@@ -149,7 +134,6 @@
     (push (make-instance 'command
 			 :name 'toggle-color
 			 :infoFn (lambda () "toggle-color: Toggle the players color")
-			 :tags (list "DEVELOPER" "PLAYER")
 			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 			 ;; todo anpassen
 			 :execFn (lambda (cb context)
@@ -232,9 +216,8 @@
 ;; ****************************
 ;;
 ;;
-(defun cmd-loop (context-factory)
-  (let ((context (funcall context-factory)))
-    (let ( (cmd nil) (opcode nil) (result nil) (command-table (car (slot-value context 'command-table-stack))))
+(defun cmd-loop (context command-table)
+    (let ((cmd nil) (opcode nil) (result nil))
       (format-context context)
       (princ #\newline)
       (print-help-text command-table)
@@ -246,10 +229,12 @@
 			 (cond
 			  ((equal (car cmd) '()) (print-help-text command-table) (setf result 'continue))
 			  ((equal (car cmd) 'q) (format t "Bye.~%Enter (quit) to exit lisp~%") (setf result nil))
+#|
 			  ((equal (car cmd) 'r)
 			   (setf context (funcall context-factory))
 			   (format-context context)
 			   (setf result 'continue)) 
+|#
 			  (t 
 			   (setf opcode (find-element command-table (lambda (command) (equal (car cmd)  (slot-value command 'name)))))
 			   (if opcode
@@ -267,7 +252,7 @@
 		)
 	    )
       )
-    )	  
+    	  
   )
 
 (defun create-default-context ( &key (colors-not-supported nil))
@@ -278,7 +263,7 @@
 	(setf (slot-value context 'cell-formatter) (make-instance 'colorful-cell-formatter))
 	(setf (slot-value context 'cell-formatter) (make-instance 'cell-formatter))
 	)
-    (setf (slot-value context 'command-table-stack) (list (create-command-table)))
+    ;; (setf (slot-value context 'command-table-stack) (list (create-command-table)))
     (setf (slot-value context 'difficulty-level) 4)
     (setf (slot-value context 'format-alert-message)
 	  (lambda (msg)
@@ -290,31 +275,11 @@
     ))
 
 ;;
-;; ****************************
-;; Start game in developer mode
-;; ****************************
-;;
-(defun lets-go( &key (colors-not-supported nil))
-  (cmd-loop (lambda ()
- 	      (format t "~%~%Welcome to Connect4~%~%")
-	      (create-default-context :colors-not-supported colors-not-supported))))
-
-;;
 ;; *************************
 ;; Start game in player mode
 ;; *************************
 ;;
 (defun lets-play( &key (colors-not-supported nil))
-  (cmd-loop (lambda ()
- 	      (format t "~%~%Welcome to Connect4~%~%")
-	      (let ((context (create-default-context :colors-not-supported colors-not-supported)))
-		(let ((cmds (car (slot-value context 'command-table-stack))))
-		  ;; filter away developer commands
-		  (setf cmds (remove-if-not (lambda (cmd)
-					      (find "PLAYER" (slot-value cmd 'tags) :test #'equal))
-					    cmds))
-		  (setf (slot-value context 'command-table-stack) (list cmds))
-		  )
-		context
-		))))
+  (format t "~%~%Welcome to Connect4~%~%")
+  (cmd-loop (create-default-context :colors-not-supported colors-not-supported) (create-command-table)))
 
