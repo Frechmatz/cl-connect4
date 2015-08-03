@@ -14,10 +14,27 @@
 (define-condition invalid-arguments (error)
   ((text :initarg :text :reader text)))
 
+(define-condition quit-game (error)
+  ((text :initarg :text :reader text)))
+
 (defun find-element (list equalFn)
   (let ((elem (first list)))
     (if (or (not elem) (funcall equalFn elem)) elem (find-element (cdr list) equalFn))
     ))
+
+
+(defclass message-formatter () ())
+(defgeneric format-message (message-formatter message)
+  (:documentation "Formats a text message"))
+(defmethod format-message ( (formatter message-formatter) message)
+  (format t "~a~%" message))
+(defclass colorful-message-formatter (message-formatter) ())
+(defmethod format-message ( (formatter colorful-message-formatter) message)
+  (format t "~c[32m~a~c[0m~%" #\Esc message #\Esc))
+
+(defvar *board-formatter*)
+(defvar *message-formatter*)
+
 
 ;; n: number 0..9 A..Z a..z (a == 10, b == 11, ...)
 (defun parse-number (n min-n max-n)
@@ -62,6 +79,17 @@
 (defun create-command-table ()
   (let ((table ()))
 
+    
+    (push (make-instance 'command
+			 :name 'q
+			 :infoFn (lambda () "q: Quit game")
+			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
+			 :execFn (lambda (cb context)
+				   (declare (ignore context))
+				   (declare (ignore cb))
+				   (error 'quit-game :text "Bye"))
+			 ) table)
+    
     (push (make-instance 'command
 			 :name 'board
 			 :infoFn (lambda () "board: Print current board")
@@ -107,9 +135,7 @@
 			 :execFn (lambda (cb context x)
 				   (let ((players-color (slot-value context 'players-color))
 					 (computers-color (invert-color (slot-value context 'players-color)))
-					 (difficulty-level (slot-value context 'difficulty-level))
-
-					 )
+					 (difficulty-level (slot-value context 'difficulty-level)))
 				     (game-command-throw-piece
 				      (slot-value context 'board) players-color x
 				      (lambda (x y board)
@@ -135,7 +161,6 @@
 			 :name 'toggle-color
 			 :infoFn (lambda () "toggle-color: Toggle the players color")
 			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
-			 ;; todo anpassen
 			 :execFn (lambda (cb context)
 				   (setf (slot-value context 'players-color) (invert-color (slot-value context 'players-color)))
 				   (funcall cb nil t nil nil))
@@ -143,25 +168,6 @@
 
     table
     ))
-
-#|
-(defun final-state-reached-command-table ()
-  (let ((table ()))
-
-    (push (make-instance 'command
-			 :name 'r
-			 :infoFn (lambda () "Enter r to start a new game")
-			 :tags (list "DEVELOPER" "PLAYER")
-			 :parseArgsFn (lambda (args context) (parse-arguments args '() context))
-			 :execFn #'game-command-board
-			 ) table)
-
-    table
-    ))
-|#
-
-
-
 
 (defun print-help-text (command-table)
   (format t "Commands:~%")
@@ -175,10 +181,10 @@
 ;; Print board and statuses
 ;;
 (defun format-context (context &optional highlight-cells)
-    (format-board (slot-value context 'board) (slot-value context 'cell-formatter) highlight-cells)
+    (format-board (slot-value context 'board) *board-formatter* highlight-cells)
     (format t "~%Level: ~a Your color: ~a~%"
 	    (slot-value context 'difficulty-level)
-	    (format-cell-value (slot-value context 'cell-formatter) (slot-value context 'players-color)))
+	    (format-cell-value *board-formatter* (slot-value context 'players-color)))
     )
 
 (defun read-cmd ()
@@ -228,13 +234,6 @@
 			 (princ #\newline)
 			 (cond
 			  ((equal (car cmd) '()) (print-help-text command-table) (setf result 'continue))
-			  ((equal (car cmd) 'q) (format t "Bye.~%Enter (quit) to exit lisp~%") (setf result nil))
-#|
-			  ((equal (car cmd) 'r)
-			   (setf context (funcall context-factory))
-			   (format-context context)
-			   (setf result 'continue)) 
-|#
 			  (t 
 			   (setf opcode (find-element command-table (lambda (command) (equal (car cmd)  (slot-value command 'name)))))
 			   (if opcode
@@ -243,43 +242,44 @@
 			     )
 			   (if (slot-value result 'redraw-board)
 			       (format-context context (slot-value result 'highlight-cells)))
-			   (if (slot-value result 'message) (progn (princ (slot-value result 'message)) (princ #\newline)))
-			   )
-			  )
+			   (if (slot-value result 'message) (format-message *message-formatter* (slot-value result 'message)))
+			   ))
 			 result))
 	    (do ((ergebnis (do-command) (do-command)))
 		((not ergebnis))
 		)
 	    )
       )
-    	  
   )
 
-(defun create-default-context ( &key (colors-not-supported nil))
+(defun create-default-context ()
   (let ((context (make-instance 'context)))
     (setf (slot-value context 'board) (create-board *CLASSIC-WIDTH* *CLASSIC-HEIGHT*))
     (setf (slot-value context 'players-color) 'W)
-    (if (not colors-not-supported)
-	(setf (slot-value context 'cell-formatter) (make-instance 'colorful-cell-formatter))
-	(setf (slot-value context 'cell-formatter) (make-instance 'cell-formatter))
-	)
-    ;; (setf (slot-value context 'command-table-stack) (list (create-command-table)))
     (setf (slot-value context 'difficulty-level) 4)
-    (setf (slot-value context 'format-alert-message)
-	  (lambda (msg)
-	    (if (not colors-not-supported)
-		(format nil "~c[32m~a~c[0m" #\Esc msg #\Esc)
-		(format nil "~a" msg)
-		)))
     context
     ))
 
 ;;
 ;; *************************
-;; Start game in player mode
+;; Start game
 ;; *************************
 ;;
 (defun lets-play( &key (colors-not-supported nil))
   (format t "~%~%Welcome to Connect4~%~%")
-  (cmd-loop (create-default-context :colors-not-supported colors-not-supported) (create-command-table)))
+  (let ( (*board-formatter*
+	  (if (not colors-not-supported)
+	      (make-instance 'colorful-cell-formatter)
+	      (make-instance 'cell-formatter))
+	   )
+	(*message-formatter*
+	  (if (not colors-not-supported)
+	      (make-instance 'colorful-message-formatter)
+	      (make-instance 'message-formatter))
+	  ))
+    (handler-case (cmd-loop (create-default-context) (create-command-table))
+      (quit-game (info) nil))
+    (format t "Bye. Thanks for playing.~%")
+    ))
 
+    
