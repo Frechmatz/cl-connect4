@@ -8,7 +8,7 @@
 #       #    # #  # # #  # # #      #        #   ####### 
 #     # #    # #   ## #   ## #      #    #   #        #  
  #####   ####  #    # #    # ######  ####    #        #  
-                                                         
+
 |#
 
 (define-condition invalid-arguments (error)
@@ -36,7 +36,13 @@
 (defvar *message-formatter*)
 
 
-;; n: number 0..9 A..Z a..z (a == 10, b == 11, ...)
+;;
+;;
+;; Command line parameter parsers
+;;
+;;
+
+;; n: number in hex
 (defun parse-number (n min-n max-n)
   (if (not (integerp n))
       (setf n (handler-case (parse-integer (format nil "~a" n) :radix 16)
@@ -74,6 +80,14 @@
   (parse-number n 4 16))
 
 
+;;
+;;
+;; Game commands
+;; - may manipulate the context
+;; - may print context status or messages
+;;
+;;
+
 (defun game-command-set-board-size (context width height)
   (setf (slot-value context 'board) (create-board width height))
   (format-context context)
@@ -95,15 +109,16 @@
   )
 
 (defun game-command-play-computer (context)
-  (let ((computers-color (invert-color (slot-value context 'players-color)))
-	(difficulty-level (slot-value context 'difficulty-level)))
+  (let (
+	(computers-color (invert-color (slot-value context 'players-color)))
+	)
     (game-command-play
-     (slot-value context 'board) computers-color difficulty-level
+     (slot-value context 'board) computers-color (slot-value context 'difficulty-level)
      (lambda (counter-x counter-y counter-score counter-board)
        (declare (ignore counter-score))
        (if (not counter-board)
 	   (progn
-	     (format-board board *board-formatter* (list (list x y)))
+	     (format-board (slot-value context 'board) *board-formatter*)
 	     (format-message *message-formatter* "No counter move found")
 	     )
 	   (progn
@@ -120,9 +135,7 @@
 		 )))))))
 
 (defun game-command-play-human (context x)
-  (let ((players-color (slot-value context 'players-color))
-	(computers-color (invert-color (slot-value context 'players-color)))
-	(difficulty-level (slot-value context 'difficulty-level)))
+  (let ((players-color (slot-value context 'players-color)))
     (game-command-throw-piece
      (slot-value context 'board) players-color x
      (lambda (x y board)
@@ -164,35 +177,17 @@
   (read-from-string (concatenate 'string "(" (read-line) ")"))
   )
 
-
-;;
-;; Execute a command entered into the game repl
-;;
-(defun exec-command (opcode context args)
-  (let ((parsed-args
-	 (handler-case
-	     (funcall (slot-value opcode 'parseArgsFn) args context)
-	   (invalid-arguments (err) err)
-	   )))
-    (if (listp parsed-args)
-	(apply (slot-value opcode 'execFn) context parsed-args)
-	(format-message *message-formatter* (slot-value parsed-args 'text))
-	)
-    ))
-
-
 ;;
 ;; ****************************
 ;; Main game repl
 ;; ****************************
-;;
 ;;
 (defun cmd-loop (context command-table)
   (let ((cmd nil) (opcode nil) (result nil))
     (format-context context)
     (princ #\newline)
     (print-help-text command-table)
-    (flet ((do-command ()
+    (labels ((do-command ()
 	     (format t "Enter command: ")
 	     (finish-output)
 	     (setf cmd (read-cmd))
@@ -201,28 +196,29 @@
 	       ((equal (car cmd) '()) (print-help-text command-table) (setf result 'continue))
 	       (t 
 		(setf opcode (find-element command-table (lambda (command) (equal (car cmd)  (slot-value command 'name)))))
-		(if opcode (exec-command opcode context (cdr cmd))))
-	       )
-	     t))
-      (do ((ergebnis (do-command) (do-command)))
-	  ((not ergebnis))
-	)
-      )
-    )
-  )
-
-(defun create-default-context ()
-  (let ((context (make-instance 'context)))
-    (setf (slot-value context 'board) (create-board *CLASSIC-WIDTH* *CLASSIC-HEIGHT*))
-    (setf (slot-value context 'players-color) 'W)
-    (setf (slot-value context 'difficulty-level) 4)
-    context
-    ))
+		(if opcode
+		    (let ((parsed-args
+			   (handler-case
+			       (funcall (slot-value opcode 'parseArgsFn) (cdr cmd) context)
+			     (invalid-arguments (err) err)
+			     )))
+		      (if (listp parsed-args)
+			  (apply (slot-value opcode 'execFn) context parsed-args)
+			  ;; print parsing error
+			  (format-message *message-formatter* (slot-value parsed-args 'text)))
+		      ))))
+	     (do-command)
+	     ))
+      (do-command)
+      )))
 
 ;;
-;; *************************
+;; ********************************************************************
 ;; Start game
-;; *************************
+;; - Set up formatting functions for messages and the board
+;; - Set up the command table on which the game repl works
+;; - Create the game context
+;; ********************************************************************
 ;;
 (defun lets-play( &key (colors-not-supported t))
   (format t "~%~%Welcome to Connect4~%~%")
@@ -255,8 +251,7 @@
 		   :name 'board
 		   :infoFn (lambda () "board: Print current board")
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
-		   :execFn (lambda (context)
-			     (format-context context))
+		   :execFn (lambda (context) (format-context context))
 		   ) table)
 	    ;; Set board size
 	    (push (make-instance
@@ -264,8 +259,7 @@
 		   :name 'set-board-size
 		   :infoFn (lambda () "set-board-size <width> <height>: Set size of the board")
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-board-dimension #'parse-board-dimension) context))
-		   :execFn (lambda (context width height)
-			     (game-command-set-board-size context width height))
+		   :execFn (lambda (context width height) (game-command-set-board-size context width height))
 		   ) table)
 	    ;; Hint
 	    (push (make-instance
@@ -273,7 +267,6 @@
 		   :name 'hint
 		   :infoFn (lambda () "hint: Show next move the computer would do")
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
-		   ;; Wrap call into lambda to gain late lookup of implementing function-symbol
 		   :execFn (lambda (context) (game-command-hint context))
 		   ) table)
 	    ;; Set Level
@@ -291,7 +284,6 @@
 		   :infoFn (lambda () "play <column>: Play a move and get computers counter move. column can be entered in hex")
 		   :parseArgsFn (lambda (args context)
 				  (parse-arguments args (list #'parse-x) context))
-		   ;; Wrap call into lambda to gain late lookup of implementing function-symbol
 		   :execFn (lambda (context x) (game-command-play-human context x))
 		   ) table)
 	    ;; Toggle color
@@ -304,10 +296,17 @@
 		   ) table)
 	    table
 	    ))
-	 (context (create-default-context))
+	 (context
+	  (let ((context (make-instance 'context)))
+	    (setf (slot-value context 'board) (create-board *CLASSIC-WIDTH* *CLASSIC-HEIGHT*))
+	    (setf (slot-value context 'players-color) 'W)
+	    (setf (slot-value context 'difficulty-level) 4)
+	    context))
 	 )
     (handler-case (cmd-loop context command-table)
-      (quit-game (info) nil))
+      (quit-game (info)
+	(declare (ignore info))
+	nil))
     (format t "Bye. Thanks for playing.~%")
     ))
 
