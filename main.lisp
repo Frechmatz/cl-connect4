@@ -94,7 +94,32 @@
   (format-context context)
   )
 
-(defun game-command-play-main (context x)
+(defun game-command-play-computer (context)
+  (let ((computers-color (invert-color (slot-value context 'players-color)))
+	(difficulty-level (slot-value context 'difficulty-level)))
+    (game-command-play
+     (slot-value context 'board) computers-color difficulty-level
+     (lambda (counter-x counter-y counter-score counter-board)
+       (declare (ignore counter-score))
+       (if (not counter-board)
+	   (progn
+	     (format-board board *board-formatter* (list (list x y)))
+	     (format-message *message-formatter* "No counter move found")
+	     )
+	   (progn
+	     (setf (slot-value context 'board) counter-board)
+	     (if (is-four counter-board counter-x counter-y)
+		 (progn 
+		   (format-board counter-board *board-formatter* (max-line-at counter-board counter-x counter-y computers-color))
+		   (format-message *message-formatter* "COMPUTER HAS WON")
+		   )
+		 (progn
+		   (format-board counter-board *board-formatter* (list (list counter-x counter-y)))
+		   (format-message *message-formatter* (format nil "Computers move is ~a" counter-x))
+		   )
+		 )))))))
+
+(defun game-command-play-human (context x)
   (let ((players-color (slot-value context 'players-color))
 	(computers-color (invert-color (slot-value context 'players-color)))
 	(difficulty-level (slot-value context 'difficulty-level)))
@@ -104,33 +129,15 @@
        (if (not board)
 	   (format-message *message-formatter* "Invalid move. No place left in given column")
 	   (progn
+	     ;; Update context
 	     (setf (slot-value context 'board) board)
 	     (if (is-four board x y)
 	       (progn
 		 (format-board board *board-formatter* (max-line-at board x y players-color))
 		 (format-message *message-formatter* "YOU ARE THE WINNER")
 		 )
-	       (game-command-play
-		board computers-color difficulty-level
-		(lambda (counter-x counter-y counter-score counter-board)
-		  (declare (ignore counter-score))
-		  (if (not counter-board)
-		      (progn
-			(format-board board *board-formatter* (list (list x y)))
-			(format-message *message-formatter* "No counter move found")
-			)
-		      (progn
-			(setf (slot-value context 'board) counter-board)
-			(if (is-four counter-board counter-x counter-y)
-			    (progn 
-			      (format-board counter-board *board-formatter* (max-line-at counter-board counter-x counter-y computers-color))
-			      (format-message *message-formatter* "COMPUTER HAS WON")
-			      )
-			    (progn
-			      (format-board counter-board *board-formatter* (list (list counter-x counter-y)))
-			      (format-message *message-formatter* (format nil "Computers move is ~a" counter-x))
-			    )
-			    ))))))))))))
+	       (game-command-play-computer context)
+	       )))))))
 
 ;;
 ;; Print command overview
@@ -285,7 +292,7 @@
 		   :parseArgsFn (lambda (args context)
 				  (parse-arguments args (list #'parse-x) context))
 		   ;; Wrap call into lambda to gain late lookup of implementing function-symbol
-		   :execFn (lambda (context x) (game-command-play-main context x))
+		   :execFn (lambda (context x) (game-command-play-human context x))
 		   ) table)
 	    ;; Toggle color
 	    (push (make-instance
