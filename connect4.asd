@@ -5,12 +5,11 @@
   :long-description
   "Implementation of the Connect 4 game"
   :components
-  ((:file "main" :depends-on ("board" "boardformatter" "context" "argparser" "command" "commandresult" "classic" "gamecommands"))
+  ((:file "main" :depends-on ("board" "boardformatter" "context" "argparser" "command" "classic" "gamecommands"))
    (:file "board" )
    (:file "boardformatter" :depends-on ("board") )
    (:file "context" )
    (:file "argparser" )
    (:file "command" )
-   (:file "commandresult" )
    (:file "classic" :depends-on ("board"))
    (:file "gamecommands" :depends-on ("board"))))

@@ -178,8 +178,8 @@
 	(apply (slot-value opcode 'execFn) context parsed-args)
 	(format-message *message-formatter* (slot-value parsed-args 'text))
 	)
-    (make-instance 'command-result :redraw-board nil :message nil :highlight-cells nil)
     ))
+
 
 ;;
 ;; ****************************
