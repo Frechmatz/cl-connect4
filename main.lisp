@@ -42,6 +42,22 @@
 ;;
 ;;
 
+(defun parse-arguments (args parsers context)
+  (let ((result ()))
+    (labels ((parse (args parsers context)
+	       (let ((arg (car args)) (parser (car parsers)))
+		 (cond 
+		   ((and (not arg) (not parser)) nil)
+		   ((and (not arg) parser) (error 'invalid-arguments :text "Missing arguments"))
+		   ((and arg (not parser)) (error 'invalid-arguments :text "Too many arguments"))
+		   (t 
+		    (push (funcall parser arg context) result)
+		    (parse (cdr args) (cdr parsers) context))
+		   ))))
+      (parse args parsers context))
+    (reverse result)
+    ))
+
 ;; n: number in hex
 (defun parse-number (n min-n max-n)
   (if (not (integerp n))
