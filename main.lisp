@@ -109,48 +109,43 @@
   )
 
 (defun game-command-play-computer (context)
-  (let (
-	(computers-color (invert-color (slot-value context 'players-color)))
-	)
-    (game-command-play
-     (slot-value context 'board) computers-color (slot-value context 'difficulty-level)
-     (lambda (counter-x counter-y counter-score counter-board)
-       (declare (ignore counter-score))
-       (if (not counter-board)
-	   (progn
-	     (format-board (slot-value context 'board) *board-formatter*)
-	     (format-message *message-formatter* "No counter move found")
-	     )
-	   (progn
-	     (setf (slot-value context 'board) counter-board)
-	     (if (is-four counter-board counter-x counter-y)
-		 (progn 
-		   (format-board counter-board *board-formatter* (max-line-at counter-board counter-x counter-y computers-color))
-		   (format-message *message-formatter* "COMPUTER HAS WON")
-		   )
-		 (progn
-		   (format-board counter-board *board-formatter* (list (list counter-x counter-y)))
-		   (format-message *message-formatter* (format nil "Computers move is ~a" counter-x))
-		   )
-		 )))))))
+  (let ((computers-color (invert-color (slot-value context 'players-color)))
+	(counter-move nil) (counter-x nil) (counter-y nil) (counter-board nil))
+    (setf counter-move (best-move (slot-value context 'board) computers-color (slot-value context 'difficulty-level)))
+    (if (not counter-move)
+	(format-message *message-formatter* "No counter move found")
+	(progn
+	  (setf counter-x (first counter-move))
+	  (setf counter-y (second counter-move))
+	  (setf counter-board (set-field (slot-value context 'board) counter-x counter-y computers-color))
+	  (setf (slot-value context 'board) counter-board)
+	  (if (is-four counter-board counter-x counter-y)
+	      (progn 
+		(format-board counter-board *board-formatter* (max-line-at counter-board counter-x counter-y computers-color))
+		(format-message *message-formatter* "COMPUTER HAS WON")
+		)
+	      (progn
+		(format-board counter-board *board-formatter* (list (list counter-x counter-y)))
+		(format-message *message-formatter* (format nil "Computers move is ~a" counter-x))
+		)
+	      )))))
 
 (defun game-command-play-human (context x)
-  (let ((players-color (slot-value context 'players-color)))
-    (game-command-throw-piece
-     (slot-value context 'board) players-color x
-     (lambda (x y board)
-       (if (not board)
-	   (format-message *message-formatter* "Invalid move. No place left in given column")
-	   (progn
-	     ;; Update context
-	     (setf (slot-value context 'board) board)
-	     (if (is-four board x y)
-	       (progn
-		 (format-board board *board-formatter* (max-line-at board x y players-color))
+  (let ((players-color (slot-value context 'players-color)) (y nil) (counter-board nil))
+    (setf y (find-row (slot-value context 'board) x))
+    (if (not y)
+	(format-message *message-formatter* "Invalid move. No place left in given column")
+	(progn
+	  (setf counter-board (set-field (slot-value context 'board) x y players-color))
+	  (setf (slot-value context 'board) counter-board)
+	  (if (is-four counter-board x y)
+	      (progn
+		 (format-board counter-board *board-formatter* (max-line-at counter-board x y players-color))
 		 (format-message *message-formatter* "YOU ARE THE WINNER")
 		 )
-	       (game-command-play-computer context)
-	       )))))))
+	      (game-command-play-computer context)
+	      )))))
+
 
 ;;
 ;; Print command overview
