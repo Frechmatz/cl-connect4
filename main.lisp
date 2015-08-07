@@ -9,15 +9,12 @@
 #     # #    # #   ## #   ## #      #    #   #        #  
  #####   ####  #    # #    # ######  ####    #        #  
 
-|#
+A console based implementation of the Connect Four game
 
-#|
-Console based implementation of the Connect4 game
 |#
-
 
 ;;
-;; Condition definitions
+;; Conditions
 ;;
 
 (define-condition invalid-arguments (error)
@@ -25,7 +22,6 @@ Console based implementation of the Connect4 game
 
 (define-condition quit-game (error)
   ((text :initarg :text :reader text)))
-
 
 ;;
 ;; Output formatters
@@ -47,9 +43,8 @@ Console based implementation of the Connect4 game
 ;; The Game Context
 ;;
 
-(defparameter *GAME-STATE-CONNECTED-FOUR* 1)
-(defparameter *GAME-STATE-NO-MOVES-LEFT* 2)
-(defparameter *GAME-STATE-CONTINUE* 3)
+(defparameter *GAME-STATE-FINAL* 1)
+(defparameter *GAME-STATE-CONTINUE* 2)
 
 (defclass context ()
   (
@@ -60,8 +55,7 @@ Console based implementation of the Connect4 game
    ))
 
 ;;
-;;
-;; Command line parameter parsers
+;; Command line argument parsers
 ;;
 
 (defun parse-arguments (args parsers context)
@@ -80,7 +74,6 @@ Console based implementation of the Connect4 game
     (reverse result)
     ))
 
-;; n: number in hex
 (defun parse-number (n min-n max-n)
   (if (not (integerp n))
       (setf n
@@ -104,7 +97,7 @@ Console based implementation of the Connect4 game
   (declare (ignore context))
   (parse-number level 0 10))
 
-(defun parse-color (c &optional context)
+(defun parse-color (c context)
   (declare (ignore context))
   (if (equal c 'W) *WHITE*
     (if (equal c 'B) *BLACK*
@@ -113,33 +106,44 @@ Console based implementation of the Connect4 game
 
 (defun parse-board-dimension (n  context)
   (declare (ignore context))
-  ;; board dimension > 16 not supported by formatter
+  ;; board dimension > 16 are not supported by the board-formatter
   (parse-number n 4 16 ))
 
 
 ;;
-;;
 ;; Game commands
-;; - may manipulate the context
-;; - may print context status or messages
 ;;
+;; - may modify the game context
+;; - may print context statuses or messages
+;;   to the console
+;; - may return NIL to signal that the
+;;   current command loop should be left.
+;;   Typically commands always return t
+;; - may indicate a final game state by
+;;   setting the game-state property of the
+;;   game context to *GAME-STATE-FINAL*
 ;;
 
 (defun game-command-set-board-size (context width height)
   (setf (slot-value context 'board) (create-board width height))
-  (format-context context))
+  (format-context context)
+  t)
 
 (defun game-command-hint (context)
   (let ((result (best-move (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
-    (format t "Recommended move is column ~a with a score of ~a" (first result) (third result))))
+    ;; todo: use message-formatter
+    (format t "Recommended move is column ~a with a score of ~a" (first result) (third result)))
+  t)
 
 (defun game-command-set-level (context level)
   (setf (slot-value context 'difficulty-level) level)
-  (format-context context))
+  (format-context context)
+  t)
 
 (defun game-command-toggle-color (context)
   (setf (slot-value context 'players-color) (invert-color (slot-value context 'players-color)))
-  (format-context context))
+  (format-context context)
+  t)
 
 (defun game-command-play-computer (context)
   (let ((computers-color (invert-color (slot-value context 'players-color)))
@@ -161,7 +165,8 @@ Console based implementation of the Connect4 game
 		(format-board counter-board *board-formatter* (list (list counter-x counter-y)))
 		(format-message *message-formatter* (format nil "Computers move is ~a" counter-x))
 		)
-	      )))))
+	      ))))
+  t)
 
 (defun game-command-play-human (context x)
   (let ((players-color (slot-value context 'players-color)) (y nil) (counter-board nil))
@@ -177,51 +182,16 @@ Console based implementation of the Connect4 game
 		 (format-message *message-formatter* "YOU ARE THE WINNER")
 		 )
 	      (game-command-play-computer context)
-	      )))))
+	      ))))
+  t)
 
 (defun game-command-quit (context)
   (declare (ignore context))
   ;; Signal quit
   (error 'quit-game :text "Bye"))
 
-
-
-
 ;;
-;; Print command overview
-;;
-(defun print-help-text (command-table)
-  (format t "Commands:~%")
-  (dolist (cmd command-table)
-    (format t "~a~c"  (funcall (slot-value cmd 'infoFn)) #\newline))
-  (format t "q: quit~%r: restart game~%"))
-
-;;
-;; Print board and statuses
-;;
-(defun format-context (context &optional highlight-cells)
-    (format-board (slot-value context 'board) *board-formatter* highlight-cells)
-    (format t "~%Level: ~a Your color: ~a~%"
-	    (slot-value context 'difficulty-level)
-	    (format-cell-value *board-formatter* (slot-value context 'players-color))))
-
-;;
-;; Read a command from the console
-;;
-(defun read-cmd ()
-  (read-from-string (concatenate 'string "(" (read-line) ")"))
-  )
-
-;;
-;; Helper for the lookup of commands
-;;
-(defun find-element (list equalFn)
-  (let ((elem (first list)))
-    (if (or (not elem) (funcall equalFn elem)) elem (find-element (cdr list) equalFn))
-    ))
-
-;;
-;; Interface of commands executed by the game repl
+;; Interface of the commands that are processed by the game repl
 ;;
 
 (defclass command ()
@@ -229,15 +199,46 @@ Console based implementation of the Connect4 game
    (name :initarg :name)
    (infoFn :initarg :infoFn)
    (parseArgsFn :initarg :parseArgsFn)
-   (descriptionFn :initarg :descriptionFn)
    (execFn :initarg :execFn)
-   (tags :initarg :tags)
    ))
+
+;;
+;; Helper functions
+;;
+
+;; Print command overview
+(defun print-help-text (command-table)
+  (format t "Commands:~%")
+  (dolist (cmd command-table)
+    (format t "~a~c"  (funcall (slot-value cmd 'infoFn)) #\newline))
+  (format t "~%")
+  )
+
+;; Print board and statuses
+(defun format-context (context &optional highlight-cells)
+    (format-board (slot-value context 'board) *board-formatter* highlight-cells)
+    (format t "~%Level: ~a Your color: ~a~%"
+	    (slot-value context 'difficulty-level)
+	    (format-cell-value *board-formatter* (slot-value context 'players-color))))
+
+;; Read a command from the console
+(defun read-cmd ()
+  (read-from-string (concatenate 'string "(" (read-line) ")"))
+  )
+
+;; Look up a command
+;; todo: get rid of this function
+(defun find-element (list equalFn)
+  (let ((elem (first list)))
+    (if (or (not elem) (funcall equalFn elem)) elem (find-element (cdr list) equalFn))
+    ))
 
 ;;
 ;; ****************************
 ;; Main game repl
 ;; ****************************
+;;
+;; todo: exit loop when command returns nil
 ;;
 (defun cmd-loop (context command-table)
   (let ((cmd nil) (opcode nil) (result nil))
@@ -271,10 +272,10 @@ Console based implementation of the Connect4 game
 
 ;;
 ;; ********************************************************************
-;; Start game
-;; - Set up formatting functions for messages and the board
+;; Start the game
+;; - Set up formatting contexts for messages and the board
 ;; - Create the game context
-;; - Set up the command table on which the game repl works
+;; - Set up the command table on which the game repl will work
 ;; ********************************************************************
 ;;
 (defun lets-play( &key (colors-not-supported t))
@@ -363,4 +364,8 @@ Console based implementation of the Connect4 game
     (format t "Bye. Thanks for playing.~%")
     ))
 
+(defun lets-play-colorful ()
+  (lets-play :colors-not-supported nil))
+
+  
     
