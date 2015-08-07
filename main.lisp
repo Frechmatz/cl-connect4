@@ -221,6 +221,20 @@ Console based implementation of the Connect4 game
     ))
 
 ;;
+;; Interface of commands executed by the game repl
+;;
+
+(defclass command ()
+  (
+   (name :initarg :name)
+   (infoFn :initarg :infoFn)
+   (parseArgsFn :initarg :parseArgsFn)
+   (descriptionFn :initarg :descriptionFn)
+   (execFn :initarg :execFn)
+   (tags :initarg :tags)
+   ))
+
+;;
 ;; ****************************
 ;; Main game repl
 ;; ****************************
