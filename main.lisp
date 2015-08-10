@@ -90,7 +90,7 @@ A console based implementation of the Connect Four game
 
 (defun parse-level (level context)
   (declare (ignore context))
-  (parse-number level 0 10))
+  (parse-number level 1 10))
 
 (defun parse-color (c context)
   (declare (ignore context))
@@ -138,7 +138,7 @@ A console based implementation of the Connect Four game
   t)
 
 (defun game-command-hint (context)
-  (let ((result (best-move (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
+  (let ((result (minmax (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
     ;; todo: use message-formatter
     (format t "Recommended move is column ~a with a score of ~a" (first result) (third result)))
   (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
@@ -173,7 +173,7 @@ A console based implementation of the Connect Four game
   (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
   (let ((computers-color (invert-color (slot-value context 'players-color)))
 	(counter-move nil) (counter-x nil) (counter-y nil) (counter-board nil))
-    (setf counter-move (best-move (slot-value context 'board) computers-color (slot-value context 'difficulty-level)))
+    (setf counter-move (minmax (slot-value context 'board) computers-color (slot-value context 'difficulty-level)))
     (if (not counter-move)
 	(progn 
 	  (format-message *message-formatter* "No counter move found")
@@ -185,12 +185,12 @@ A console based implementation of the Connect Four game
 	  (setf (slot-value context 'board) counter-board)
 	  (if (is-four counter-board counter-x counter-y)
 	      (progn 
-		(format-context counter-board (max-line-at counter-board counter-x counter-y computers-color))
+		(format-context context (max-line-at counter-board counter-x counter-y computers-color))
 		(format-message *message-formatter* "COMPUTER HAS WON")
 		(setf (slot-value context 'state) *GAME-STATE-FINAL*)
 		)
 	      (progn
-		(format-context counter-board (list (list counter-x counter-y)))
+		(format-context context (list (list counter-x counter-y)))
 		(format-message *message-formatter* (format nil "Computers move is ~a" counter-x))
 		(check-if-move-is-available context)
 		)
@@ -208,7 +208,7 @@ A console based implementation of the Connect Four game
 	  (setf (slot-value context 'board) counter-board)
 	  (if (is-four counter-board x y)
 	      (progn
-		 (format-context counter-board (max-line-at counter-board x y players-color))
+		 (format-context context (max-line-at counter-board x y players-color))
 		 (format-message *message-formatter* "YOU ARE THE WINNER")
 		 (setf (slot-value context 'state) *GAME-STATE-FINAL*)
 		 )
@@ -371,7 +371,7 @@ A console based implementation of the Connect Four game
 	    (push (make-instance
 		   'command
 		   :name 'set-level
-		   :infoFn (lambda () "set-level <n>: Set the maximum traversal depth")
+		   :infoFn (lambda () "set-level <n>: Set the number of half-moves the computer will execute to determine it's best counter-move")
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-level) context))
 		   :execFn (lambda (context level) (game-command-set-level context level))
 		   ) table)

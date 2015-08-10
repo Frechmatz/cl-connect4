@@ -5,8 +5,8 @@
   :long-description
   "Implementation of the Connect 4 game"
   :components
-  ((:file "main" :depends-on ("board" "boardformatter" "classic"))
+  ((:file "main" :depends-on ("board" "engine" "boardformatter"))
    (:file "board" )
-   (:file "boardformatter" :depends-on ("board") )
-   (:file "classic" :depends-on ("board"))
+   (:file "engine" :depends-on ("board"))
+   (:file "boardformatter" :depends-on ("board"))
    ))

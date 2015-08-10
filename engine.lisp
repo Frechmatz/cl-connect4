@@ -1,7 +1,7 @@
 
 
 #|
-Classic-Connect4 specific implementations
+Engine of classic Connect4
 |#
 
 ;;
@@ -60,7 +60,6 @@ Classic-Connect4 specific implementations
     (nth (floor index) moves)
     ))
 
-
 ;;
 ;; Reduce list of possible moves
 ;; moves: list of tupels (x y score)
@@ -80,13 +79,17 @@ Classic-Connect4 specific implementations
     ))
 
 ;;
+;; 
 ;; Minimax implementation
+;; Calculates a move
 ;; returns a tupel (x y score) where x represents the column, y the row and score the score of the column
+;; max-depth: Maximum number of half-moves to execute (1..n)
+;; color: The computers color
 ;;
-(defun get-minmax (the-board color is-opponent cur-depth max-depth)
+(defun minmax (the-board color max-depth)
   ;; create a clone of the board that for performance reasons will be manipulated during the traversal
   (let ((board (clone-board the-board)))
-    (labels ((get-minmax-inner (board color is-opponent cur-depth max-depth)
+    (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))
 		 (dolist (move generated-moves)
 		   (nset-field board (first move) (second move) color) ;; do move
@@ -95,27 +98,19 @@ Classic-Connect4 specific implementations
 		   (setf score (/ score (+ cur-depth 1.0))) ;; adapt score to current search depth
 		   (if is-opponent (setf score (* -1.0 score))) ;; invert score if opponents draw
 		   ;; final state or no more moves availabe or max depth reached
-		   (if (or is-four (not (is-move-available board)) (equal max-depth 0))
+		   (if (or is-four (not (is-move-available board)) (equal cur-depth max-depth))
 		       (progn
 			 (push (list (first move) (second move) score) moves)
 			 )
 		       (progn
-			 (setf score (get-minmax-inner board (invert-color color) (not is-opponent) (+ cur-depth 1) (+ max-depth -1)))
+			 (setf score (minmax-inner board (invert-color color) (not is-opponent) (+ cur-depth 1)))
 			 (push (list (first move) (second move) (third score)) moves)))
 		   (nset-field board (first move) (second move) *EMPTY*) ;; undo move
 		   )
 		 ;; we now have a list of (x y score) tuples. Reduce them to a final move
 		 (reduce-scores moves is-opponent (if (equal cur-depth 0) nil t))
 		 )))
-      (get-minmax-inner board color is-opponent cur-depth max-depth)
+      (minmax-inner board color nil 1)
       )))
 
-
-;;
-;; Calculate counter-move. Entry point for the game repl
-;; returns tupel (x y score), e.g. (0 3 0.75) or nil
-;;
-(defun best-move (board color max-depth)
-  (get-minmax board color nil 0 max-depth)
-  )
 
