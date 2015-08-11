@@ -1,7 +1,9 @@
 
 
 #|
-Engine of classic Connect4
+    *********************************************
+    Engine of classic Connect4
+    *********************************************
 |#
 
 ;;
@@ -12,7 +14,6 @@ Engine of classic Connect4
 
 ;;
 ;; Skip randomizer by setting to not nil.
-;; Used for unit tests, to get reproducable results
 ;;
 (defvar *classic-skip-randomizer* nil)
 

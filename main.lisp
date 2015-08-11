@@ -37,7 +37,6 @@ A console based implementation of the Connect Four game
 (defparameter *GAME-STATE-CONTINUE* 2)
 (defparameter *GAME-STATE-PROCESSING-FINAL* 3)
 
-
 (defclass context ()
   (
    (board :accessor board)
@@ -69,6 +68,7 @@ A console based implementation of the Connect Four game
     (reverse result)
     ))
 
+;; accepts bases 10 and 16
 (defun parse-number (n min-n max-n)
   (if (not (integerp n))
       (setf n
@@ -101,16 +101,16 @@ A console based implementation of the Connect Four game
 
 (defun parse-board-dimension (n  context)
   (declare (ignore context))
-  ;; board dimension > 16 are not supported by the board-formatter
+  ;; board dimension > 16 is not supported by the board-formatter
   (parse-number n 4 16 ))
 
 ;;
-;; Helper function that checks if more moves are possible
+;; Helper function to detect a final state
 ;;
 (defun check-if-move-is-available (context)
   (if (not (is-move-available (slot-value context 'board)))
       (progn
-	(format-message *message-formatter* "No more moves possible")
+	(format-message *message-formatter* "Draw! No more moves left.")
 	(setf (slot-value context 'state) *GAME-STATE-FINAL*)
 	)))
 
@@ -122,7 +122,8 @@ A console based implementation of the Connect Four game
 ;;   to the console
 ;; - may return NIL to signal that the
 ;;   current command loop should be left.
-;;   Typically commands always return t
+;;   Used for exiting a nest command loop.
+;;   Commands typically return t
 ;; - may indicate a final state by
 ;;   setting the game-state property of the
 ;;   game context to *GAME-STATE-FINAL*
@@ -139,8 +140,7 @@ A console based implementation of the Connect Four game
 
 (defun game-command-hint (context)
   (let ((result (minmax (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
-    ;; todo: use message-formatter
-    (format t "Recommended move is column ~a with a score of ~a" (first result) (third result)))
+    (format-message *message-formatter* (format nil "Recommended move is column ~a with a score of ~a" (first result) (third result))))
   (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
   t)
 
@@ -162,7 +162,6 @@ A console based implementation of the Connect Four game
   t)
 
 (defun game-command-restart (context)
-  ;; Create new board
   (game-command-set-board-size context (get-board-width (slot-value context 'board)) (get-board-height (slot-value context 'board)))
   (format-context context)
   (format-message *message-formatter* "Restarted game")
@@ -218,11 +217,11 @@ A console based implementation of the Connect Four game
 
 (defun game-command-quit (context)
   (declare (ignore context))
-  ;; Signal quit
+  ;; Signal quit.
   (error 'quit-game :text "Bye"))
 
 ;;
-;; Interface of the commands that are processed by the game repl
+;; Interface of the commands that are executed by the game repl
 ;;
 
 (defclass command ()
@@ -258,12 +257,13 @@ A console based implementation of the Connect Four game
   )
 
 ;; Look up a command
-;; todo: get rid of this function
+;; todo: get rid of this function. replace it by functionality of the standard library
 (defun find-element (list equalFn)
   (let ((elem (first list)))
     (if (or (not elem) (funcall equalFn elem)) elem (find-element (cdr list) equalFn))
     ))
 
+;; Execute a command
 (defun do-cmd (context command-table command-string)
   (let ((result t))
     (if (equal (car command-string) '())
@@ -289,6 +289,7 @@ A console based implementation of the Connect Four game
 ;; ****************************
 ;; Main game repl
 ;; ****************************
+;;
 (defun cmd-loop (context command-table)
   (let ((cmd nil))
     (format-context context)
@@ -330,12 +331,12 @@ A console based implementation of the Connect Four game
 
 
 ;;
-;; ********************************************************************
+;; ***********************************************************************************
 ;; Start the game
 ;; - Set up formatting contexts for messages and the board
 ;; - Create the game context
 ;; - Set up the command table on which the game repl will work
-;; ********************************************************************
+;; ***********************************************************************************
 ;;
 (defun lets-play( &key (colors-not-supported t))
   (format t "~%~%Welcome to Connect4~%~%")
@@ -431,8 +432,9 @@ A console based implementation of the Connect Four game
     (format t "Bye. Thanks for playing.~%")
     ))
 
+;;
+;; Start game using ansi escape sequences for colored output
+;;
 (defun lets-play-colorful ()
   (lets-play :colors-not-supported nil))
 
-  
-    

@@ -1,12 +1,8 @@
 
 ;;
-;; Pretty print a board using a cell formatter
+;; Pretty printer for a board
 ;;
 
-;;
-;; Cell formatter
-;; highlight-cells: A list of (x y) tupels to be emphasized by the formatter 
-;;
 (defclass board-formatter () ())
 
 (defgeneric format-board (formatter board &optional highlight-cells)
@@ -50,7 +46,6 @@
    (t "_")
    ))
 
-
 (defmethod format-horizontal-cell-margin( (formatter board-formatter))
   " ")
 
@@ -73,8 +68,10 @@
   (format nil "~1,'0x" y)
    )
 
+;;
+;;
+;;
 (defclass colorful-board-formatter (board-formatter) ())
-
 
 ;; override simple B/W formatting
 (defmethod format-cell-value ( (formatter colorful-board-formatter) cell-value)
