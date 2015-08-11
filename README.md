@@ -32,7 +32,7 @@ Then start your Lisp implementation and enter the following commands
 ```
 #### Using Quicklisp or ASDF 
 
-Add connect4 to the asdf system path. The system is loaded via
+Add connect4 to the asdf system path. The system is loaded and started via
 
 ```bash
 (require "connect4")
