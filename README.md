@@ -36,7 +36,7 @@ Add connect4 to the asdf system path. The system is loaded and started via
 
 ```bash
 (require "connect4")
-;; Terminal doesn't support ansi color escape sequences
+# Terminal doesn't support ansi color escape sequences
 (lets-play)
 # Terminal supports ansi color escape sequences
 # (lets-play-colorful)
@@ -45,7 +45,7 @@ or alternatively via
 
 ```bash
 (asdf:load-system "connect4")
-;; Terminal doesn't support ansi color escape sequences
+# Terminal doesn't support ansi color escape sequences
 (lets-play)
 # Terminal supports ansi color escape sequences
 # (lets-play-colorful)
