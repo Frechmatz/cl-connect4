@@ -247,7 +247,7 @@ A console based implementation of the Connect Four game
 
 ;; Print board and statuses
 (defun format-context (context &optional highlight-cells)
-    (format-board (slot-value context 'board) *board-formatter* highlight-cells)
+    (format-board *board-formatter* (slot-value context 'board) highlight-cells)
     (format t "~%Level: ~a Your color: ~a~%"
 	    (slot-value context 'difficulty-level)
 	    (format-cell-value *board-formatter* (slot-value context 'players-color))))
@@ -341,8 +341,8 @@ A console based implementation of the Connect Four game
   (format t "~%~%Welcome to Connect4~%~%")
   (let ( (*board-formatter*
 	  (if (not colors-not-supported)
-	      (make-instance 'colorful-cell-formatter)
-	      (make-instance 'cell-formatter))
+	      (make-instance 'colorful-board-formatter)
+	      (make-instance 'board-formatter))
 	   )
 	(*message-formatter*
 	 (if (not colors-not-supported)
