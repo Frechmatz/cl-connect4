@@ -68,7 +68,7 @@ Engine of classic Connect4
 ;; skip-randomizer: nil -> If multiple moves are available choose a random one. t -> choose first one
 ;; returns move with minimum or maximum score
 ;;
-(defun reduce-scores (moves is-opponent &optional skip-randomizer)
+(defun reduce-scores (moves is-opponent &key (skip-randomizer nil))
   (let ((move nil) (fn (if is-opponent #'< #'>)))
     (setf move (reduce (lambda (best item)
 			 (if (funcall fn (third item) (third best)) item best)) 
@@ -108,7 +108,7 @@ Engine of classic Connect4
 		   (nset-field board (first move) (second move) *EMPTY*) ;; undo move
 		   )
 		 ;; we now have a list of (x y score) tuples. Reduce them to a final move
-		 (reduce-scores moves is-opponent (if (equal cur-depth 0) nil t))
+		 (reduce-scores moves is-opponent :skip-randomizer nil)
 		 )))
       (minmax-inner board color nil 1)
       )))
