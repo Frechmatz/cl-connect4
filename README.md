@@ -4,32 +4,51 @@
 ### Installation
 
 To use the program you need an implementation of Common Lisp such as clisp (http://www.clisp.org) or sbcl (http://www.sbcl.org).
-The following instructions also assume that the quicklisp package manager has been installed.
 
-Download the project
+Download the project via
+
 ```bash
 git clone https://github.com/Frechmatz/connect4.git
 ```
-and add connect4 to the asdf system path. The system is loaded via
+
+or manually download all .lisp files situated in the root of this project.
+
+### Running the program
+
+#### No package managers et.al. installed, just a plain lisp implementation
+
+Enter into the directory into which you've downloaded the sources.
+Then start your Lisp implementation and enter the following commands
+
+```bash
+(load "board.lisp")
+(load "boardformatter.lisp")
+(load "engine.lisp")
+(load "main.lisp")
+# Terminal doesn't support ansi color escape sequences
+(lets-play)
+# Terminal supports ansi color escape sequences
+# (lets-play-colorful)
+```
+#### Using Quicklisp or ASDF 
+
+Add connect4 to the asdf system path. The system is loaded and started via
 
 ```bash
 (require "connect4")
+# Terminal doesn't support ansi color escape sequences
+(lets-play)
+# Terminal supports ansi color escape sequences
+# (lets-play-colorful)
 ```
 or alternatively via
 
 ```bash
 (asdf:load-system "connect4")
-```
-### Running the program
-
-```bash
+# Terminal doesn't support ansi color escape sequences
 (lets-play)
-```
-
-If your terminal doesn't support ANSI color escape sequences start the game as follows
-
-```bash
-(lets-play :colors-not-supported t)
+# Terminal supports ansi color escape sequences
+# (lets-play-colorful)
 ```
 
 ### Screenshots
