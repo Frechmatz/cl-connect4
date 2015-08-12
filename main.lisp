@@ -185,6 +185,7 @@ A console based implementation of the Connect Four game
 	  (if (is-four counter-board counter-x counter-y)
 	      (progn 
 		(format-context context (max-line-at counter-board counter-x counter-y computers-color))
+		(format-message *message-formatter* (format nil "Computers move is ~a" counter-x))
 		(format-message *message-formatter* "COMPUTER HAS WON")
 		(setf (slot-value context 'state) *GAME-STATE-FINAL*)
 		)
