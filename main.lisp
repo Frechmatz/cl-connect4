@@ -401,6 +401,14 @@ A console based implementation of the Connect Four game
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-toggle-color context))
 		   ) table)
+	    ;; Continue 
+	    (push (make-instance
+		   'command
+		   :name 'continue
+		   :infoFn (lambda () "continue: Computer plays next move")
+		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
+		   :execFn (lambda (context) (game-command-play-computer context))
+		   ) table)
 	    ;; Restart
 	    (push (make-instance
 		    'command
