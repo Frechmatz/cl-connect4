@@ -53,5 +53,5 @@ or alternatively via
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc//computerwon_2_1.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc//computerwon_2_2.jpg)
 
