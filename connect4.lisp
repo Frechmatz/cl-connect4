@@ -284,8 +284,9 @@ A console based implementation of the Connect Four game
 		    (setf result (apply (slot-value opcode 'execFn) context parsed-args))
 		    ;; print parsing error
 		    (format-message *message-formatter* (slot-value parsed-args 'text))
-		    )))
-	  (format t "Command not found~%")
+		    ))
+	      (format t "Command not found~%")
+	      )
 	  ))
     result))
   

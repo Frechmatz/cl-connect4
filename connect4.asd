@@ -12,5 +12,5 @@
    (:file "board" )
    (:file "boardformatter")
    (:file "engine")
-   (:file "main")
+   (:file "connect4")
    ))
