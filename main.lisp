@@ -254,7 +254,7 @@ A console based implementation of the Connect Four game
 
 ;; Read a command from the console
 (defun read-cmd ()
-  (read-from-string (concatenate 'string "(" (read-line) ")"))
+  (cl-ppcre:split "\\s" (read-line))
   )
 
 ;; Look up a command
@@ -282,7 +282,9 @@ A console based implementation of the Connect Four game
 		    (setf result (apply (slot-value opcode 'execFn) context parsed-args))
 		    ;; print parsing error
 		    (format-message *message-formatter* (slot-value parsed-args 'text))
-		    )))))
+		    )))
+	  (format t "Command not found~%")
+	  ))
     result))
   
 
@@ -309,14 +311,14 @@ A console based implementation of the Connect Four game
 			 (do-command (let ((table ()))
 				       (push (make-instance
 					      'command
-					      :name 'q
+					      :name "q"
 					      :infoFn (lambda () "q: Quit game")
 					      :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 					      :execFn (lambda (context) (game-command-quit context))
 					      ) table)
 				       (push (make-instance
 					      'command
-					      :name 'r
+					      :name "r"
 					      :infoFn (lambda () "r: To start a new game")
 					      :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 					      :execFn (lambda (context) (game-command-restart context) nil) ;; quit loop by returning nil
@@ -356,7 +358,7 @@ A console based implementation of the Connect Four game
 	    ;; Play
 	    (push (make-instance
 		   'command
-		   :name 'play
+		   :name "play"
 		   :infoFn (lambda () "play <column>: Play a move and get computers counter move. column can be entered in hex")
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x) context))
 		   :execFn (lambda (context x) (game-command-play-human context x))
@@ -364,7 +366,7 @@ A console based implementation of the Connect Four game
 	    ;; Print board
 	    (push (make-instance
 		   'command
-		   :name 'board
+		   :name "board"
 		   :infoFn (lambda () "board: Print current board")
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-print-board context))
@@ -372,7 +374,7 @@ A console based implementation of the Connect Four game
 	    ;; Set Level
 	    (push (make-instance
 		   'command
-		   :name 'set-level
+		   :name "set-level"
 		   :infoFn (lambda () "set-level <n>: Set the number of half-moves the computer will execute to determine it's best counter-move")
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-level) context))
 		   :execFn (lambda (context level) (game-command-set-level context level))
@@ -380,7 +382,7 @@ A console based implementation of the Connect Four game
 	    ;; Set board size
 	    (push (make-instance
 		   'command
-		   :name 'set-board-size
+		   :name "set-board-size"
 		   :infoFn (lambda () "set-board-size <width> <height>: Set size of the board")
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-board-dimension #'parse-board-dimension) context))
 		   :execFn (lambda (context width height) (game-command-set-board-size context width height))
@@ -388,7 +390,7 @@ A console based implementation of the Connect Four game
 	    ;; Hint
 	    (push (make-instance
 		   'command
-		   :name 'hint
+		   :name "hint"
 		   :infoFn (lambda () "hint: Show next move the computer would do")
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-hint context))
@@ -396,7 +398,7 @@ A console based implementation of the Connect Four game
 	    ;; Toggle color
 	    (push (make-instance
 		   'command
-		   :name 'toggle-color
+		   :name "toggle-color"
 		   :infoFn (lambda () "toggle-color: Toggle the players color")
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-toggle-color context))
@@ -404,7 +406,7 @@ A console based implementation of the Connect Four game
 	    ;; Continue 
 	    (push (make-instance
 		   'command
-		   :name 'continue
+		   :name "continue"
 		   :infoFn (lambda () "continue: Computer plays next move")
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-play-computer context))
@@ -412,7 +414,7 @@ A console based implementation of the Connect Four game
 	    ;; Restart
 	    (push (make-instance
 		    'command
-		    :name 'r
+		    :name "r"
 		    :infoFn (lambda () "r: Restart game")
 		    :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		    :execFn (lambda (context) (game-command-restart context))
@@ -420,7 +422,7 @@ A console based implementation of the Connect Four game
 	    ;; Quit
 	    (push (make-instance
 		    'command
-		    :name 'q
+		    :name "q"
 		    :infoFn (lambda () "q: Quit game")
 		    :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		    :execFn (lambda (context) (game-command-quit context))
