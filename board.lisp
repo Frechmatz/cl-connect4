@@ -6,6 +6,8 @@ Common Connect4 board related functionality
 - Provides functions to create, clone, access and manipulate a board
 |#
 
+(in-package :connect4)
+
 (defparameter *BLACK* 'B)
 (defparameter *WHITE* 'W)
 (defparameter *EMPTY* '_)

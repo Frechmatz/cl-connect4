@@ -13,6 +13,8 @@ A console based implementation of the Connect Four game
 
 |#
 
+(in-package :connect4)
+
 ;;
 ;; Output formatters
 ;;

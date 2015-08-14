@@ -8,6 +8,7 @@
   :depends-on (:cl-ppcre)
   :components
   (
+   (:file "packages" )
    (:file "board" )
    (:file "boardformatter")
    (:file "engine")

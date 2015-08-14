@@ -3,6 +3,8 @@
 ;; Pretty printer for a board
 ;;
 
+(in-package :connect4)
+
 (defclass board-formatter () ())
 
 (defgeneric format-board (formatter board &optional highlight-cells)

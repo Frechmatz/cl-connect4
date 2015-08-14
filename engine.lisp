@@ -6,6 +6,9 @@
     *********************************************
 |#
 
+(in-package :connect4)
+
+
 ;;
 ;; Board dimensions of the original game
 ;;
