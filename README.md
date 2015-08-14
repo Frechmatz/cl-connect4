@@ -11,44 +11,21 @@ Download the project via
 git clone https://github.com/Frechmatz/connect4.git
 ```
 
-or manually download all .lisp files situated in the root of this project.
+and add connect4 to the asdf system path.
 
 ### Running the program
 
-#### No package managers et.al. installed, just a plain lisp implementation
+#### Using Quicklisp
 
-Enter into the directory into which you've downloaded the sources.
-Then start your Lisp implementation and enter the following commands
-
-```bash
-(load "board.lisp")
-(load "boardformatter.lisp")
-(load "engine.lisp")
-(load "main.lisp")
-# Terminal doesn't support ansi color escape sequences
-(lets-play)
-# Terminal supports ansi color escape sequences
-# (lets-play-colorful)
-```
-#### Using Quicklisp or ASDF 
-
-Add connect4 to the asdf system path. The system is loaded and started via
 
 ```bash
 (require "connect4")
+# ASDF:
+# (asdf:load-system "connect4")
 # Terminal doesn't support ansi color escape sequences
-(lets-play)
+(connect4:lets-play)
 # Terminal supports ansi color escape sequences
-# (lets-play-colorful)
-```
-or alternatively via
-
-```bash
-(asdf:load-system "connect4")
-# Terminal doesn't support ansi color escape sequences
-(lets-play)
-# Terminal supports ansi color escape sequences
-# (lets-play-colorful)
+# (connect4:lets-play-colorful)
 ```
 
 ### Screenshots
