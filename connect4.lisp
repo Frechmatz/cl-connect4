@@ -443,4 +443,7 @@
 (defun lets-play-colorful ()
   "Starts the game using ANSI escape sequences for colored output"
   (lets-play :colors-not-supported nil))
+(defun lpc ()
+  "Starts the game using ANSI escape sequences for colored output"
+  (lets-play :colors-not-supported nil))
 

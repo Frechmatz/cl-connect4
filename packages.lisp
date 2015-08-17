@@ -3,4 +3,6 @@
   (:use :cl)
   (:export :lets-play)
   (:export :lets-play-colorful)
+  ;; shortcut for lets-play-colorful
+  (:export :lpc)
   )
