@@ -44,6 +44,9 @@
    (players-color :accessor players-color)
    (difficulty-level :accessor difficulty-level)
    (state :initarg :state :initform *GAME-STATE-CONTINUE* :accessor state)
+   (wins :initform 0 :accessor wins)
+   (loses :initform 0 :accessor loses)
+   (draws :initform 0 :accessor draws)
    ))
 
 ;;;;
@@ -109,6 +112,7 @@
   "Helper function to detect a final state"
   (if (not (is-move-available (slot-value context 'board)))
       (progn
+	(setf (slot-value context 'draws) (+ 1 (slot-value context 'draws)))
 	(format-message *message-formatter* "Draw! No more moves left.")
 	(setf (slot-value context 'state) *GAME-STATE-FINAL*)
 	)))
@@ -173,7 +177,9 @@
 	(counter-move nil) (counter-x nil) (counter-y nil) (counter-board nil))
     (setf counter-move (minmax (slot-value context 'board) computers-color (slot-value context 'difficulty-level)))
     (if (not counter-move)
-	(progn 
+	(progn
+	  (setf (slot-value context 'draws) (+ 1 (slot-value context 'draws)))
+	  (format-context context)
 	  (format-message *message-formatter* "No counter move found")
 	  (setf (slot-value context 'state) *GAME-STATE-FINAL*))  
 	(progn
@@ -182,7 +188,8 @@
 	  (setf counter-board (set-field (slot-value context 'board) counter-x counter-y computers-color))
 	  (setf (slot-value context 'board) counter-board)
 	  (if (is-four counter-board counter-x counter-y)
-	      (progn 
+	      (progn
+		(setf (slot-value context 'loses) (+ 1 (slot-value context 'loses)))
 		(format-context context (max-line-at counter-board counter-x counter-y computers-color))
 		(format-message *message-formatter* (format nil "Computers move is ~a with a score of ~a" counter-x (third counter-move)))
 		(format-message *message-formatter* "COMPUTER HAS WON")
@@ -207,10 +214,11 @@
 	  (setf (slot-value context 'board) counter-board)
 	  (if (is-four counter-board x y)
 	      (progn
-		 (format-context context (max-line-at counter-board x y players-color))
-		 (format-message *message-formatter* "YOU ARE THE WINNER")
-		 (setf (slot-value context 'state) *GAME-STATE-FINAL*)
-		 )
+		(setf (slot-value context 'wins) (+ 1 (slot-value context 'wins)))
+		(format-context context (max-line-at counter-board x y players-color))
+		(format-message *message-formatter* "YOU ARE THE WINNER")
+		(setf (slot-value context 'state) *GAME-STATE-FINAL*)
+		)
 	      (game-command-play-computer context)
 	      ))))
   t)
@@ -245,6 +253,10 @@
 (defun format-context (context &optional highlight-cells)
   "Print board and statuses"
     (format-board *board-formatter* (slot-value context 'board) highlight-cells)
+    (format t "~%Wins: ~a Loses: ~a Draws: ~a"
+	    (slot-value context 'wins)
+	    (slot-value context 'loses)
+	    (slot-value context 'draws))
     (format t "~%Level: ~a Your color: ~a~%"
 	    (slot-value context 'difficulty-level)
 	    (format-cell-value *board-formatter* (slot-value context 'players-color))))
@@ -418,7 +430,7 @@
 	  (let ((context (make-instance 'context)))
 	    (setf (slot-value context 'board) (create-board *CLASSIC-WIDTH* *CLASSIC-HEIGHT*))
 	    (setf (slot-value context 'players-color) 'W)
-	    (setf (slot-value context 'difficulty-level) 4)
+	    (setf (slot-value context 'difficulty-level) 6)
 	    context))
 	 )
     (handler-case (cmd-loop context command-table)
