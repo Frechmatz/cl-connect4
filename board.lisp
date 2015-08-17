@@ -8,10 +8,10 @@
 
 (in-package :connect4)
 
-(defparameter *BLACK* 'B)
-(defparameter *WHITE* 'W)
-(defparameter *EMPTY* '_)
-(defparameter *BORDER* 'X)
+(defconstant *BLACK* 'B)
+(defconstant *WHITE* 'W)
+(defconstant *EMPTY* '_)
+(defconstant *BORDER* 'X)
 
 (defun get-board-width (board)
   "Get width of a board (1..x)"

@@ -22,7 +22,8 @@
   (:documentation "Formats a text message"))
 (defmethod format-message ( (formatter message-formatter) message)
   (format t "~a~%" message))
-(defclass colorful-message-formatter (message-formatter) ())
+(defclass colorful-message-formatter (message-formatter) ()
+  (:documentation "Formats a text message using ANSI escape sequences for colored output"))
 (defmethod format-message ( (formatter colorful-message-formatter) message)
   (format t "~c[32m~a~c[0m~%" #\Esc message #\Esc))
 
@@ -33,9 +34,9 @@
 ;;;; The Game Context
 ;;;;
 
-(defparameter *GAME-STATE-FINAL* 1)
-(defparameter *GAME-STATE-CONTINUE* 2)
-(defparameter *GAME-STATE-PROCESSING-FINAL* 3)
+(defconstant *GAME-STATE-FINAL* 1)
+(defconstant *GAME-STATE-CONTINUE* 2)
+(defconstant *GAME-STATE-PROCESSING-FINAL* 3)
 
 (defclass context ()
   (
@@ -183,13 +184,13 @@
 	  (if (is-four counter-board counter-x counter-y)
 	      (progn 
 		(format-context context (max-line-at counter-board counter-x counter-y computers-color))
-		(format-message *message-formatter* (format nil "Computers move is ~a" counter-x))
+		(format-message *message-formatter* (format nil "Computers move is ~a with a score of ~a" counter-x (third counter-move)))
 		(format-message *message-formatter* "COMPUTER HAS WON")
 		(setf (slot-value context 'state) *GAME-STATE-FINAL*)
 		)
 	      (progn
 		(format-context context (list (list counter-x counter-y)))
-		(format-message *message-formatter* (format nil "Computers move is ~a" counter-x))
+		(format-message *message-formatter* (format nil "Computers move is ~a with a score of ~a" counter-x (third counter-move)))
 		(check-if-move-is-available context)
 		)
 	      ))))

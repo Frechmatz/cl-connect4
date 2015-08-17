@@ -5,16 +5,10 @@
 (in-package :connect4)
 
 
-;;
-;; Board dimensions of the original game
-;;
-(defparameter *CLASSIC-WIDTH* 7) 
-(defparameter *CLASSIC-HEIGHT* 6) 
+(defconstant *CLASSIC-WIDTH* 7 "Board width of the original game") 
+(defconstant *CLASSIC-HEIGHT* 6 "Board height of the original game") 
 
-;;
-;; Skip randomizer by setting to not nil.
-;;
-(defvar *classic-skip-randomizer* nil)
+(defvar *classic-skip-randomizer* nil "Set varibale to true to disable that a random move is chosen from all moves that have the same score. Typically set by tests.")
 
 (defun board-score (board x y)
   "Evaluate the score of the board. x y: The latest move. Returns 1.0 or 0.0"
