@@ -57,20 +57,21 @@
     ))
 
 (defun minmax (the-board color max-depth)
-  "Minimax implementation. Calculates a counter move"
+  "Minimax implementation. Calculates a counter move. max-depth >= 1"
   ;; returns a tupel (x y score) where x represents the column, y the row and score the score of the column
   ;; max-depth: Maximum number of half-moves to execute (1..n)
   ;; color: The computers color
   ;;
   ;; create a clone of the board that for performance reasons will be manipulated during the traversal
   (let ((board (clone-board the-board)))
+    ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))
 		 (dolist (move generated-moves)
 		   (nset-field board (first move) (second move) color) ; do move
 		   (setf score (board-score board (first move) (second move) )) ; calc score
 		   (setf is-four (equal score 1.0)) ; 4 pieces in a row? 
-		   (setf score (/ score (+ cur-depth 1.0))) ; adapt score to current search depth
+		   (setf score (/ score cur-depth)) ; adapt score to current search depth
 		   (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
 		   ;; final state or no more moves availabe or max depth reached
 		   (if (or is-four (not (is-move-available board)) (equal cur-depth max-depth))
@@ -82,8 +83,9 @@
 			 (push (list (first move) (second move) (third score)) moves)))
 		   (nset-field board (first move) (second move) *EMPTY*) ; undo move
 		   )
-		 ;; we now have a list of (x y score) tuples. Reduce them to a final move
-		 (reduce-scores moves is-opponent :skip-randomizer nil)
+		 ;; We now have a list of (x y score) tuples. Reduce them to a final move
+		 ;; Randomize only on top level. For deeper traversal depths only the resulting score is relevant
+		 (reduce-scores moves is-opponent :skip-randomizer (if (equal cur-depth 1) nil t))
 		 )))
       (minmax-inner board color nil 1)
       )))
