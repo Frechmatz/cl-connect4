@@ -1,7 +1,7 @@
 
-;;
-;; Pretty printer for a board
-;;
+;;;;
+;;;; Pretty printer for a board
+;;;;
 
 (in-package :connect4)
 
@@ -70,12 +70,10 @@
   (format nil "~1,'0x" y)
    )
 
-;;
-;;
-;;
-(defclass colorful-board-formatter (board-formatter) ())
+(defclass colorful-board-formatter (board-formatter) ()
+  (:documentation "Board formatter with colored output using ANSI escape sequences")
+  )
 
-;; override simple B/W formatting
 (defmethod format-cell-value ( (formatter colorful-board-formatter) cell-value)
   (cond
    ((equal cell-value *WHITE*) (format nil "~c[32mW~c[0m" #\Esc #\Esc))

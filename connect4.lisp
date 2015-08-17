@@ -1,23 +1,21 @@
+;;;;
+;;;;   #####                                           #       
+;;;;  #     #  ####  #    # #    # ######  ####  ##### #    #  
+;;;;  #       #    # ##   # ##   # #      #    #   #   #    #  
+;;;;  #       #    # # #  # # #  # #####  #        #   #    #  
+;;;;  #       #    # #  # # #  # # #      #        #   ####### 
+;;;;  #     # #    # #   ## #   ## #      #    #   #        #  
+;;;;   #####   ####  #    # #    # ######  ####    #        #  
+;;;;  
+;;;;  A console based implementation of the Connect Four game
+;;;;
 
-#|
-
- #####                                           #       
-#     #  ####  #    # #    # ######  ####  ##### #    #  
-#       #    # ##   # ##   # #      #    #   #   #    #  
-#       #    # # #  # # #  # #####  #        #   #    #  
-#       #    # #  # # #  # # #      #        #   ####### 
-#     # #    # #   ## #   ## #      #    #   #        #  
- #####   ####  #    # #    # ######  ####    #        #  
-
-A console based implementation of the Connect Four game
-
-|#
 
 (in-package :connect4)
 
-;;
-;; Output formatters
-;;
+;;;;
+;;;; Output formatters
+;;;;
 
 (defclass message-formatter () ())
 (defgeneric format-message (message-formatter message)
@@ -31,9 +29,9 @@ A console based implementation of the Connect Four game
 (defvar *board-formatter*)
 (defvar *message-formatter*)
 
-;;
-;; The Game Context
-;;
+;;;;
+;;;; The Game Context
+;;;;
 
 (defparameter *GAME-STATE-FINAL* 1)
 (defparameter *GAME-STATE-CONTINUE* 2)
@@ -47,9 +45,9 @@ A console based implementation of the Connect Four game
    (state :initarg :state :initform *GAME-STATE-CONTINUE* :accessor state)
    ))
 
-;;
-;; Command line argument parsers
-;;
+;;;;
+;;;; Command line argument parsers
+;;;;
 
 (define-condition invalid-arguments (error)
   ((text :initarg :text :reader text)))
@@ -70,8 +68,8 @@ A console based implementation of the Connect Four game
     (reverse result)
     ))
 
-;; accepts bases 10 and 16
 (defun parse-number (n min-n max-n)
+  "Parse a number out of a hex string."
   (if (not (integerp n))
       (setf n
 	    (handler-case
@@ -106,30 +104,28 @@ A console based implementation of the Connect Four game
   ;; board dimension > 16 is not supported by the board-formatter
   (parse-number n 4 16 ))
 
-;;
-;; Helper function to detect a final state
-;;
 (defun check-if-move-is-available (context)
+  "Helper function to detect a final state"
   (if (not (is-move-available (slot-value context 'board)))
       (progn
 	(format-message *message-formatter* "Draw! No more moves left.")
 	(setf (slot-value context 'state) *GAME-STATE-FINAL*)
 	)))
 
-;;
-;; Game commands
-;;
-;; - may modify the game context
-;; - may print context statuses or messages
-;;   to the console
-;; - may return NIL to signal that the
-;;   current command loop should be left.
-;;   Used for exiting a nest command loop.
-;;   Commands typically return t
-;; - may indicate a final state by
-;;   setting the game-state property of the
-;;   game context to *GAME-STATE-FINAL*
-;;
+;;;;
+;;;; Game commands
+;;;;
+;;;; - may modify the game context
+;;;; - may print context statuses or messages
+;;;;   to the console
+;;;; - may return NIL to signal that the
+;;;;   current command loop should be left.
+;;;;   Used for exiting a nest command loop.
+;;;;   Commands typically return t
+;;;; - may indicate a final state by
+;;;;   setting the game-state property of the
+;;;;   game context to *GAME-STATE-FINAL*
+;;;;
 
 (define-condition quit-game (error)
   ((text :initarg :text :reader text)))
@@ -220,12 +216,8 @@ A console based implementation of the Connect Four game
 
 (defun game-command-quit (context)
   (declare (ignore context))
-  ;; Signal quit.
+  ;; Signal quit. (todo: consider if this is a good idea)
   (error 'quit-game :text "Bye"))
-
-;;
-;; Interface of the commands that are executed by the game repl
-;;
 
 (defclass command ()
   (
@@ -233,41 +225,42 @@ A console based implementation of the Connect Four game
    (infoFn :initarg :infoFn)
    (parseArgsFn :initarg :parseArgsFn)
    (execFn :initarg :execFn)
-   ))
+   )
+   (:documentation "Interface of the commands that are executed by the game repl")
+  )
 
-;;
-;; Helper functions
-;;
+;;;;
+;;;; Helper functions
+;;;;
 
-;; Print command overview
 (defun print-help-text (command-table)
+  "Print command overview"
   (format t "Commands:~%")
   (dolist (cmd command-table)
     (format t "~a~c"  (funcall (slot-value cmd 'infoFn)) #\newline))
   (format t "~%")
   )
 
-;; Print board and statuses
 (defun format-context (context &optional highlight-cells)
+  "Print board and statuses"
     (format-board *board-formatter* (slot-value context 'board) highlight-cells)
     (format t "~%Level: ~a Your color: ~a~%"
 	    (slot-value context 'difficulty-level)
 	    (format-cell-value *board-formatter* (slot-value context 'players-color))))
 
-;; Read a command from the console
 (defun read-cmd ()
+  "Read a command from the console. Returns list of strings."
   (cl-ppcre:split "\\s" (read-line))
   )
 
-;; Look up a command
-;; todo: get rid of this function. replace it by functionality of the standard library
 (defun find-element (list equalFn)
+  "Look up a command. todo: get rid of this function. replace it by functionality of the standard library"
   (let ((elem (first list)))
     (if (or (not elem) (funcall equalFn elem)) elem (find-element (cdr list) equalFn))
     ))
 
-;; Execute a command
 (defun do-cmd (context command-table command-string)
+  "Execute a command"
   (let ((result t))
     (if (equal (car command-string) '())
 	(progn
@@ -291,12 +284,8 @@ A console based implementation of the Connect Four game
     result))
   
 
-;;
-;; ****************************
-;; Main game repl
-;; ****************************
-;;
 (defun cmd-loop (context command-table)
+  "The game REPL"
   (let ((cmd nil))
     (format-context context)
     (princ #\newline)
@@ -324,7 +313,7 @@ A console based implementation of the Connect Four game
 					      :name "r"
 					      :infoFn (lambda () "r: To start a new game")
 					      :parseArgsFn (lambda (args context) (parse-arguments args '() context))
-					      :execFn (lambda (context) (game-command-restart context) nil) ;; quit loop by returning nil
+					      :execFn (lambda (context) (game-command-restart context) nil) ; quit loop by returning nil
 					      ) table)
 				       ;; Prevent recursive entering into final state processing
 				       (setf (slot-value context 'state) *GAME-STATE-PROCESSING-FINAL*)
@@ -336,15 +325,16 @@ A console based implementation of the Connect Four game
       )))
 
 
-;;
-;; ***********************************************************************************
-;; Start the game
-;; - Set up formatting contexts for messages and the board
-;; - Create the game context
-;; - Set up the command table on which the game repl will work
-;; ***********************************************************************************
-;;
+;;;;
+;;;; ***********************************************************************************
+;;;; Start the game
+;;;; - Set up formatting contexts for messages and the board
+;;;; - Create the game context
+;;;; - Set up the command table on which the game repl will work
+;;;; ***********************************************************************************
+;;;;
 (defun lets-play( &key (colors-not-supported t))
+  "Starts the game"
   (format t "~%~%Welcome to Connect4~%~%")
   (let ( (*board-formatter*
 	  (if (not colors-not-supported)
@@ -358,15 +348,13 @@ A console based implementation of the Connect Four game
 	  )
 	 (command-table
 	  (let ((table ()))
-	    ;; Play
 	    (push (make-instance
 		   'command
 		   :name "play"
-		   :infoFn (lambda () "play <column>: Play a move and get computers counter move. column can be entered in hex")
+		   :infoFn (lambda () "play <column>: Play a move and get computers counter move. Column: 0..9 A..F")
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x) context))
 		   :execFn (lambda (context x) (game-command-play-human context x))
 		   ) table)
-	    ;; Print board
 	    (push (make-instance
 		   'command
 		   :name "board"
@@ -374,7 +362,6 @@ A console based implementation of the Connect Four game
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-print-board context))
 		   ) table)
-	    ;; Set Level
 	    (push (make-instance
 		   'command
 		   :name "set-level"
@@ -382,7 +369,6 @@ A console based implementation of the Connect Four game
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-level) context))
 		   :execFn (lambda (context level) (game-command-set-level context level))
 		   ) table)
-	    ;; Set board size
 	    (push (make-instance
 		   'command
 		   :name "set-board-size"
@@ -390,7 +376,6 @@ A console based implementation of the Connect Four game
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-board-dimension #'parse-board-dimension) context))
 		   :execFn (lambda (context width height) (game-command-set-board-size context width height))
 		   ) table)
-	    ;; Hint
 	    (push (make-instance
 		   'command
 		   :name "hint"
@@ -398,7 +383,6 @@ A console based implementation of the Connect Four game
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-hint context))
 		   ) table)
-	    ;; Toggle color
 	    (push (make-instance
 		   'command
 		   :name "toggle-color"
@@ -406,7 +390,6 @@ A console based implementation of the Connect Four game
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-toggle-color context))
 		   ) table)
-	    ;; Continue 
 	    (push (make-instance
 		   'command
 		   :name "continue"
@@ -414,7 +397,6 @@ A console based implementation of the Connect Four game
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-play-computer context))
 		   ) table)
-	    ;; Restart
 	    (push (make-instance
 		    'command
 		    :name "r"
@@ -422,7 +404,6 @@ A console based implementation of the Connect Four game
 		    :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		    :execFn (lambda (context) (game-command-restart context))
 		    ) table)
-	    ;; Quit
 	    (push (make-instance
 		    'command
 		    :name "q"
@@ -446,9 +427,7 @@ A console based implementation of the Connect Four game
     (format t "Bye. Thanks for playing.~%")
     ))
 
-;;
-;; Start game using ansi escape sequences for colored output
-;;
 (defun lets-play-colorful ()
+  "Starts the game using ANSI escape sequences for colored output"
   (lets-play :colors-not-supported nil))
 

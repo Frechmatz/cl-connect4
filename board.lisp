@@ -1,10 +1,10 @@
 
 
-#|
-Common Connect4 board related functionality
-- Encapsulates the representation of the board
-- Provides functions to create, clone, access and manipulate a board
-|#
+;;;; 
+;;;; Common Connect4 board related functionality
+;;;; - Encapsulates the representation of the board
+;;;; - Provides functions to create, clone, access and manipulate a board
+;;;; 
 
 (in-package :connect4)
 
@@ -13,34 +13,28 @@ Common Connect4 board related functionality
 (defparameter *EMPTY* '_)
 (defparameter *BORDER* 'X)
 
-;;
-;; Get width of a board (1..x)
-;;
 (defun get-board-width (board)
+  "Get width of a board (1..x)"
   (+ (array-dimension board 1) -2))
 
-;; get maximum x coordinate
 (defun get-max-x (board)
+  "get maximum x coordinate"
   (+  (get-board-width board) -1))
 
-;;
-;; Get height of a board (1..x)
-;; 
 (defun get-board-height (board)
+  "Get height of a board (1..x)"
   (+ (array-dimension board 0) -2))
 
-;; get maximum y coordinate
 (defun get-max-y (board)
+  "get maximum y coordinate"
   (+  (get-board-height board) -1))
 
 (defun get-field (board x y)
+  "get the value of a field position"
   (aref board (+ 1 y) (+ 1 x)))
 
-
-;;
-;; Create a board
-;; 
 (defun create-board (width height)
+  "Create a board"
   (let ( (board (make-array (list (+ 2 height) (+ 2 width)) :initial-element *EMPTY*)))
     (dotimes (x (+ 2 width))
       (setf (aref board 0 x) *BORDER*)
@@ -53,11 +47,8 @@ Common Connect4 board related functionality
     board
     ))
 
-;;
-;; Clone a board
-;; bozo algorithm but not used that often :)
-;; 
 (defun clone-board (board)
+  "Clone a board. todo: better implementation"
   (let ((new-board (create-board (get-board-width board) (get-board-height board))))
     (dotimes (x (+ 2 (get-board-width board)))
       (dotimes (y (+ 1 (get-board-height board)))
@@ -65,45 +56,33 @@ Common Connect4 board related functionality
 	))
     new-board))
 
-;;
-;; Clone board and set field
-;; returns new board
-;; 
 (defun set-field (board x y color)
+  "Set a field of the board. Non-Destructive"
   (let ((new-board (clone-board board)))
     (setf (aref new-board (+ 1 y) (+ 1 x)) color)
     new-board
     ))
 
-;;
-;; Set field in given board (does not clone the board)
-;; returns manipulated board
-;;
 (defun nset-field (board x y color)
+  "Set a field of the board. Destructive"
   (setf (aref board (+ 1 y) (+ 1 x)) color)
   board
     )
 
-;;
-;; Check if a field has a given color
-;; applies border checking and returns nil if field is out of board
-;; this check is a bit costly but allows simpler implementations of
-;; board traversals
-;;
 (defun is-field-color-p (board x y color)
+  "Check if a field has a given color. Returns nil if position is not within the board"
   (if (or (>= x (get-board-width board)) (>= y (get-board-height board)))
       nil
     (eq (get-field board x y) color)
   ))
 
-;;
-;; Calculate the line at the given position and for given direction
-;; x y: Starting point from which adjacent points are checked for the same color
-;; dx dy: Direction to traverse ("as is" and inverted)
-;; returns list of (x y) tupels
-;;
+
 (defun line-at (board x y dx dy color)
-  (declare (fixnum x y dx dy))
+  "Calculate the line at the given position and for given direction"
+  ;; x y: Starting point from which adjacent points are checked for the same color
+  ;; dx dy: Direction to traverse ("as is" and inverted)
+  ;; returns list of (x y) tupels
+  ;;  (declare (fixnum x y dx dy))
   (let ((length '())) 
     (labels (
 	     (traverse (x y dx dy)
@@ -141,16 +120,15 @@ Common Connect4 board related functionality
 (defun max-line-length-at (board x y color)
   (length (max-line-at board x y color)))
 
-;;
-;; Calculate the total length of the line at the given position and for given direction
-;; x y: Starting point from which adjacent points are checked for the same color
-;; dx dy: Direction to traverse ("as is" and inverted)
-;;
 (defun line-length-at (board x y dx dy color)
+  "Calculate the total length of the line at the given position and for given direction"
+  ;; x y: Starting point from which adjacent points are checked for the same color
+  ;; dx dy: Direction to traverse ("as is" and inverted)
   (length (line-at board x y dx dy color))
   )
 
 (defun is-field-set (board x y)
+  "Check if given field is set. Returns nil if position is not within board"
   (if (or (is-field-color-p board x y *WHITE*) (is-field-color-p board x y *BLACK*)) t NIL)
   )
 
@@ -158,22 +136,20 @@ Common Connect4 board related functionality
   (if (is-field-color-p board x y *EMPTY*) t nil)
   )
 
-;; check if four pieces are in a row
 (defun is-four (board x y)
+  "Check if four pieces are in a row"
   (let ((l (max-line-length-at board x y (get-field board x y))))
     (if (>= l 4) t nil))
   )
 
-;;
-;; Calculates the row into which a piece will fall if its thrown into the given column
-;; returns y or nil if all fields of the column are already occupied
-;;
 (defun find-row (board x)
+  "Calculates the row into which a piece will fall if its thrown into the given column. Returns nil if no place left in column."
   (if (is-field-empty board x 0)
       (+ (line-length-at board x 0 0 1 *EMPTY*) -1)
     nil
     ))
 
 (defun invert-color (color)
-   (if (eq color *WHITE*) *BLACK* *WHITE*)
+  "Invert the given color"
+  (if (eq color *WHITE*) *BLACK* *WHITE*)
    )
