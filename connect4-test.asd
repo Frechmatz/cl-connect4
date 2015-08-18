@@ -4,6 +4,7 @@
 ;;;; (in-package :connect4-test)
 ;;;; (run-tests)
 ;;;;
+;;;;
 (defsystem :connect4-test
   :serial t
   :description "Tests of the Connect Four game"
@@ -14,6 +15,7 @@
                         :components ((:file "packages")
                                      (:file "testutil")
                                      (:file "minmaxtest")
+                                     (:file "board-01")
 				     )))
   )
 

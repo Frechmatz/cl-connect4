@@ -1,6 +1,10 @@
 
 (in-package :connect4-test)
 
+;;;
+;;; Next move by: WHITE (the computer)
+;;; Direct win 
+;;;
 (define-test test-direct-win ()
   (let ( (board nil) (best-move nil) (connect4::*classic-skip-randomizer* t))
     (setf board (create-test-board (list
@@ -13,8 +17,10 @@
     ))
 
 
-
+;;;
+;;; Next move by: WHITE (the computer)
 ;;; 'checkmate' in two moves
+;;;
 (define-test test-win-by-two ()
   (let ( (board nil) (best-move nil) (connect4::*classic-skip-randomizer* t))
     (setf board (create-test-board (list
