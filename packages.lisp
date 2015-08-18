@@ -1,8 +1,6 @@
 
 (defpackage :connect4
-  (:use :cl)
+  (:use :cl :cl-ppcre)
   (:export :lets-play)
   (:export :lets-play-colorful)
-  ;; shortcut for lets-play-colorful
-  (:export :lpc)
   )
