@@ -72,25 +72,21 @@
     (reverse result)
     ))
 
-(defun parse-number (n min-n max-n)
+(defun parse-number (n min-n max-n &key (radix 10))
   "Parse a number out of a hex string."
-  (if (not (integerp n))
-      (setf n
-	    (handler-case
-		(parse-integer (format nil "~a" n) :radix 16)
-	      (parse-error  nil))))
+  (setf n
+	(handler-case
+	    (parse-integer (format nil "~a" n) :radix radix)
+	  (parse-error  nil)))
   (cond 
-	 ((not (integerp n)) (error 'invalid-arguments :text "Not a number"))
-	 ((> n max-n) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are ~a...~a" n min-n max-n)))
-	 ((< n min-n) (error 'invalid-arguments :text (format nil "Number too small: ~a. Allowed values are ~a...~a" n min-n max-n)))
-	 (t n)
-	 ))
-  
-(defun parse-x (x context)
-  (parse-number x 0 (get-max-x (slot-value context 'board))))
+    ((not (integerp n)) (error 'invalid-arguments :text "Not a number"))
+    ((> n max-n) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are ~a...~a" n min-n max-n)))
+    ((< n min-n) (error 'invalid-arguments :text (format nil "Number too small: ~a. Allowed values are ~a...~a" n min-n max-n)))
+    (t n)
+    ))
 
-(defun parse-y (y context)
-  (parse-number y 0 (get-max-y (slot-value context 'board))))
+(defun parse-x (x context)
+  (parse-number x 0 (get-max-x (slot-value context 'board)) :radix 16))
 
 (defun parse-level (level context)
   (declare (ignore context))
