@@ -3,7 +3,7 @@
 
 
 ;;;
-;;; Next move by: WHITE (the computer)
+;;; Next move by: WHITE
 ;;;
 ;;; This board presents a situation where BLACK will win if it plays into column 3.
 ;;; (WHITE is forced to answer with 3 then BLACK will play 4 and the game is over)

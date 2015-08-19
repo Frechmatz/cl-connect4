@@ -14,8 +14,9 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "testutil")
-                                     (:file "minmaxtest")
+                                     (:file "board-00")
                                      (:file "board-01")
+                                     (:file "board-02")
 				     )))
   )
 
