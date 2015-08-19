@@ -266,12 +266,6 @@
   (cl-ppcre:split "\\s" (read-line))
   )
 
-(defun find-element (list equalFn)
-  "Look up a command. todo: get rid of this function. replace it by functionality of the standard library"
-  (let ((elem (first list)))
-    (if (or (not elem) (funcall equalFn elem)) elem (find-element (cdr list) equalFn))
-    ))
-
 (defun do-cmd (context command-table command-string)
   "Execute a command"
   (let ((result t))
@@ -279,7 +273,7 @@
 	(progn
 	  (format-context context)
 	  (print-help-text command-table))
-	(let ((opcode (find-element command-table (lambda (command) (equal (car command-string)  (slot-value command 'name))))))
+	(let ((opcode (find-if (lambda (c) (equal (car command-string) (slot-value c 'name))) command-table)))
 	  (if opcode
 	      (let ((parsed-args
 		     (handler-case
