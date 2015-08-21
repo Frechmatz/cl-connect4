@@ -1,6 +1,6 @@
 (defsystem :connect4
   :serial t
-  :version "0.9.0"
+  :version "1.0.0"
   :licence "Public Domain / 0-clause MIT"
   :description "Implementation of the Connect Four game"
   :long-description
