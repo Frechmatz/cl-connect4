@@ -19,12 +19,10 @@ and add connect4 to the asdf system path.
 
 
 ```bash
-(require "connect4")
-# ASDF:
-# (asdf:load-system "connect4")
+(asdf:load-system "connect4")
 # Terminal doesn't support ansi color escape sequences
 (connect4:lets-play)
-# Terminal supports ansi color escape sequences
+# otherwise
 # (connect4:lets-play-colorful)
 ```
 
