@@ -21,7 +21,7 @@
 (define-test test-board-02-a ()
   (let ( (board nil) (best-move nil) (connect4::*classic-skip-randomizer* t))
     (setf board (create-board-02))
-    (setf best-move (connect4::minmax board connect4::*WHITE* 2))
+    (setf best-move (connect4::minmax board connect4::WHITE 2))
     (assert-equal 2 (first best-move) (format t "test-board02-a: Wrong move chosen: ~a" (first best-move)))
     ))
 
@@ -29,7 +29,7 @@
 (define-test test-board-02-b ()
   (let ( (board nil) (best-move nil) (connect4::*classic-skip-randomizer* t))
     (setf board (create-board-02))
-    (setf best-move (connect4::minmax board connect4::*WHITE* 3))
+    (setf best-move (connect4::minmax board connect4::WHITE 3))
     (assert-equal 4 (first best-move) (format t "test-board02-b: Wrong move chosen: ~a" (first best-move)))
     ))
 

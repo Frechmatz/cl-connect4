@@ -5,8 +5,8 @@
 (in-package :connect4)
 
 
-(defconstant *CLASSIC-WIDTH* 7 "Board width of the original game") 
-(defconstant *CLASSIC-HEIGHT* 6 "Board height of the original game") 
+(defconstant CLASSIC-WIDTH 7 "Board width of the original game") 
+(defconstant CLASSIC-HEIGHT 6 "Board height of the original game") 
 
 (defvar *classic-skip-randomizer* nil "Set varibale to true to disable that a random move is chosen from all moves that have the same score. Typically set by tests.")
 
@@ -81,7 +81,7 @@
 		       (progn
 			 (setf score (minmax-inner board (invert-color color) (not is-opponent) (+ cur-depth 1)))
 			 (push (list (first move) (second move) (third score)) moves)))
-		   (nset-field board (first move) (second move) *EMPTY*) ; undo move
+		   (nset-field board (first move) (second move) EMPTY) ; undo move
 		   )
 		 ;; We now have a list of (x y score) tuples. Reduce them to a final move
 		 ;; Randomize only on top level. For deeper traversal depths only the resulting score is relevant

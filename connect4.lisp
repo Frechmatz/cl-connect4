@@ -34,16 +34,16 @@
 ;;;; The Game Context
 ;;;;
 
-(defconstant *GAME-STATE-FINAL* 1)
-(defconstant *GAME-STATE-CONTINUE* 2)
-(defconstant *GAME-STATE-PROCESSING-FINAL* 3)
+(defconstant GAME-STATE-FINAL 1)
+(defconstant GAME-STATE-CONTINUE 2)
+(defconstant GAME-STATE-PROCESSING-FINAL 3)
 
 (defclass context ()
   (
    (board :accessor board)
    (players-color :accessor players-color)
    (difficulty-level :accessor difficulty-level)
-   (state :initarg :state :initform *GAME-STATE-CONTINUE* :accessor state)
+   (state :initarg :state :initform GAME-STATE-CONTINUE :accessor state)
    (wins :initform 0 :accessor wins)
    (loses :initform 0 :accessor loses)
    (draws :initform 0 :accessor draws)
@@ -94,8 +94,8 @@
 
 (defun parse-color (c context)
   (declare (ignore context))
-  (if (equal c 'W) *WHITE*
-    (if (equal c 'B) *BLACK*
+  (if (equal c 'W) WHITE
+    (if (equal c 'B) BLACK
       (error 'invalid-arguments :text "Invalid color. Valid colors are W and B")
       )))
 
@@ -110,7 +110,7 @@
       (progn
 	(setf (slot-value context 'draws) (+ 1 (slot-value context 'draws)))
 	(format-message *message-formatter* "Draw! No more moves left.")
-	(setf (slot-value context 'state) *GAME-STATE-FINAL*)
+	(setf (slot-value context 'state) GAME-STATE-FINAL)
 	)))
 
 ;;;;
@@ -125,7 +125,7 @@
 ;;;;   Commands typically return t
 ;;;; - may indicate a final state by
 ;;;;   setting the game-state property of the
-;;;;   game context to *GAME-STATE-FINAL*
+;;;;   game context to GAME-STATE-FINAL
 ;;;;
 
 (define-condition quit-game (error)
@@ -133,42 +133,42 @@
 
 (defun game-command-set-board-size (context width height)
   (setf (slot-value context 'board) (create-board width height))
-  (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
+  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   (format-context context)
   t)
 
 (defun game-command-hint (context)
   (let ((result (minmax (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
     (format-message *message-formatter* (format nil "Recommended move is column ~a with a score of ~a" (first result) (third result))))
-  (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
+  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   t)
 
 (defun game-command-print-board (context)
   (format-context context)
-  (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
+  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   t)
 
 (defun game-command-set-level (context level)
   (setf (slot-value context 'difficulty-level) level)
   (format-context context)
-  (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
+  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   t)
 
 (defun game-command-toggle-color (context)
   (setf (slot-value context 'players-color) (invert-color (slot-value context 'players-color)))
   (format-context context)
-  (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
+  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   t)
 
 (defun game-command-restart (context)
   (game-command-set-board-size context (get-board-width (slot-value context 'board)) (get-board-height (slot-value context 'board)))
   (format-context context)
   (format-message *message-formatter* "Restarted game")
-  (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
+  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   t)
 
 (defun game-command-play-computer (context)
-  (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
+  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   (let ((computers-color (invert-color (slot-value context 'players-color)))
 	(counter-move nil) (counter-x nil) (counter-y nil) (counter-board nil))
     (setf counter-move (minmax (slot-value context 'board) computers-color (slot-value context 'difficulty-level)))
@@ -177,7 +177,7 @@
 	  (setf (slot-value context 'draws) (+ 1 (slot-value context 'draws)))
 	  (format-context context)
 	  (format-message *message-formatter* "No counter move found")
-	  (setf (slot-value context 'state) *GAME-STATE-FINAL*))  
+	  (setf (slot-value context 'state) GAME-STATE-FINAL))  
 	(progn
 	  (setf counter-x (first counter-move))
 	  (setf counter-y (second counter-move))
@@ -189,7 +189,7 @@
 		(format-context context (max-line-at counter-board counter-x counter-y computers-color))
 		(format-message *message-formatter* (format nil "Computers move is ~a with a score of ~a" counter-x (third counter-move)))
 		(format-message *message-formatter* "COMPUTER HAS WON")
-		(setf (slot-value context 'state) *GAME-STATE-FINAL*)
+		(setf (slot-value context 'state) GAME-STATE-FINAL)
 		)
 	      (progn
 		(format-context context (list (list counter-x counter-y)))
@@ -200,7 +200,7 @@
   t)
 
 (defun game-command-play-human (context x)
-  (setf (slot-value context 'state) *GAME-STATE-CONTINUE*)
+  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   (let ((players-color (slot-value context 'players-color)) (y nil) (counter-board nil))
     (setf y (find-row (slot-value context 'board) x))
     (if (not y)
@@ -213,7 +213,7 @@
 		(setf (slot-value context 'wins) (+ 1 (slot-value context 'wins)))
 		(format-context context (max-line-at counter-board x y players-color))
 		(format-message *message-formatter* "YOU ARE THE WINNER")
-		(setf (slot-value context 'state) *GAME-STATE-FINAL*)
+		(setf (slot-value context 'state) GAME-STATE-FINAL)
 		)
 	      (game-command-play-computer context)
 	      ))))
@@ -299,7 +299,7 @@
 	       (setf cmd (read-cmd))
 	       (princ #\newline)
 	       (if (do-cmd context command-table cmd)
-		   (if (not (equal (slot-value context 'state) *GAME-STATE-FINAL*))
+		   (if (not (equal (slot-value context 'state) GAME-STATE-FINAL))
 		       (do-command command-table)
 		       (progn
 			 ;; Process final state: Let player quit or restart game
@@ -319,7 +319,7 @@
 					      :execFn (lambda (context) (game-command-restart context) nil) ; quit loop by returning nil
 					      ) table)
 				       ;; Prevent recursive entering into final state processing
-				       (setf (slot-value context 'state) *GAME-STATE-PROCESSING-FINAL*)
+				       (setf (slot-value context 'state) GAME-STATE-PROCESSING-FINAL)
 				       table))
 			 (do-command command-table))
 		       )
@@ -418,7 +418,7 @@
 	    ))
 	 (context
 	  (let ((context (make-instance 'context)))
-	    (setf (slot-value context 'board) (create-board *CLASSIC-WIDTH* *CLASSIC-HEIGHT*))
+	    (setf (slot-value context 'board) (create-board CLASSIC-WIDTH CLASSIC-HEIGHT))
 	    (setf (slot-value context 'players-color) 'W)
 	    (setf (slot-value context 'difficulty-level) 6)
 	    context))

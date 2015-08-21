@@ -36,15 +36,15 @@
 
 (defmethod format-cell-value ( (formatter board-formatter) cell-value)
   (cond
-   ((equal cell-value *WHITE*) "W")
-   ((equal cell-value *BLACK*) "B")
+   ((equal cell-value WHITE) "W")
+   ((equal cell-value BLACK) "B")
    (t "_")
    ))
 
 (defmethod format-cell-value-highlighted ( (formatter board-formatter) cell-value)
   (cond
-   ((equal cell-value *WHITE*) "W")
-   ((equal cell-value *BLACK*) "B")
+   ((equal cell-value WHITE) "W")
+   ((equal cell-value BLACK) "B")
    (t "_")
    ))
 
@@ -76,15 +76,15 @@
 
 (defmethod format-cell-value ( (formatter colorful-board-formatter) cell-value)
   (cond
-   ((equal cell-value *WHITE*) (format nil "~c[32mW~c[0m" #\Esc #\Esc))
-   ((equal cell-value *BLACK*) (format nil "~c[31mB~c[0m" #\Esc #\Esc))
+   ((equal cell-value WHITE) (format nil "~c[32mW~c[0m" #\Esc #\Esc))
+   ((equal cell-value BLACK) (format nil "~c[31mB~c[0m" #\Esc #\Esc))
    (t "_")
    ))
 
 (defmethod format-cell-value-highlighted ( (formatter colorful-board-formatter) cell-value)
   (cond
-   ((equal cell-value *WHITE*) (format nil "~c[32;1mW~c[0m" #\Esc #\Esc))
-   ((equal cell-value *BLACK*) (format nil "~c[31;1mB~c[0m" #\Esc #\Esc))
+   ((equal cell-value WHITE) (format nil "~c[32;1mW~c[0m" #\Esc #\Esc))
+   ((equal cell-value BLACK) (format nil "~c[31;1mB~c[0m" #\Esc #\Esc))
    (t "_")
    ))
 

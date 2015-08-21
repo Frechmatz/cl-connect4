@@ -24,7 +24,7 @@
 (define-test test-board-01-computer-fail ()
   (let ( (board nil) (best-move nil) (connect4::*classic-skip-randomizer* t))
     (setf board (create-board-01))
-    (setf best-move (connect4::minmax board connect4::*WHITE* 4))
+    (setf best-move (connect4::minmax board connect4::WHITE 4))
     (assert-equal 0 (first best-move) (format t "test-board-01-computer-fail: Unexpected move chosen: ~a~%" (first best-move)))
     ))
 
@@ -32,7 +32,7 @@
 (define-test test-board-01-computer-pass ()
   (let ( (board nil) (best-move nil) (connect4::*classic-skip-randomizer* t))
     (setf board (create-board-01))
-    (setf best-move (connect4::minmax board connect4::*WHITE* 6))
+    (setf best-move (connect4::minmax board connect4::WHITE 6))
     (assert-equal 3 (first best-move) (format t "test-board-01-computer-pass: Unexpected move chosen: ~a~%" (first best-move)))
     ))
 

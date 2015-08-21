@@ -8,10 +8,10 @@
 
 (in-package :connect4)
 
-(defconstant *BLACK* 'B)
-(defconstant *WHITE* 'W)
-(defconstant *EMPTY* '_)
-(defconstant *BORDER* 'X)
+(defconstant BLACK 'B)
+(defconstant WHITE 'W)
+(defconstant EMPTY '_)
+(defconstant BORDER 'X)
 
 (defun get-board-width (board)
   "Get width of a board (1..x)"
@@ -35,14 +35,14 @@
 
 (defun create-board (width height)
   "Create a board"
-  (let ( (board (make-array (list (+ 2 height) (+ 2 width)) :initial-element *EMPTY*)))
+  (let ( (board (make-array (list (+ 2 height) (+ 2 width)) :initial-element EMPTY)))
     (dotimes (x (+ 2 width))
-      (setf (aref board 0 x) *BORDER*)
-      (setf (aref board (+ height 1) x) *BORDER*)
+      (setf (aref board 0 x) BORDER)
+      (setf (aref board (+ height 1) x) BORDER)
       )
     (dotimes (y (+ 2 height))
-      (setf (aref board y 0) *BORDER*)
-      (setf (aref board y (+ width 1)) *BORDER*)
+      (setf (aref board y 0) BORDER)
+      (setf (aref board y (+ width 1)) BORDER)
       )
     board
     ))
@@ -129,11 +129,11 @@
 
 (defun is-field-set (board x y)
   "Check if given field is set. Returns nil if position is not within board"
-  (if (or (is-field-color-p board x y *WHITE*) (is-field-color-p board x y *BLACK*)) t NIL)
+  (if (or (is-field-color-p board x y WHITE) (is-field-color-p board x y BLACK)) t NIL)
   )
 
 (defun is-field-empty (board x y)
-  (if (is-field-color-p board x y *EMPTY*) t nil)
+  (if (is-field-color-p board x y EMPTY) t nil)
   )
 
 (defun is-four (board x y)
@@ -145,11 +145,11 @@
 (defun find-row (board x)
   "Calculates the row into which a piece will fall if its thrown into the given column. Returns nil if no place left in column."
   (if (is-field-empty board x 0)
-      (+ (line-length-at board x 0 0 1 *EMPTY*) -1)
+      (+ (line-length-at board x 0 0 1 EMPTY) -1)
     nil
     ))
 
 (defun invert-color (color)
   "Invert the given color"
-  (if (eq color *WHITE*) *BLACK* *WHITE*)
+  (if (eq color WHITE) BLACK WHITE)
    )
