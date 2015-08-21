@@ -30,5 +30,5 @@ and add connect4 to the asdf system path.
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc//computerwon_2_2.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc/gameplay.jpg)
 
