@@ -13,216 +13,9 @@
 
 (in-package :connect4)
 
-;;;;
-;;;; Output formatters
-;;;;
-
-(defclass message-formatter () ())
-(defgeneric format-message (message-formatter message)
-  (:documentation "Formats a text message"))
-(defmethod format-message ( (formatter message-formatter) message)
-  (format t "~a~%" message))
-(defclass colorful-message-formatter (message-formatter) ()
-  (:documentation "Formats a text message using ANSI escape sequences for colored output"))
-(defmethod format-message ( (formatter colorful-message-formatter) message)
-  (format t "~c[32m~a~c[0m~%" #\Esc message #\Esc))
-
-(defvar *board-formatter*)
-(defvar *message-formatter*)
-
-;;;;
-;;;; The Game Context
-;;;;
-
-(defconstant GAME-STATE-FINAL 1)
-(defconstant GAME-STATE-CONTINUE 2)
-(defconstant GAME-STATE-PROCESSING-FINAL 3)
-
-(defclass context ()
-  (
-   (board :accessor board)
-   (players-color :accessor players-color)
-   (difficulty-level :accessor difficulty-level)
-   (state :initarg :state :initform GAME-STATE-CONTINUE :accessor state)
-   (wins :initform 0 :accessor wins)
-   (loses :initform 0 :accessor loses)
-   (draws :initform 0 :accessor draws)
-   ))
-
-;;;;
-;;;; Command line argument parsers
-;;;;
-
-(define-condition invalid-arguments (error)
-  ((text :initarg :text :reader text)))
-
-(defun parse-arguments (args parsers context)
-  (let ((result ()))
-    (labels ((parse (args parsers context)
-	       (let ((arg (car args)) (parser (car parsers)))
-		 (cond 
-		   ((and (not arg) (not parser)) nil)
-		   ((and (not arg) parser) (error 'invalid-arguments :text "Missing arguments"))
-		   ((and arg (not parser)) (error 'invalid-arguments :text "Too many arguments"))
-		   (t 
-		    (push (funcall parser arg context) result)
-		    (parse (cdr args) (cdr parsers) context))
-		   ))))
-      (parse args parsers context))
-    (reverse result)
-    ))
-
-(defun parse-number (n min-n max-n &key (radix 10))
-  "Parse a number out of a hex string."
-  (setf n
-	(handler-case
-	    (parse-integer (format nil "~a" n) :radix radix)
-	  (parse-error  nil)))
-  (cond 
-    ((not (integerp n)) (error 'invalid-arguments :text "Not a number"))
-    ((> n max-n) (error 'invalid-arguments :text (format nil "Number too large: ~a. Allowed values are ~a...~a" n min-n max-n)))
-    ((< n min-n) (error 'invalid-arguments :text (format nil "Number too small: ~a. Allowed values are ~a...~a" n min-n max-n)))
-    (t n)
-    ))
-
-(defun parse-x (x context)
-  (parse-number x 0 (get-max-x (slot-value context 'board)) :radix 16))
-
-(defun parse-level (level context)
-  (declare (ignore context))
-  (parse-number level 1 10))
-
-(defun parse-color (c context)
-  (declare (ignore context))
-  (if (equal c 'W) WHITE
-    (if (equal c 'B) BLACK
-      (error 'invalid-arguments :text "Invalid color. Valid colors are W and B")
-      )))
-
-(defun parse-board-dimension (n  context)
-  (declare (ignore context))
-  ;; board dimension > 16 is not supported by the board-formatter
-  (parse-number n 4 16 ))
-
-(defun check-if-move-is-available (context)
-  "Helper function to detect a final state"
-  (if (not (is-move-available (slot-value context 'board)))
-      (progn
-	(setf (slot-value context 'draws) (+ 1 (slot-value context 'draws)))
-	(format-message *message-formatter* "Draw! No more moves left.")
-	(setf (slot-value context 'state) GAME-STATE-FINAL)
-	)))
-
-;;;;
-;;;; Game commands
-;;;;
-;;;; - may modify the game context
-;;;; - may print context statuses or messages
-;;;;   to the console
-;;;; - may return NIL to signal that the
-;;;;   current command loop should be left.
-;;;;   Used for exiting a nest command loop.
-;;;;   Commands typically return t
-;;;; - may indicate a final state by
-;;;;   setting the game-state property of the
-;;;;   game context to GAME-STATE-FINAL
-;;;;
-
-(define-condition quit-game (error)
-  ((text :initarg :text :reader text)))
-
-(defun game-command-set-board-size (context width height)
-  (setf (slot-value context 'board) (create-board width height))
-  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
-  (format-context context)
-  t)
-
-(defun game-command-hint (context)
-  (let ((result (minmax (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
-    (format-message *message-formatter* (format nil "Recommended move is column ~a with a score of ~a" (first result) (third result))))
-  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
-  t)
-
-(defun game-command-print-board (context)
-  (format-context context)
-  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
-  t)
-
-(defun game-command-set-level (context level)
-  (setf (slot-value context 'difficulty-level) level)
-  (format-context context)
-  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
-  t)
-
-(defun game-command-toggle-color (context)
-  (setf (slot-value context 'players-color) (invert-color (slot-value context 'players-color)))
-  (format-context context)
-  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
-  t)
-
-(defun game-command-restart (context)
-  (game-command-set-board-size context (get-board-width (slot-value context 'board)) (get-board-height (slot-value context 'board)))
-  (format-context context)
-  (format-message *message-formatter* "Restarted game")
-  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
-  t)
-
-(defun game-command-play-computer (context)
-  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
-  (let ((computers-color (invert-color (slot-value context 'players-color)))
-	(counter-move nil) (counter-x nil) (counter-y nil) (counter-board nil))
-    (setf counter-move (minmax (slot-value context 'board) computers-color (slot-value context 'difficulty-level)))
-    (if (not counter-move)
-	(progn
-	  (setf (slot-value context 'draws) (+ 1 (slot-value context 'draws)))
-	  (format-context context)
-	  (format-message *message-formatter* "No counter move found")
-	  (setf (slot-value context 'state) GAME-STATE-FINAL))  
-	(progn
-	  (setf counter-x (first counter-move))
-	  (setf counter-y (second counter-move))
-	  (setf counter-board (set-field (slot-value context 'board) counter-x counter-y computers-color))
-	  (setf (slot-value context 'board) counter-board)
-	  (if (is-four counter-board counter-x counter-y)
-	      (progn
-		(setf (slot-value context 'loses) (+ 1 (slot-value context 'loses)))
-		(format-context context (max-line-at counter-board counter-x counter-y computers-color))
-		(format-message *message-formatter* (format nil "Computers move is ~a with a score of ~a" counter-x (third counter-move)))
-		(format-message *message-formatter* "COMPUTER HAS WON")
-		(setf (slot-value context 'state) GAME-STATE-FINAL)
-		)
-	      (progn
-		(format-context context (list (list counter-x counter-y)))
-		(format-message *message-formatter* (format nil "Computers move is ~a with a score of ~a" counter-x (third counter-move)))
-		(check-if-move-is-available context)
-		)
-	      ))))
-  t)
-
-(defun game-command-play-human (context x)
-  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
-  (let ((players-color (slot-value context 'players-color)) (y nil) (counter-board nil))
-    (setf y (find-row (slot-value context 'board) x))
-    (if (not y)
-	(format-message *message-formatter* "Invalid move. No place left in given column")
-	(progn
-	  (setf counter-board (set-field (slot-value context 'board) x y players-color))
-	  (setf (slot-value context 'board) counter-board)
-	  (if (is-four counter-board x y)
-	      (progn
-		(setf (slot-value context 'wins) (+ 1 (slot-value context 'wins)))
-		(format-context context (max-line-at counter-board x y players-color))
-		(format-message *message-formatter* "YOU ARE THE WINNER")
-		(setf (slot-value context 'state) GAME-STATE-FINAL)
-		)
-	      (game-command-play-computer context)
-	      ))))
-  t)
-
-(defun game-command-quit (context)
-  (declare (ignore context))
-  ;; Signal quit. (todo: consider if this is a good idea)
-  (error 'quit-game :text "Bye"))
+;;;
+;;; The game repl specific code 
+;;;
 
 (defclass command ()
   (
@@ -231,31 +24,16 @@
    (parseArgsFn :initarg :parseArgsFn)
    (execFn :initarg :execFn)
    )
-   (:documentation "Interface of the commands that are executed by the game repl")
+   (:documentation "Interface of the commands that can be executed by the game repl")
   )
 
-;;;;
-;;;; Helper functions
-;;;;
-
 (defun print-help-text (command-table)
-  "Print command overview"
+  "Prints an overview of the commands that can by entered into the game repl"
   (format t "Commands:~%")
   (dolist (cmd command-table)
     (format t "~a~c"  (funcall (slot-value cmd 'infoFn)) #\newline))
   (format t "~%")
   )
-
-(defun format-context (context &optional highlight-cells)
-  "Print board and statuses"
-    (format-board *board-formatter* (slot-value context 'board) highlight-cells)
-    (format t "~%Wins: ~a Loses: ~a Draws: ~a"
-	    (slot-value context 'wins)
-	    (slot-value context 'loses)
-	    (slot-value context 'draws))
-    (format t "~%Level: ~a Your color: ~a~%"
-	    (slot-value context 'difficulty-level)
-	    (format-cell-value *board-formatter* (slot-value context 'players-color))))
 
 (defun read-cmd ()
   "Read a command from the console. Returns list of strings."
@@ -263,7 +41,7 @@
   )
 
 (defun do-cmd (context command-table command-string)
-  "Execute a command"
+  "Executes a command entered via the game repl. command-string: list of strings, consisting of the command and additional arguments."
   (let ((result t))
     (if (equal (car command-string) '())
 	(progn
@@ -288,7 +66,7 @@
   
 
 (defun cmd-loop (context command-table)
-  "The game REPL"
+  "The game repl"
   (let ((cmd nil))
     (format-context context)
     (princ #\newline)
@@ -328,14 +106,14 @@
       )))
 
 
-;;;;
-;;;; ***********************************************************************************
-;;;; Start the game
-;;;; - Set up formatting contexts for messages and the board
-;;;; - Create the game context
-;;;; - Set up the command table on which the game repl will work
-;;;; ***********************************************************************************
-;;;;
+;;;
+;;; ***********************************************************************************
+;;; Start the game
+;;; - Set up formatting contexts for messages and the board
+;;; - Create the game context
+;;; - Set up the command table on which the game repl will work
+;;; ***********************************************************************************
+;;;
 (defun lets-play( &key (colors-not-supported t))
   "Starts the game"
   (format t "~%~%Welcome to Connect4~%~%")
@@ -434,6 +212,7 @@
   "Starts the game using ANSI escape sequences for colored output"
   (lets-play :colors-not-supported nil))
 (defun lpc ()
-  "Starts the game using ANSI escape sequences for colored output"
-  (lets-play :colors-not-supported nil))
+  "Shortcut for lets-play-colorful"
+  (lets-play-colorful))
+
 
