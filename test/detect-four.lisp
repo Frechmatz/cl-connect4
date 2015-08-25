@@ -1,6 +1,4 @@
 
-
-
 (in-package :connect4-test)
 
 (define-test test-detect4-diagonal ()
