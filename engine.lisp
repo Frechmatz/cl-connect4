@@ -8,10 +8,10 @@
 (defconstant CLASSIC-WIDTH 7 "Board width of the original game") 
 (defconstant CLASSIC-HEIGHT 6 "Board height of the original game") 
 
-(defvar *classic-skip-randomizer* nil "Set varibale to true to disable that a random move is chosen from all moves that have the same score. Typically set by tests.")
+(defvar *classic-skip-randomizer* nil "Set variable to true to disable that a random move is chosen from all moves that have the same score. Typically set by tests.")
 
 (defun board-score (board x y)
-  "Evaluate the score of the board. x y: The latest move. Returns 1.0 or 0.0"
+  "Evaluate the score of the board. x y: The current move. Returns a value 0 >= value <= 1, where 1 signals a winning position"
   (let ((l (max-line-length-at board x y (get-field board x y))))
     (if (>= l 4)
 	1.0
@@ -76,7 +76,8 @@
 		   (nset-field board (first move) (second move) color) ; do move
 		   (setf score (board-score board (first move) (second move) )) ; calc score
 		   (setf is-four (equal score 1.0)) ; 4 pieces in a row? 
-		   (setf score (/ score cur-depth)) ; adapt score to current search depth
+		   ;; (setf score (/ score cur-depth)) ; adapt score to current search depth
+		   (setf score (/ score (expt 10 (- cur-depth 1)))) ; shift score according to current search depth
 		   (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
 		   ;; final state or no more moves availabe or max depth reached
 		   (if (or is-four (not (is-move-available board)) (equal cur-depth max-depth))
