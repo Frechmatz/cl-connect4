@@ -12,7 +12,12 @@
 
 (defun board-score (board x y)
   "Evaluate the score of the board. x y: The latest move. Returns 1.0 or 0.0"
-  (if (is-four board x y) 1.0 0.0))
+  (let ((l (max-line-length-at board x y (get-field board x y))))
+    (if (>= l 4)
+	1.0
+	(progn
+	  (if (>= l 3) 0.5 0.0))
+    )))
 
 (defun generate-moves (board)
   "Generate moves. Returns a list of (x y) coordinates of all possible moves"

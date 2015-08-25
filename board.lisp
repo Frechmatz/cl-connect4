@@ -106,15 +106,16 @@
 
 (defparameter *DIRECTIONS* '((0 1) (1 0) (1 1) (1 -1)))
 (defun max-line-at (board x y color)
-    (let ( (all '()))
-      (dolist (d *DIRECTIONS*)
-	(push (line-at board x y (first d) (second d) color) all)
-	)
+  "Returns tupels of (x y) which describe the most length sequence of connected pieces"
+  (let ( (all '()))
+    (dolist (d *DIRECTIONS*)
+      (push (line-at board x y (first d) (second d) color) all)
+      )
 
-      (reduce (lambda (best item)
-		(if (> (length best) (length item)) best item)) 
-	      all)
-     )
+    (reduce (lambda (best item)
+	      (if (> (length best) (length item)) best item)) 
+	    all)
+    )
   )
 
 (defun max-line-length-at (board x y color)
