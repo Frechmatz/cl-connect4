@@ -75,10 +75,10 @@
 		 (dolist (move generated-moves)
 		   (nset-field board (first move) (second move) color) ; do move
 		   (setf score (board-score board (first move) (second move) )) ; calc score
-		   (setf is-four (equal score 1.0)) ; 4 pieces in a row? 
-		   ;; (setf score (/ score cur-depth)) ; adapt score to current search depth
-		   (setf score (/ score (expt 10 (- cur-depth 1)))) ; shift score according to current search depth
+		   (setf is-four (>= score 1.0)) ; 4 pieces in a row? 
 		   (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
+		   (if (not is-four)
+		       (setf score (/ score (expt 10 (- cur-depth 1))))) ; shift score according to current search depth
 		   ;; final state or no more moves availabe or max depth reached
 		   (if (or is-four (not (is-move-available board)) (equal cur-depth max-depth))
 		       (progn

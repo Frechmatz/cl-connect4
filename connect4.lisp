@@ -179,6 +179,13 @@
 		   :execFn (lambda (context) (game-command-play-computer context))
 		   ) table)
 	    (push (make-instance
+		   'command
+		   :name "set-board"
+		   :infoFn (lambda () "set-board <function>. <package-name>::<function-name> A function that returns a board.")
+		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-symbol) context))
+		   :execFn (lambda (context creator-fn) (game-command-set-board context creator-fn))
+		   ) table)
+	    (push (make-instance
 		    'command
 		    :name "r"
 		    :infoFn (lambda () "r: Restart game")
@@ -192,6 +199,7 @@
 		    :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		    :execFn (lambda (context) (game-command-quit context))
 		    ) table)
+
 	    (nreverse table)
 	    ))
 	 (context

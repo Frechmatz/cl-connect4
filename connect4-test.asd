@@ -18,6 +18,7 @@
                                      (:file "board-01")
                                      (:file "board-02")
                                      (:file "board-03")
+                                     (:file "board-04")
                                      (:file "detect-four")
                                      (:file "board-score")
 				     )))

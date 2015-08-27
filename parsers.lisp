@@ -57,6 +57,26 @@
   ;; board dimension > 16 is not supported by the board-formatter
   (parse-number n 4 16 ))
 
-
-
+;;;
+;;; Parses <package-name>::<symbol-name>
+;;; Returns given symbol that belongs to given package 
+;;;
+(defun parse-symbol (s context)
+  (declare (ignore context))
+  (let ( (splitted (cl-ppcre:split "::" s)) (package nil) (fn nil) )
+    (if (not (equal (length splitted) 2))
+	(error 'invalid-arguments :text "Invalid function specifier. Must be <PACKAGE-NAME>::<FUNCTION-NAME>")
+	(if (equal (length (car splitted)) 0)
+	    (error 'invalid-arguments :text "Invalid specifier. No package name given")
+	    (if (equal (length (car (cdr splitted))) 0)
+		(error 'invalid-arguments :text "Invalid specifier. No symbol name given")
+		(progn
+		  (setf package (find-package (string-upcase (car splitted))))
+		  (if (not package)
+		      (error 'invalid-arguments :text (format nil "Package ~a not found" (string-upcase (car splitted))))
+		      (progn 
+			(setf fn (find-symbol (string-upcase (car (cdr splitted))) package))
+			(if (not fn)
+			    (error 'invalid-arguments :text (format nil "Function ~a in package ~a not found" (string-upcase (car (cdr splitted))) package))
+			    fn)))))))))
 

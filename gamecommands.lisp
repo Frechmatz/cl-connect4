@@ -124,3 +124,9 @@
   (error 'quit-game :text "Bye"))
 
 
+(defun game-command-set-board (context creator-fn)
+  (setf (slot-value context 'board) (funcall creator-fn))
+  (format-context context)
+  (format-message *message-formatter* "Board set")
+  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
+  t)
