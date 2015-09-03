@@ -4,6 +4,9 @@
 
 
 ;;;
+;;;
+;;; Status: Approved
+;;;
 ;;; Next move by: WHITE
 ;;;
 ;;; This board presents a situation where WHITE will immediately win

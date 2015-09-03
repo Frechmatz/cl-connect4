@@ -3,6 +3,9 @@
 (in-package :connect4-test)
 
 ;;;
+;;;
+;;; Status: Review required. Review board and test more detailed.
+;;;
 ;;; Next move by: WHITE
 ;;;
 ;;; This board presents a situation where WHITE will in two moves

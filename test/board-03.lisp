@@ -5,6 +5,9 @@
 
 
 ;;;
+;;;
+;;; Status: Review required. Review board and test more detailed.
+;;;
 ;;; Next move by: BLACK
 ;;;
 ;;;

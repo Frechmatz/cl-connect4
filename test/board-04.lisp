@@ -2,6 +2,9 @@
 (in-package :connect4-test)
 
 ;;;
+;;;
+;;; Status: Review required. Review board and test more detailed.
+;;;
 ;;; Next move by: BLACK
 ;;; 
 ;;; Computer must throw into column 2 otherwise

@@ -2,6 +2,9 @@
 
 (in-package :connect4-test)
 
+;;;
+;;; Status: Approved
+;;;
 
 (defun create-board-06 ()
   (create-test-board (list

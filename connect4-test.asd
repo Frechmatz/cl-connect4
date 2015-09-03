@@ -22,6 +22,7 @@
                                      (:file "board-05")
                                      (:file "board-06")
 				     (:file "board-07")
+				     (:file "board-08")
                                      (:file "detect-four")
                                      (:file "board-score")
                                      (:file "reduce-scores")

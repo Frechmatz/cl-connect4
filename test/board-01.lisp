@@ -3,6 +3,9 @@
 
 
 ;;;
+;;;
+;;; Status: Review required. Review board and test more detailed.
+;;;
 ;;; Next move by: WHITE
 ;;;
 ;;; This board presents a situation where BLACK will win if it plays into column 3.
