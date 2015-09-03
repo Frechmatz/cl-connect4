@@ -76,6 +76,13 @@
     (eq (get-field board x y) color)
   ))
 
+(defun is-field-color-white-p (board x y)
+  "Check if a field is occupied by White. Returns nil if position is not within the board or not White"
+  (is-field-color-p board x y WHITE))
+
+(defun is-field-color-black-p (board x y)
+  "Check if a field is occupied by Black. Returns nil if position is not within the board or not Black"
+  (is-field-color-p board x y BLACK))
 
 (defun line-at (board x y dx dy color)
   "Calculate the line at the given position and for given direction"

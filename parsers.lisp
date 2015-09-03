@@ -59,7 +59,7 @@
 
 ;;;
 ;;; Parses <package-name>::<symbol-name>
-;;; Returns given symbol that belongs to given package 
+;;; Returns the symbol 
 ;;;
 (defun parse-symbol (s context)
   (declare (ignore context))

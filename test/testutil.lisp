@@ -24,3 +24,6 @@
 	   ((or (equal (aref row x) #\B) (equal (aref row x) #\b)) (connect4::nset-field board x y connect4::BLACK))
 	   )))
       board)))
+
+(defun equal-scores-p (a b)
+  (equalp a b))

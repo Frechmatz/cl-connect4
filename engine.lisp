@@ -10,13 +10,22 @@
 
 (defvar *classic-skip-randomizer* nil "Set variable to true to disable that a random move is chosen from all moves that have the same score. Typically set by tests.")
 
+(defvar *engine-notification-reduced-scores*
+  (lambda (board color is-opponent depth reduced-score all-scores)
+  (declare (ignore board color is-opponent depth reduced-score all-scores))
+  nil))
+
+
+
+
 (defun board-score (board x y)
   "Evaluate the score of the board. x y: The current move. Returns a value 0 >= value <= 1, where 1 signals a winning position"
   (let ((l (max-line-length-at board x y (get-field board x y))))
     (if (>= l 4)
 	1.0
-	(progn
-	  (if (>= l 3) 0.5 0.0))
+	0.0
+	;;(progn
+	;;  (if (>= l 3) 0.5 0.0))
     )))
 
 (defun generate-moves (board)
@@ -61,24 +70,23 @@
       move)
     ))
 
+;;; returns a tupel (x y score) where x represents the column, y the row and score the score of the column
+;;; max-depth: Maximum number of half-moves to execute (1..n)
+;;; color: The computers color
+;;;
+;;; create a clone of the board that for performance reasons will be manipulated during the traversal
 (defun minmax (the-board color max-depth)
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
-  ;; returns a tupel (x y score) where x represents the column, y the row and score the score of the column
-  ;; max-depth: Maximum number of half-moves to execute (1..n)
-  ;; color: The computers color
-  ;;
-  ;; create a clone of the board that for performance reasons will be manipulated during the traversal
-  (let ((board (clone-board the-board)))
+  (let ((board (clone-board the-board)) (result nil))
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))
 		 (dolist (move generated-moves)
 		   (nset-field board (first move) (second move) color) ; do move
 		   (setf score (board-score board (first move) (second move) )) ; calc score
-		   (setf is-four (>= score 1.0)) ; 4 pieces in a row? 
+		   (setf is-four (>= score 1.0)) ; 4 pieces in a row?
 		   (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
-		   (if (not is-four)
-		       (setf score (/ score (expt 10 (- cur-depth 1))))) ; shift score according to current search depth
+		   ;;(setf score (/ score (expt 10 (- cur-depth 1)))) ; shift score according to current search depth
 		   ;; final state or no more moves availabe or max depth reached
 		   (if (or is-four (not (is-move-available board)) (equal cur-depth max-depth))
 		       (progn
@@ -89,10 +97,20 @@
 			 (push (list (first move) (second move) (third score)) moves)))
 		   (nset-field board (first move) (second move) EMPTY) ; undo move
 		   )
-		 ;; We now have a list of (x y score) tuples. Reduce them to a final move
-		 ;; Randomize only on top level. For deeper traversal depths only the resulting score is relevant
-		 (reduce-scores moves is-opponent :skip-randomizer (if (equal cur-depth 1) nil t))
+		 (let ((result (reduce-scores moves is-opponent :skip-randomizer (if (equal cur-depth 1) nil t))))
+		   (funcall *engine-notification-reduced-scores* board color is-opponent cur-depth result moves)
+		   result)
 		 )))
-      (minmax-inner board color nil 1)
+      (setf result (minmax-inner board color nil 1))
+      (if (not (equalp board the-board))
+	  (progn 
+	    (format t "~%FATAL ERROR: BOARDS ARE NOT EQUAL~%")
+	    (format t "Original board: ~%")
+	    (format-board (make-instance 'board-formatter) the-board)
+	    (format t "~%Play board: ~%")
+	    (format-board (make-instance 'board-formatter) board)
+	    (format t "~%")
+	    ))
+      result
       )))
 
