@@ -2,7 +2,7 @@
 (in-package :connect4-test)
 
 (define-test test-detect4-diagonal ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil))
     (setf board (create-test-board (list
 		      "...bb.."
 		      ".bw.w.b"
@@ -18,7 +18,7 @@
     ))
 
 (define-test test-detect4-horizontal ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil))
     (setf board (create-test-board (list
 		      "...bb.."
 		      ".bbbw.b"
@@ -32,7 +32,7 @@
     ))
 
 (define-test test-detect4-vertical ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil))
     (setf board (create-test-board (list
 		      ".b..b.."
 		      ".bbww.b"

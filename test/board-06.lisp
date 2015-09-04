@@ -15,10 +15,10 @@
 
 (define-test test-board-06-a ()
 	     (let ( (board nil) (best-move nil)
-		    (connect4::*classic-skip-randomizer* t)
+		    (connect4::*engine-configuration-skip-randomizer* t)
 		    (connect4::*engine-notification-reduced-scores*
 		     (lambda (board color is-opponent depth reduced-score all-scores)
-		       (if t
+		       (if nil
 			   (progn
 			     (format t
 				     "~%Color: ~a Is-Opponent: ~a Depth: ~a Score: ~a~%Final scores:~%~a~%"
@@ -45,10 +45,10 @@
 
 (define-test test-board-06-b ()
 	     (let ( (board nil) (best-move nil)
-		    (connect4::*classic-skip-randomizer* t)
+		    (connect4::*engine-configuration-skip-randomizer* t)
 		    (connect4::*engine-notification-reduced-scores*
 		     (lambda (board color is-opponent depth reduced-score all-scores)
-		       (if t
+		       (if nil
 			   (progn
 			     (format t
 				     "~%Color: ~a Is-Opponent: ~a Depth: ~a Score: ~a~%Final scores:~%~a~%"

@@ -1,6 +1,10 @@
 
 
 ;;;;
+;;;; Test check mate in 4 half moves
+;;;; WHITE must realize its win
+;;;; BLACK must counter the threat
+;;;;
 ;;;; Status: Approved
 ;;;;
 
@@ -20,7 +24,7 @@
 ;;; WHITE must answer with 1.0 for 1
 (define-test test-board-08-a ()
 	     (let ( (board nil) (best-move nil)
-		    (connect4::*classic-skip-randomizer* t)
+		    (connect4::*engine-configuration-skip-randomizer* t)
 		    (connect4::*engine-notification-reduced-scores*
 		     (lambda (board color is-opponent depth reduced-score all-scores)
 		       (declare (ignore board color is-opponent reduced-score))
@@ -29,7 +33,7 @@
 			   (assert-true (equal-scores-p
 					 all-scores
 					 '((0 1 0.0) (1 1 1.0) (2 0 0.0) (3 0 0.0) (4 1 0.0))
-					 ))
+					 ) "test-board-08-a: Final score comparison failed")
 			   ) 
 		      ))
 		    )
@@ -43,7 +47,7 @@
 ;;; BLACK must answer with 0.0 for 0 or 1 or 4 and with -1.0 for 2 and 3 
 (define-test test-board-08-b ()
 	     (let ( (board nil) (best-move nil)
-		    (connect4::*classic-skip-randomizer* t)
+		    (connect4::*engine-configuration-skip-randomizer* t)
 		    (connect4::*engine-notification-reduced-scores*
 		     (lambda (board color is-opponent depth reduced-score all-scores)
 		       (declare (ignore board color is-opponent reduced-score))
@@ -52,7 +56,7 @@
 			   (assert-true (equal-scores-p
 					 all-scores
 					 '((0 1 0.0) (1 1 0.0) (2 0 -1.0) (3 0 -1.0) (4 1 0.0))
-					 ))
+					 ) "test-board-08-b: Final score comparison failed")
 			   ) 
 		      ))
 		    )

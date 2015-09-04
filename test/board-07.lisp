@@ -18,7 +18,8 @@
 ;;; BLACK must answer with negative value for all columns
 (define-test test-board-07-a ()
 	     (let ( (board nil) (best-move nil)
-		    (connect4::*classic-skip-randomizer* t)
+		    (connect4::*engine-configuration-skip-randomizer* t)
+		    (connect4::*engine-configuration-depth-relative-score* nil)
 		    (connect4::*engine-notification-reduced-scores*
 		     (lambda (board color is-opponent depth reduced-score all-scores)
 		       (declare (ignore board color is-opponent reduced-score))
@@ -27,7 +28,7 @@
 			   (assert-true (equal-scores-p
 					 all-scores
 					 '((0 1 -1.0) (1 0 -1.0) (2 0 -1.0) (3 0 -1.0) (4 1 -1.0))
-					 ))
+					 ) "test-board-07-a: Final score comparison failed")
 			   ) 
 		      ))
 		    )
@@ -41,7 +42,7 @@
 ;;; WHITE must answer with 0 or 4
 (define-test test-board-07-b ()
 	     (let ( (board nil) (best-move nil)
-		    (connect4::*classic-skip-randomizer* t)
+		    (connect4::*engine-configuration-skip-randomizer* t)
 		    (connect4::*engine-notification-reduced-scores*
 		     (lambda (board color is-opponent depth reduced-score all-scores)
 		       (declare (ignore board color is-opponent reduced-score))
@@ -50,7 +51,7 @@
 			   (assert-true (equal-scores-p
 					 all-scores
 					 '((0 1 1.0) (1 0 0.0) (2 0 0.0) (3 0 0.0) (4 1 1.0))
-					 ))
+					 ) "test-board-07-b: Final score comparison failed")
 			   ) 
 		      ))
 		    )

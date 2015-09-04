@@ -30,7 +30,7 @@
 ;;; Test with traversal depth 6 BLACK
 (define-test test-board-05-a ()
 	     (let ( (board nil) (best-move nil)
-		    (connect4::*classic-skip-randomizer* t)
+		    (connect4::*engine-configuration-skip-randomizer* t)
 		    (connect4::*engine-notification-reduced-scores*
 		     (lambda (board color is-opponent depth reduced-score all-scores)
 		       ;; gegner (W) hat in drei geworfen und Computer verliert. Scores müssen negativ sein.

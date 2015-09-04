@@ -3,7 +3,7 @@
 (in-package :connect4-test)
 
 (define-test test-move-available-1 ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil))
     (setf board (create-test-board (list
 		      "......."
 		      "......."
@@ -14,7 +14,7 @@
     ))
 
 (define-test test-move-available-2 ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil))
     (setf board (create-test-board (list
 		      "w......"
 		      "w......"
@@ -25,7 +25,7 @@
     ))
 
 (define-test test-move-available-3 ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil))
     (setf board (create-test-board (list
 		      "w.....w"
 		      "w.....w"
@@ -36,7 +36,7 @@
     ))
 
 (define-test test-move-available-4 ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil) )
     (setf board (create-test-board (list
 		      "..w...."
 		      "..w...."
@@ -47,7 +47,7 @@
     ))
 
 (define-test test-move-available-5 ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil))
     (setf board (create-test-board (list
 		      "www.www"
 		      "wwwwwww"
@@ -56,7 +56,7 @@
     ))
 
 (define-test test-move-available-6 ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil) )
     (setf board (create-test-board (list
 		      "wwwwwww"
 		      "wwwwwww"

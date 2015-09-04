@@ -8,7 +8,10 @@
 (defconstant CLASSIC-WIDTH 7 "Board width of the original game") 
 (defconstant CLASSIC-HEIGHT 6 "Board height of the original game") 
 
-(defvar *classic-skip-randomizer* nil "Set variable to true to disable that a random move is chosen from all moves that have the same score. Typically set by tests.")
+(defvar *engine-configuration-skip-randomizer* nil
+  "Set variable to true to disable that a random move will be chosen from all moves that have the same score.")
+(defvar *engine-configuration-depth-relative-score* t
+  "Set variable to nil to disable that a score reflects the current traversal depth, e.g. at a current depth of 2, a score of 1.0 results in 0.1.")
 
 (defvar *engine-notification-reduced-scores*
   (lambda (board color is-opponent depth reduced-score all-scores)
@@ -65,7 +68,7 @@
     (setf move (reduce (lambda (best item)
 			 (if (funcall fn (third item) (third best)) item best)) 
 		       moves))
-    (if (and move (not skip-randomizer) (not *classic-skip-randomizer*))
+    (if (and move (not skip-randomizer) (not *engine-configuration-skip-randomizer*))
 	(get-random-move moves (third move))
       move)
     ))
@@ -86,7 +89,8 @@
 		   (setf score (board-score board (first move) (second move) )) ; calc score
 		   (setf is-four (>= score 1.0)) ; 4 pieces in a row?
 		   (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
-		   ;;(setf score (/ score (expt 10 (- cur-depth 1)))) ; shift score according to current search depth
+		   (if *engine-configuration-depth-relative-score*
+		       (setf score (/ score (expt 10 (- cur-depth 1)))))
 		   ;; final state or no more moves availabe or max depth reached
 		   (if (or is-four (not (is-move-available board)) (equal cur-depth max-depth))
 		       (progn

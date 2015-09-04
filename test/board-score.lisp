@@ -3,7 +3,7 @@
 (in-package :connect4-test)
 
 (define-test test-board-score-4 ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil))
     (setf board (create-test-board (list
 		      "......."
 		      "...w..."
@@ -15,7 +15,7 @@
     ))
 
 (define-test test-board-score-3 ()
-  (let ( (board nil) (connect4::*classic-skip-randomizer* t))
+  (let ( (board nil))
     (setf board (create-test-board (list
 		      "......."
 		      "......."
