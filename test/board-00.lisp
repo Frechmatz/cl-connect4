@@ -5,7 +5,7 @@
 
 ;;;
 ;;;
-;;; Status: Approved
+;;; Status: OK
 ;;;
 ;;; Next move by: WHITE
 ;;;

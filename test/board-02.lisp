@@ -4,7 +4,7 @@
 
 ;;;
 ;;;
-;;; Status: Review required. Review board and test more detailed.
+;;; Status: Ok
 ;;;
 ;;; Next move by: WHITE
 ;;;

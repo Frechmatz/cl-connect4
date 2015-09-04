@@ -4,7 +4,7 @@
 
 ;;;
 ;;;
-;;; Status: Review required. Review board and test more detailed.
+;;; Status: Review required. Board requires way deeper traversal depth than 6. Not part of test suite.
 ;;;
 ;;; Next move by: BLACK
 ;;; 

@@ -3,7 +3,10 @@
 (in-package :connect4-test)
 
 ;;;
-;;; Status: Approved
+;;; Tests direct win for WHITE for column 5
+;;; Tests that BLACK counters with column 5
+;;;
+;;; Status: Ok
 ;;;
 
 (defun create-board-06 ()

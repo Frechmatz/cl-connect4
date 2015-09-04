@@ -12,6 +12,8 @@
   "Set variable to true to disable that a random move will be chosen from all moves that have the same score.")
 (defvar *engine-configuration-depth-relative-score* t
   "Set variable to nil to disable that a score reflects the current traversal depth, e.g. at a current depth of 2, a score of 1.0 results in 0.1.")
+(defvar *engine-configuration-score-calculation-considers-three* nil
+  "Experimental. Set variable to t to enable that when there are three pieces in a row the resulting board-score will be increased.")
 
 (defvar *engine-notification-reduced-scores*
   (lambda (board color is-opponent depth reduced-score all-scores)
@@ -26,9 +28,12 @@
   (let ((l (max-line-length-at board x y (get-field board x y))))
     (if (>= l 4)
 	1.0
-	0.0
-	;;(progn
-	;;  (if (>= l 3) 0.5 0.0))
+	(if (not *engine-configuration-score-calculation-considers-three*)
+	    0.0
+	    (progn
+	      ;; (princ "Considers three")
+	      (if (>= l 3) 0.5 0.0))
+	    )
     )))
 
 (defun generate-moves (board)

@@ -2,11 +2,12 @@
 
 
 
-;;;;
-;;;; Test check mate in 6 half moves
-;;;; WHITE must realize its win
-;;;; Status: In work
-;;;;
+;;;
+;;; Test check mate in 6 half moves
+;;; WHITE must realize its win
+;;;
+;;; Status: Ok
+;;;
 
 (in-package :connect4-test)
 
@@ -29,6 +30,7 @@
 (define-test test-board-09-a ()
 	     (let ( (board nil) (best-move nil)
 		    (connect4::*engine-configuration-skip-randomizer* t)
+		    (connect4::*engine-configuration-depth-relative-score* nil)
 		    (connect4::*engine-notification-reduced-scores*
 		     (lambda (board color is-opponent depth reduced-score all-scores)
 		       (declare (ignore board color is-opponent reduced-score))
@@ -54,6 +56,7 @@
 (define-test test-board-09-b ()
 	     (let ( (board nil) (best-move nil)
 		    (connect4::*engine-configuration-skip-randomizer* t)
+		    (connect4::*engine-configuration-depth-relative-score* nil)
 		    (connect4::*engine-notification-reduced-scores*
 		     (lambda (board color is-opponent depth reduced-score all-scores)
 		       (declare (ignore board color is-opponent reduced-score))
@@ -61,8 +64,8 @@
 		       (if (equal depth 1)
 			   (assert-true (equal-scores-p
 					 all-scores
-					 '((0 909 0.0) (1 4 1.0) (3 0 0.0) (4 4 0.0))
-			   		 ) "test-board-09-b: Final score comparison failed")
+					 '((0 0 0.0) (1 4 1.0) (3 0 0.0) (4 4 0.0))
+			   		 ) (format t "test-board-09-b: Final score comparison failed: ~a" all-scores))
 			   ) ; if
 		       )
 		      )

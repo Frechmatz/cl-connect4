@@ -3,8 +3,12 @@
 
 
 ;;;
+;;; 
+;;; Tests that
+;;; BLACK recognizes that it has lost and responds with a negative score for all columns
+;;; WHITE will choose move for direct win
 ;;;
-;;; Status: Approved
+;;; Status: Ok
 ;;;
 ;;; Depth: 2 half moves
 ;;;
