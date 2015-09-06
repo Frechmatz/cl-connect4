@@ -23,20 +23,14 @@
 
 ;;; Test with traversal depth 1
 (define-test test-board-00-a ()
-  (let ( (board nil) (best-move nil) (connect4::*engine-configuration-skip-randomizer* t))
-    (setf board (create-board-00))
-    (setf best-move (connect4::minmax board connect4::WHITE 1))
-    (assert-equal 2 (first best-move) (format t "test-board-00-a: Wrong move chosen: ~a" (first best-move)))
-    ))
+	     (run-minmax-test 
+	      "test-board-00-a" (create-board-00) connect4::WHITE 1
+	      :expected-final-column 2
+	      ))
 
 ;;; Test with traversal depth 6
 (define-test test-board-00-b ()
-  (let ( (board nil) (best-move nil) (connect4::*engine-configuration-skip-randomizer* t))
-    (setf board (create-board-00))
-    (setf best-move (connect4::minmax board connect4::WHITE 6))
-    (assert-equal 2 (first best-move) (format t "test-board-00-b: Wrong move chosen: ~a" (first best-move)))
-    ))
-
-
-
-
+	     (run-minmax-test 
+	      "test-board-00-b" (create-board-00) connect4::WHITE 6
+	      :expected-final-column 2
+	      ))

@@ -22,18 +22,14 @@
 
 ;;; test with traversal depth 2 (win situation won't be recognized)
 (define-test test-board-02-a ()
-  (let ( (board nil) (best-move nil) (connect4::*engine-configuration-skip-randomizer* t))
-    (setf board (create-board-02))
-    (setf best-move (connect4::minmax board connect4::WHITE 2))
-    (assert-equal 2 (first best-move) (format t "test-board02-a: Wrong move chosen: ~a" (first best-move)))
-    ))
+	     (run-minmax-test 
+	      "test-board-02-a" (create-board-02) connect4::WHITE 2
+	      :expected-final-column 2
+	      ))
 
 ;;; test with traversal depth 3 (win situation will be recognized)
 (define-test test-board-02-b ()
-  (let ( (board nil) (best-move nil) (connect4::*engine-configuration-skip-randomizer* t))
-    (setf board (create-board-02))
-    (setf best-move (connect4::minmax board connect4::WHITE 3))
-    (assert-equal 4 (first best-move) (format t "test-board02-b: Wrong move chosen: ~a" (first best-move)))
-    ))
-
-
+	     (run-minmax-test 
+	      "test-board-02-b" (create-board-02) connect4::WHITE 3
+	      :expected-final-column 4
+	      ))

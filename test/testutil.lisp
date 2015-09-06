@@ -27,3 +27,45 @@
 
 (defun equal-scores-p (a b)
   (equalp a b))
+
+(defun run-minmax-test (name-of-test board color depth
+			&key 
+			  (engine-configuration-skip-randomizer t)
+			  (engine-configuration-depth-relative-score nil)
+			  (print-final-scores nil)
+			  (expected-final-scores nil)
+			  (expected-final-column nil)
+			)
+  (let ( (best-move nil)
+	(connect4::*engine-configuration-skip-randomizer* engine-configuration-skip-randomizer)
+	 (connect4::*engine-configuration-depth-relative-score* engine-configuration-depth-relative-score)
+	 (connect4::*engine-notification-reduced-scores*
+	  (lambda (board color is-opponent depth reduced-score all-scores)
+	    (declare (ignore board))
+	    (if (and print-final-scores (equal depth 1))
+		(progn
+		  (format t
+			  "~%~a: Final scores: Color: ~a Is-Opponent: ~a Depth: ~a Score: ~a All scores:~%~a~%"
+			  name-of-test color is-opponent depth (third reduced-score) all-scores)
+		  )
+		)
+	    (if (and expected-final-scores (equal depth 1))
+		(assert-true (equal-scores-p
+			      all-scores
+			      expected-final-scores)
+			     (format t "~a: Final scores do not match. Expected:~%~a~%Resulting:~%~a~%"
+				     name-of-test expected-final-scores all-scores)
+			     )
+			   ) ; endif
+	    ))
+	 )
+    (setf best-move (connect4::minmax board color depth))
+    (if expected-final-column
+	(assert-true
+	 (equal expected-final-column (first best-move))
+	 (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%" name-of-test (first best-move) (third best-move) expected-final-column)
+	 ))
+    ))
+
+
+
