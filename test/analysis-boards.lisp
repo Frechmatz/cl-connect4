@@ -10,7 +10,7 @@
 ;;; Computer must throw into column 2 otherwise
 ;;; WHITE will win via 2 - 4 - 4
 ;;;
-(defun create-board-04 ()
+(defun create-board-analysis-01 ()
   (create-test-board (list
 		      "......."
 		      "......."
@@ -21,15 +21,9 @@
 		      )))
 
 ;;; Test with traversal depth 6 BLACK
-(define-test test-board-04-a ()
+(define-test test-board-analysis-01-a ()
 	     (run-minmax-test 
-	      "test-board-04-a" (create-board-04) connect4::BLACK 6
+	      "test-board-analysis-01-a" (create-board-analysis-01) connect4::BLACK 6
 	      :expected-final-column 2
 	      ))
 
-;;; Test with traversal depth 6 WHITE
-(define-test test-board-04-b ()
-	     (run-minmax-test 
-	      "test-board-04-b" (create-board-04) connect4::WHITE 6
-	      :expected-final-column 2
-	      ))
