@@ -25,18 +25,26 @@
 	   )))
       board)))
 
+(defun sort-scores-by-column (scores)
+  (sort scores (lambda (a b) (< (first a) (first b)))
+	))
+
+
 (defun equal-scores-p (a b)
-  (equalp a b))
+  (equalp (sort-scores-by-column a) (sort-scores-by-column b)))
+
 
 (defun run-minmax-test (name-of-test board color depth
 			&key 
 			  (engine-configuration-skip-randomizer t)
 			  (engine-configuration-depth-relative-score nil)
+			  (engine-configuration-quit-row-evaluation-on-four t)
 			  (print-final-scores nil)
 			  (expected-final-scores nil)
 			  (expected-final-column nil)
 			)
   (let ( (best-move nil)
+	(connect4::*engine-configuration-quit-row-evaluation-on-four* engine-configuration-quit-row-evaluation-on-four)
 	(connect4::*engine-configuration-skip-randomizer* engine-configuration-skip-randomizer)
 	 (connect4::*engine-configuration-depth-relative-score* engine-configuration-depth-relative-score)
 	 (connect4::*engine-notification-reduced-scores*
