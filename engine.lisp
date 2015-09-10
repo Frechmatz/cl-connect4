@@ -4,6 +4,12 @@
 
 (in-package :connect4)
 
+;;;
+;;; Condition that signals an implementation error of the engine
+;;;
+(define-condition internal-error (error)
+  ((text :initarg :text :reader text)))
+
 
 (defconstant CLASSIC-WIDTH 7 "Board width of the original game") 
 (defconstant CLASSIC-HEIGHT 6 "Board height of the original game") 
@@ -96,8 +102,7 @@
 (defun minmax (the-board color max-depth &key (print-engine-configuration nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
   (if print-engine-configuration
-      (print-engine-configuration)
-      )
+      (print-engine-configuration))
   (let ((board (clone-board the-board)) (result nil))
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
@@ -131,13 +136,15 @@
 		 )))
       (setf result (minmax-inner board color nil 1))
       (if (not (equalp board the-board))
-	  (progn 
-	    (format t "~%FATAL ERROR: BOARDS ARE NOT EQUAL~%")
+	  (progn
+	    (format t "~%Fatal error: Temporary board is not equal to incoming one~%")
 	    (format t "Original board: ~%")
 	    (format-board (make-instance 'board-formatter) the-board)
-	    (format t "~%Play board: ~%")
+	    (format t "~%Temporary board: ~%")
 	    (format-board (make-instance 'board-formatter) board)
 	    (format t "~%")
+	    ;; enter debugger
+	    (error 'internal-error :text "Temporary board is not equal to the incoming one")
 	    ))
       result
       )))

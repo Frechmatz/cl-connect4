@@ -2,13 +2,17 @@ Connect4 Todos
 ==============
 
 * General
-** Minmax should throw an exception when final board does not match with original one
+** DONE Minmax should throw an exception when final board does not match with original one
 ** Study analysis-boards
+** After Unit-Testing set default value of *engine-configuration-depth-relative-score* to t
+** After Unit-Testing set default value of *engine-configuration-quit-row-evaluation-on-four* to t
 * Unit Tests
 ** TODO Remove redundancies from tests
-** TODO Tests should not depend on order of moves played by the Minmax (e.g. reverse of moves by move generator should be possible)
-** TODO Review of board-04
+** DONE Tests should not depend on order of moves played by the Minmax
 ** DONE Remove *engine-configuration-skip-randomizer* option
+** TODO Toggle default value of *engine-configuration-depth-relative-score* and adapt/extend tests
+** TODO Toggle default value of *engine-configuration-quit-row-evaluation-on-four* and adapt/extend tests
+** TODO Toggle default value of *engine-configuration-score-calculation-considers-three* and adapt/extend tests
 * Board Score Evaluation
 ** TODO Take into account 3 pieces in a row
 ** TODO Prefer moves near the center of the board
