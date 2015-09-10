@@ -42,7 +42,7 @@
 (defun run-minmax-test (name-of-test board color depth
 			&key 
 			  (engine-configuration-depth-relative-score nil)
-			  (engine-configuration-quit-row-evaluation-on-four nil)
+			  (engine-configuration-quit-row-evaluation-on-four t)
 			  (print-final-scores nil)
 			  (expected-final-scores nil)
 			  (expected-final-column nil)
