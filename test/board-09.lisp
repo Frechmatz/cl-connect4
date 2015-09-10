@@ -38,11 +38,20 @@
 
 
 ;;; Check that win situation is detected with traversal depth of 6
+;;; No depth relative scores
 (define-test test-board-09-b ()
 	     (run-minmax-test 
 	      "test-board-09-b" (create-board-09) connect4::WHITE 6
 	      :expected-final-scores
 	      '((0 0 0.0) (1 4 1.0) (3 0 0.0) (4 4 0.0))
 	      :expected-final-column 1
+	      :engine-configuration-depth-relative-score nil
 	      ))
 
+;;; Check that win situation is detected with traversal depth of 6
+;;; Depth relative scores
+(define-test test-board-09-c ()
+	     (run-minmax-test 
+	      "test-board-09-c" (create-board-09) connect4::WHITE 6
+	      :expected-final-column 1
+	      ))

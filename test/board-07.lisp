@@ -20,27 +20,30 @@
 		      )))
 
 ;;; BLACK must answer with negative value for all columns
+;;; depth relative score off
 (define-test test-board-07-a ()
 	     (run-minmax-test 
 	      "test-board-07-a" (create-board-07) connect4::BLACK 2
+	      :engine-configuration-depth-relative-score nil
 	      :expected-final-scores
 	      '((0 1 -1.0) (1 0 -1.0) (2 0 -1.0) (3 0 -1.0) (4 1 -1.0))
 	      ))
 
-;;; WHITE must answer with 0 or 4
+;;; BLACK must answer with negative value for all columns
+;;; depth relative score on
 (define-test test-board-07-b ()
 	     (run-minmax-test 
-	      "test-board-07-b" (create-board-07) connect4::WHITE 2
-	      :engine-configuration-quit-row-evaluation-on-four nil
-	      :expected-final-scores
-	      '((0 1 1.0) (1 0 0.0) (2 0 0.0) (3 0 0.0) (4 1 1.0))
+	      "test-board-07-b" (create-board-07) connect4::BLACK 2
+	      :expected-final-column '(0 1 2 3 4)
 	      ))
 
 ;;; WHITE must answer with 0 or 4
 (define-test test-board-07-c ()
 	     (run-minmax-test 
 	      "test-board-07-c" (create-board-07) connect4::WHITE 2
-	      :engine-configuration-quit-row-evaluation-on-four t
-	      :expected-final-column
-	      '(4 0)
+	      :engine-configuration-quit-row-evaluation-on-four nil
+	      :expected-final-scores
+	      '((0 1 1.0) (1 0 0.0) (2 0 0.0) (3 0 0.0) (4 1 1.0))
+	      :expected-final-column '(4 0)
 	      ))
+

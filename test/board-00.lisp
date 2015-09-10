@@ -43,7 +43,6 @@
 (define-test test-board-00-c ()
 	     (run-minmax-test 
 	      "test-board-00-c" (create-board-00) connect4::WHITE 6
-	      :engine-configuration-depth-relative-score t
 	      :expected-final-column '(2) 
 	      ;; :print-final-scores t
 	      ))

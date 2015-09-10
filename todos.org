@@ -11,6 +11,7 @@ Connect4 Todos
 ** TODO Remove redundancies from tests
 ** DONE Tests should not depend on order of moves played by the Minmax
 ** DONE Remove *engine-configuration-skip-randomizer* option
+** TODO Remove *engine-configuration-depth-relative-score* option
 ** TODO Consider, if boolean configuration options not given by the test should be tested with both false and true 
 ** TODO Toggle default value of *engine-configuration-depth-relative-score* and adapt/extend tests
 ** TODO Toggle default value of *engine-configuration-quit-row-evaluation-on-four* and adapt/extend tests
