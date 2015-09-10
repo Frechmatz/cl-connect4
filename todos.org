@@ -1,0 +1,23 @@
+Connect4 Todos
+==============
+
+* General
+** Minmax should throw an exception when final board does not match with original one
+** Study analysis-boards
+* Unit Tests
+** TODO Remove redundancies from tests
+** TODO Tests should not depend on order of moves played by the Minmax (e.g. reverse of moves by move generator should be possible)
+** TODO Review of board-04
+** TODO Remove *engine-configuration-skip-randomizer* option
+* Board Score Evaluation
+** TODO Take into account 3 pieces in a row
+** TODO Prefer moves near the center of the board
+* Engine optimization
+** TODO Quit row evaluation when player has 4 for current column
+** TODO Check if for current row any column provides 4 and quit row. If not then deep traverse row.
+** TODO Pruning
+
+
+
+
+

@@ -41,6 +41,6 @@
 	     (run-minmax-test 
 	      "test-board-07-c" (create-board-07) connect4::WHITE 2
 	      :engine-configuration-quit-row-evaluation-on-four t
-	      :expected-final-scores
-	      '((0 1 1.0))
+	      :expected-final-column
+	      '(4 0)
 	      ))

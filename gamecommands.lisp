@@ -37,9 +37,21 @@
   t)
 
 (defun game-command-hint (context)
-  (let ((result (minmax (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
-    (format-message *message-formatter* (format nil "Recommended move is column ~a with a score of ~a" (first result) (third result))))
-  (setf (slot-value context 'state) GAME-STATE-CONTINUE)
+  (let (
+	(*engine-notification-reduced-scores*
+	  (lambda (board color is-opponent depth reduced-score all-scores)
+	    (declare (ignore board))
+	    (if (equal depth 1)
+		(progn
+		  (format t
+			  "~%Final scores: Color: ~a Is-Opponent: ~a Score: ~a All scores:~%~a~%"
+			  color is-opponent (third reduced-score) all-scores)
+		  )
+		))))
+    ;; only works with nested let. Not sure, when expressions are evaluated
+    (let ((result (minmax (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
+      (format-message *message-formatter* (format nil "Recommended move is column ~a with a score of ~a" (first result) (third result))))
+    (setf (slot-value context 'state) GAME-STATE-CONTINUE))
   t)
 
 (defun game-command-print-board (context)

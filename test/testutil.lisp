@@ -33,15 +33,21 @@
 (defun equal-scores-p (a b)
   (equalp (sort-scores-by-column a) (sort-scores-by-column b)))
 
+(defun is-column-p (columns column)
+  (if (not (listp columns))
+      (equal columns column)
+      (find-if (lambda (c) (equal c column)) columns)
+      ))
 
 (defun run-minmax-test (name-of-test board color depth
 			&key 
 			  (engine-configuration-skip-randomizer t)
 			  (engine-configuration-depth-relative-score nil)
-			  (engine-configuration-quit-row-evaluation-on-four t)
+			  (engine-configuration-quit-row-evaluation-on-four nil)
 			  (print-final-scores nil)
 			  (expected-final-scores nil)
 			  (expected-final-column nil)
+			  (expected-final-move-score nil)
 			)
   (let ( (best-move nil)
 	(connect4::*engine-configuration-quit-row-evaluation-on-four* engine-configuration-quit-row-evaluation-on-four)
@@ -53,8 +59,8 @@
 	    (if (and print-final-scores (equal depth 1))
 		(progn
 		  (format t
-			  "~%~a: Final scores: Color: ~a Is-Opponent: ~a Depth: ~a Score: ~a All scores:~%~a~%"
-			  name-of-test color is-opponent depth (third reduced-score) all-scores)
+			  "~%~a: Final scores: Color: ~a Is-Opponent: ~a Score: ~a All scores:~%~a~%"
+			  name-of-test color is-opponent (third reduced-score) all-scores)
 		  )
 		)
 	    (if (and expected-final-scores (equal depth 1))
@@ -70,9 +76,16 @@
     (setf best-move (connect4::minmax board color depth))
     (if expected-final-column
 	(assert-true
-	 (equal expected-final-column (first best-move))
+	 (is-column-p expected-final-column (first best-move))
 	 (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%" name-of-test (first best-move) (third best-move) expected-final-column)
 	 ))
+    (if expected-final-move-score
+	(assert-true
+	 ;; Regarding the comparison of floats, see also
+	 ;; http://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node74.html
+	 (= expected-final-move-score (third best-move))
+	 (format t "~a: Unexpected final score value: ~a Expected score value: ~a~%" name-of-test (third best-move) expected-final-move-score)))
+    
     ))
 
 

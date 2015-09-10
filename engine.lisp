@@ -10,11 +10,11 @@
 
 (defvar *engine-configuration-skip-randomizer* nil
   "Set variable to true to disable that a random move will be chosen from all moves that have the same score.")
-(defvar *engine-configuration-depth-relative-score* t
+(defvar *engine-configuration-depth-relative-score* nil
   "Set variable to nil to disable that a score reflects the current traversal depth, e.g. at a current depth of 2, a score of 1.0 results in 0.1.")
 (defvar *engine-configuration-score-calculation-considers-three* nil
   "Experimental. Set variable to t to enable that when there are three pieces in a row the resulting board-score will be increased.")
-(defvar *engine-configuration-quit-row-evaluation-on-four* t
+(defvar *engine-configuration-quit-row-evaluation-on-four* nil
   "Set to t to quit further evaluation of the current row if a winning situation has been detected.")
 
 (defvar *engine-notification-reduced-scores*
@@ -23,7 +23,18 @@
   nil))
 
 
+(defun print-engine-configuration ()
+  (format t "Engine configuration:")
+  (format t "~%*engine-configuration-skip-randomizer*: ~a" *engine-configuration-skip-randomizer*)
+  (format t "~%*engine-configuration-depth-relative-score*: ~a" *engine-configuration-depth-relative-score*)
+  (format t "~%*engine-configuration-score-calculation-considers-three*: ~a" *engine-configuration-score-calculation-considers-three*)
+  (format t "~%*engine-configuration-quit-row-evaluation-on-four*: ~a" *engine-configuration-quit-row-evaluation-on-four*)
+  (format t "~%")
+  )
 
+
+  
+  
 
 (defun board-score (board x y)
   "Evaluate the score of the board. x y: The current move. Returns a value 0 >= value <= 1, where 1 signals a winning position"
@@ -45,8 +56,7 @@
       (setf row (find-row board x))
       (if row (push (list x row) moves))
       )
-    ;;(nreverse moves)
-    moves
+    (nreverse moves)
     ))
 
 (defun is-move-available (board)
@@ -86,8 +96,11 @@
 ;;; color: The computers color
 ;;;
 ;;; create a clone of the board that for performance reasons will be manipulated during the traversal
-(defun minmax (the-board color max-depth)
+(defun minmax (the-board color max-depth &key (print-engine-configuration nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
+  (if print-engine-configuration
+      (print-engine-configuration)
+      )
   (let ((board (clone-board the-board)) (result nil))
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
@@ -99,8 +112,8 @@
 			 (nset-field board (first move) (second move) color) ; do move
 			 (setf score (board-score board (first move) (second move) )) ; calc score
 			 (setf is-four (>= score 1.0)) ; 4 pieces in a row?
-			 ;;(if (and *engine-configuration-quit-row-evaluation-on-four* is-four)
-			 ;;    (setf quit-loop t))
+			 (if (and *engine-configuration-quit-row-evaluation-on-four* is-four)
+			     (setf quit-loop t))
 			 (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
 			 (if *engine-configuration-depth-relative-score*
 			     (setf score (/ score (expt 10 (- cur-depth 1)))))
