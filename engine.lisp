@@ -56,7 +56,7 @@
       (setf row (find-row board x))
       (if row (push (list x row) moves))
       )
-    (nreverse moves)
+    moves
     ))
 
 (defun is-move-available (board)
