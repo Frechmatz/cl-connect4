@@ -23,7 +23,7 @@
 	     (run-minmax-test 
 	      "test-board-06-a" (create-board-06) connect4::WHITE 1
 	      ;; compare full final scores without quitting row evaluation on a 4
-	      :engine-configuration-quit-row-evaluation-on-four nil
+	      :engine-configuration-peek-is-four nil
 	      :expected-final-scores
 	      '((0 2 0.0) (1 1 0.0) (2 1 0.0) (3 1 0.0) (4 1 0.0) (5 2 1.0) (6 1 0.0))
 	      :expected-final-columns '(5)
@@ -62,6 +62,5 @@
 (define-test test-board-06-e ()
 	     (run-minmax-test 
 	      "test-board-06-e" (create-board-06) connect4::WHITE 1
-	      :engine-configuration-quit-row-evaluation-on-four t
 	      :expected-final-columns '(5)
 	      ))

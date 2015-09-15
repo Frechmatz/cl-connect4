@@ -44,15 +44,15 @@
 (defun run-minmax-test (name-of-test board color depth
 			&key 
 			  (engine-configuration-depth-relative-score t)
-			  (engine-configuration-quit-row-evaluation-on-four nil)
+			  (engine-configuration-peek-is-four nil)
 			  (print-final-scores nil)
 			  (expected-final-scores nil)
 			  (expected-final-columns nil)
 			  (expected-final-move-score nil)
 			)
   (let ( (best-move nil)
-	(connect4::*engine-configuration-quit-row-evaluation-on-four* engine-configuration-quit-row-evaluation-on-four)
 	 (connect4::*engine-configuration-depth-relative-score* engine-configuration-depth-relative-score)
+	 (connect4::*engine-configuration-peek-is-four* engine-configuration-peek-is-four)
 	 (connect4::*engine-notification-reduced-scores*
 	  (lambda (board color is-opponent depth reduced-score all-scores)
 	    (declare (ignore board))

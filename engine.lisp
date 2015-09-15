@@ -18,9 +18,7 @@
   "Set variable to nil to disable that a score reflects the current traversal depth, e.g. at a current depth of 2, a score of 1.0 results in 0.1.")
 (defvar *engine-configuration-score-calculation-considers-three* nil
   "Experimental. Set variable to t to enable that when there are three pieces in a row the resulting board-score will be increased.")
-(defvar *engine-configuration-quit-row-evaluation-on-four* nil
-  "Set to t to quit further evaluation of the current row if a winning situation has been detected.")
-(defvar *engine-configuration-peek-is-four* nil
+(defvar *engine-configuration-peek-is-four* t
   "Set to t to enable that possible moves will first be checked for an immediate four.")
 
 (defvar *engine-notification-reduced-scores*
@@ -105,7 +103,10 @@
 		(setf four-move move)
 		))))
     (if four-move
-	(list four-move)
+	(progn 
+	  ;; (princ ".")
+	  (list four-move)
+	  )
 	moves)))
   
 ;;;
@@ -121,32 +122,28 @@
   (let ((board (clone-board the-board)) (result nil))
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
-	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil) (quit-loop nil)   )
+	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))
 		 (if *engine-configuration-peek-is-four*
 		     (setf generated-moves (peek-is-four generated-moves board color)))
 		 (dolist (move generated-moves)
-		   (if quit-loop
-		       nil ;; (progn (format t "Schleife abgebrochen"))
-		       (progn
-			 (nset-field board (first move) (second move) color) ; do move
-			 (setf score (board-score board (first move) (second move) )) ; calc score
-			 (setf is-four (>= score 1.0)) ; 4 pieces in a row?
-			 (if (and *engine-configuration-quit-row-evaluation-on-four* is-four)
-			     (setf quit-loop t))
-			 (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
-			 (if *engine-configuration-depth-relative-score*
-			     (setf score (/ score (expt 10 (- cur-depth 1)))))
-			 ;; final state or no more moves availabe or max depth reached
-			 (if (or is-four (not (is-move-available board)) (equal cur-depth max-depth))
-			     (progn
-			       (push (list (first move) (second move) score) moves)
-			       )
-			     (progn
-			       (setf score (minmax-inner board (invert-color color) (not is-opponent) (+ cur-depth 1)))
-			       (push (list (first move) (second move) (third score)) moves)))
-			 (nset-field board (first move) (second move) EMPTY) ; undo move
-			 )
-		       ))
+		   (progn
+		     (nset-field board (first move) (second move) color) ; do move
+		     (setf score (board-score board (first move) (second move) )) ; calc score
+		     (setf is-four (>= score 1.0)) ; 4 pieces in a row?
+		     (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
+		     (if *engine-configuration-depth-relative-score*
+			 (setf score (/ score (expt 10 (- cur-depth 1)))))
+		     ;; final state or no more moves availabe or max depth reached
+		     (if (or is-four (not (is-move-available board)) (equal cur-depth max-depth))
+			 (progn
+			   (push (list (first move) (second move) score) moves)
+			   )
+			 (progn
+			   (setf score (minmax-inner board (invert-color color) (not is-opponent) (+ cur-depth 1)))
+			   (push (list (first move) (second move) (third score)) moves)))
+		     (nset-field board (first move) (second move) EMPTY) ; undo move
+		     )
+		   )
 		 (let ((result (reduce-scores moves is-opponent :skip-randomizer (if (equal cur-depth 1) nil t))))
 		   (funcall *engine-notification-reduced-scores* board color is-opponent cur-depth result moves)
 		   result)

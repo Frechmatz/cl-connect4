@@ -4,28 +4,22 @@ Connect4 Todos
 * General
 ** DONE Minmax should throw an exception when final board does not match with original one
 ** TODO Study analysis-boards
-** TODO After Unit-Testing set default value of *engine-configuration-depth-relative-score* to t
-** TODO After Unit-Testing set default value of *engine-configuration-quit-row-evaluation-on-four* to t
+** DONE After Unit-Testing set default value of *engine-configuration-depth-relative-score* to t
+** DONE After Unit-Testing set default value of *engine-configuration-peek-is-four* to t
 ** TODO After Unit-Testing set default value of *engine-configuration-score-calculation-considers-three* to t
+** TODO Clean up the messy board-interface
 * Unit Tests
 ** TODO Remove redundancies from tests
 ** DONE Tests should not depend on order of moves played by the Minmax
 ** DONE Remove *engine-configuration-skip-randomizer* option
 ** TODO Remove *engine-configuration-depth-relative-score* option
-** TODO Consider, if boolean configuration options not given by the test should be tested with both false and true 
 ** TODO Toggle default value of *engine-configuration-depth-relative-score* and adapt/extend tests
-** TODO Toggle default value of *engine-configuration-quit-row-evaluation-on-four* and adapt/extend tests
 ** TODO Toggle default value of *engine-configuration-score-calculation-considers-three* and adapt/extend tests
-** TODO If target columns are given, do apply a reverse check
 * Board Score Evaluation
 ** TODO Take into account 3 pieces in a row
 ** TODO Prefer moves near the center of the board
 * Engine optimization
-** TODO Quit row evaluation when player has 4 for current column
-** TODO Check if for current row any column results in a direct 4 and quit row. If not then deep traverse row.
+** DONE Quit row evaluation when player has 4 for current column
+** DONE Check if for current row any column results in a direct 4 and quit row. If not then deep traverse row.
 ** TODO Pruning
-
-
-
-
 
