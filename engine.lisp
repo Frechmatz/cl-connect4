@@ -20,6 +20,8 @@
   "Experimental. Set variable to t to enable that when there are three pieces in a row the resulting board-score will be increased.")
 (defvar *engine-configuration-quit-row-evaluation-on-four* nil
   "Set to t to quit further evaluation of the current row if a winning situation has been detected.")
+(defvar *engine-configuration-peek-is-four* nil
+  "Set to t to enable that possible moves will first be checked for an immediate four.")
 
 (defvar *engine-notification-reduced-scores*
   (lambda (board color is-opponent depth reduced-score all-scores)
@@ -31,7 +33,7 @@
   (format t "Engine configuration:")
   (format t "~%*engine-configuration-depth-relative-score*: ~a" *engine-configuration-depth-relative-score*)
   (format t "~%*engine-configuration-score-calculation-considers-three*: ~a" *engine-configuration-score-calculation-considers-three*)
-  (format t "~%*engine-configuration-quit-row-evaluation-on-four*: ~a" *engine-configuration-quit-row-evaluation-on-four*)
+  (format t "~%*engine-configuration-peek-is-four*: ~a" *engine-configuration-peek-is-four*)
   (format t "~%")
   )
 
@@ -90,6 +92,23 @@
       move)
     ))
 
+(defun peek-is-four (moves board color)
+  "Check all moves if an immediate four is present. If yes returns a list consisting of such move otherwise return the moves given into function"
+  (let ((four-move nil) (score nil))
+    (dolist (move moves)
+      (if (not four-move)
+	  (progn 
+	    (nset-field board (first move) (second move) color) ; do move
+	    (setf score (board-score board (first move) (second move))) ; calc score
+	    (nset-field board (first move) (second move) EMPTY) ; undo move
+	    (if (>= score 1.0) ;; 4 pieces in a row?
+		(setf four-move move)
+		))))
+    (if four-move
+	(list four-move)
+	moves)))
+  
+;;;
 ;;; returns a tupel (x y score) where x represents the column, y the row and score the score of the column
 ;;; max-depth: Maximum number of half-moves to execute (1..n)
 ;;; color: The computers color
@@ -103,6 +122,8 @@
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil) (quit-loop nil)   )
+		 (if *engine-configuration-peek-is-four*
+		     (setf generated-moves (peek-is-four generated-moves board color)))
 		 (dolist (move generated-moves)
 		   (if quit-loop
 		       nil ;; (progn (format t "Schleife abgebrochen"))

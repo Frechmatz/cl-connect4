@@ -16,6 +16,7 @@ Connect4 Todos
 ** TODO Toggle default value of *engine-configuration-depth-relative-score* and adapt/extend tests
 ** TODO Toggle default value of *engine-configuration-quit-row-evaluation-on-four* and adapt/extend tests
 ** TODO Toggle default value of *engine-configuration-score-calculation-considers-three* and adapt/extend tests
+** TODO If target columns are given, do apply a reverse check
 * Board Score Evaluation
 ** TODO Take into account 3 pieces in a row
 ** TODO Prefer moves near the center of the board

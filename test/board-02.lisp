@@ -24,7 +24,7 @@
 (define-test test-board-02-a ()
 	     (run-minmax-test 
 	      "test-board-02-a" (create-board-02) connect4::WHITE 2
-	      :expected-final-column '(2 3 4 5)
+	      :expected-final-columns '(2 3 4 5)
 	      ;; :print-final-scores t
 	      :expected-final-move-score 0.0
 	      ))
@@ -33,5 +33,5 @@
 (define-test test-board-02-b ()
 	     (run-minmax-test 
 	      "test-board-02-b" (create-board-02) connect4::WHITE 3
-	      :expected-final-column 4
+	      :expected-final-columns '(4)
 	      ))

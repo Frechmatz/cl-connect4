@@ -26,7 +26,7 @@
 	     (run-minmax-test 
 	      "test-board-00-a" (create-board-00) connect4::WHITE 1
 	      ;; :print-final-scores t
-	      :expected-final-column 2
+	      :expected-final-columns '(2)
 	      ))
 
 ;;; Test with traversal depth 6 and disabled depth relative scores
@@ -34,7 +34,7 @@
 (define-test test-board-00-b ()
 	     (run-minmax-test 
 	      "test-board-00-b" (create-board-00) connect4::WHITE 6
-	      :expected-final-column '(2 3 4 5) 
+	      :expected-final-columns '(2 3 4 5) 
 	      ;; :print-final-scores t
 	      ))
 
@@ -43,7 +43,7 @@
 (define-test test-board-00-c ()
 	     (run-minmax-test 
 	      "test-board-00-c" (create-board-00) connect4::WHITE 6
-	      :expected-final-column '(2) 
+	      :expected-final-columns '(2) 
 	      ;; :print-final-scores t
 	      ))
 

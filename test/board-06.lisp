@@ -26,7 +26,7 @@
 	      :engine-configuration-quit-row-evaluation-on-four nil
 	      :expected-final-scores
 	      '((0 2 0.0) (1 1 0.0) (2 1 0.0) (3 1 0.0) (4 1 0.0) (5 2 1.0) (6 1 0.0))
-	      :expected-final-column 5
+	      :expected-final-columns '(5)
 	      ))
 
 ;;; No winning or lose position
@@ -35,7 +35,7 @@
 	      "test-board-06-b" (create-board-06) connect4::BLACK 1
 	      :expected-final-scores
 	      '((0 2 0.0) (1 1 0.0) (2 1 0.0) (3 1 0.0) (4 1 0.0) (5 2 0.0) (6 1 0.0))
-	      :expected-final-column '(0 1 2 3 4 5 6)
+	      :expected-final-columns '(0 1 2 3 4 5 6)
 	      ;; :print-final-scores t
 	      ))
 
@@ -47,7 +47,7 @@
 	      :engine-configuration-depth-relative-score nil
 	      :expected-final-scores
 	      '((0 2 -1.0) (1 1 -1.0) (2 1 -1.0) (3 1 -1.0) (4 1 -1.0) (5 2 0.0) (6 1 -1.0))
-	      :expected-final-column 5
+	      :expected-final-columns '(5)
 	      ))
 
 ;;; BLACK counters the threat
@@ -55,7 +55,7 @@
 (define-test test-board-06-d ()
 	     (run-minmax-test 
 	      "test-board-06-d" (create-board-06) connect4::BLACK 2
-	      :expected-final-column 5
+	      :expected-final-columns '(5)
 	      ))
 
 ;;; Winning position at 5. Exit row evaluation on a 4
@@ -63,5 +63,5 @@
 	     (run-minmax-test 
 	      "test-board-06-e" (create-board-06) connect4::WHITE 1
 	      :engine-configuration-quit-row-evaluation-on-four t
-	      :expected-final-column 5
+	      :expected-final-columns '(5)
 	      ))

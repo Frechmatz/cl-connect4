@@ -33,11 +33,13 @@
 (defun equal-scores-p (a b)
   (equalp (sort-scores-by-column a) (sort-scores-by-column b)))
 
-(defun is-column-p (columns column)
-  (if (not (listp columns))
-      (equal columns column)
-      (find-if (lambda (c) (equal c column)) columns)
-      ))
+(defun other-columns (columns board-width)
+  (let ((result '()))
+    (dotimes (current-column board-width)
+      (if (not (find-if (lambda (c) (equal c current-column)) columns))
+	  (push current-column result))
+      )
+    result))
 
 (defun run-minmax-test (name-of-test board color depth
 			&key 
@@ -45,7 +47,7 @@
 			  (engine-configuration-quit-row-evaluation-on-four nil)
 			  (print-final-scores nil)
 			  (expected-final-scores nil)
-			  (expected-final-column nil)
+			  (expected-final-columns nil)
 			  (expected-final-move-score nil)
 			)
   (let ( (best-move nil)
@@ -72,11 +74,13 @@
 	    ))
 	 )
     (setf best-move (connect4::minmax board color depth))
-    (if expected-final-column
-	(assert-true
-	 (is-column-p expected-final-column (first best-move))
-	 (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%" name-of-test (first best-move) (third best-move) expected-final-column)
-	 ))
+    (if expected-final-columns
+	(progn
+	  (assert-true
+	   (find-if (lambda (c) (equal c (first best-move))) expected-final-columns)
+	   (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%" name-of-test (first best-move) (third best-move) expected-final-column)
+	   )
+	  ))
     (if expected-final-move-score
 	(assert-true
 	 ;; Regarding the comparison of floats, see also

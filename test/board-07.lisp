@@ -34,7 +34,7 @@
 (define-test test-board-07-b ()
 	     (run-minmax-test 
 	      "test-board-07-b" (create-board-07) connect4::BLACK 2
-	      :expected-final-column '(0 1 2 3 4)
+	      :expected-final-columns '(0 1 2 3 4)
 	      ))
 
 ;;; WHITE must answer with 0 or 4
@@ -44,6 +44,6 @@
 	      :engine-configuration-quit-row-evaluation-on-four nil
 	      :expected-final-scores
 	      '((0 1 1.0) (1 0 0.0) (2 0 0.0) (3 0 0.0) (4 1 1.0))
-	      :expected-final-column '(4 0)
+	      :expected-final-columns '(4 0)
 	      ))
 
