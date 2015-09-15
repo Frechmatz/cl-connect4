@@ -25,8 +25,8 @@
 	     (run-minmax-test 
 	      "test-board-01-a" (create-board-01) connect4::WHITE 4
 	      :expected-final-columns '(0 1 2 3 4 5 6)
-	      ;; :print-final-scores t
-	      :expected-final-move-score 0.0
+	      ;;:print-final-scores t
+	      ;;:expected-final-move-score 0.0
 	      ))
 
 ;;; Let computer counter the the threat with a traversal depth of 6 half-moves

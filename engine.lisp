@@ -16,7 +16,7 @@
 
 (defvar *engine-configuration-depth-relative-score* t
   "Set variable to nil to disable that a score reflects the current traversal depth, e.g. at a current depth of 2, a score of 1.0 results in 0.1.")
-(defvar *engine-configuration-score-calculation-considers-three* nil
+(defvar *engine-configuration-score-calculation-considers-three* t
   "Experimental. Set variable to t to enable that when there are three pieces in a row the resulting board-score will be increased.")
 (defvar *engine-configuration-peek-is-four* t
   "Set to t to enable that possible moves will first be checked for an immediate four.")

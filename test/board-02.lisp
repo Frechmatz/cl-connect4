@@ -26,7 +26,7 @@
 	      "test-board-02-a" (create-board-02) connect4::WHITE 2
 	      :expected-final-columns '(2 3 4 5)
 	      ;; :print-final-scores t
-	      :expected-final-move-score 0.0
+	      ;; :expected-final-move-score 0.0
 	      ))
 
 ;;; test with traversal depth 3 (win situation will be recognized)

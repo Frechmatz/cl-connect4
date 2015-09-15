@@ -33,8 +33,8 @@
 (define-test test-board-06-b ()
 	     (run-minmax-test 
 	      "test-board-06-b" (create-board-06) connect4::BLACK 1
-	      :expected-final-scores
-	      '((0 2 0.0) (1 1 0.0) (2 1 0.0) (3 1 0.0) (4 1 0.0) (5 2 0.0) (6 1 0.0))
+	      ;;:expected-final-scores
+	      ;;'((0 2 0.0) (1 1 0.0) (2 1 0.0) (3 1 0.0) (4 1 0.0) (5 2 0.0) (6 1 0.0))
 	      :expected-final-columns '(0 1 2 3 4 5 6)
 	      ;; :print-final-scores t
 	      ))
