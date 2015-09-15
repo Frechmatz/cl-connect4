@@ -14,9 +14,6 @@
 (defconstant CLASSIC-WIDTH 7 "Board width of the original game") 
 (defconstant CLASSIC-HEIGHT 6 "Board height of the original game") 
 
-(defvar *engine-configuration-depth-relative-score* t
-  "Set variable to nil to disable that a score reflects the current traversal depth, e.g. at a current depth of 2, a score of 1.0 results in 0.1.")
-
 (defvar *engine-notification-reduced-scores*
   (lambda (board color is-opponent depth reduced-score all-scores)
   (declare (ignore board color is-opponent depth reduced-score all-scores))

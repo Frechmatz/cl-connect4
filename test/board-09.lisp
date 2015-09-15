@@ -30,8 +30,6 @@
 (define-test test-board-09-a ()
 	     (run-minmax-test 
 	      "test-board-09-a" (create-board-09) connect4::WHITE 4
-	      ;;:expected-final-scores
-	      ;;'((0 0 0.0) (1 4 0.0) (3 0 0.0) (4 4 0.0))
 	      :expected-final-columns '(0 1 2 3 4)
 	      ;; :print-final-scores t
 	      ))
@@ -42,10 +40,7 @@
 (define-test test-board-09-b ()
 	     (run-minmax-test 
 	      "test-board-09-b" (create-board-09) connect4::WHITE 6
-	      ;;:expected-final-scores
-	      ;;'((0 0 0.0) (1 4 1.0) (3 0 0.0) (4 4 0.0))
 	      :expected-final-columns '(1)
-	      :engine-configuration-depth-relative-score nil
 	      ))
 
 ;;; Check that win situation is detected with traversal depth of 6

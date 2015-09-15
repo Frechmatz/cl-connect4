@@ -26,10 +26,7 @@
 (define-test test-board-08-a ()
 	     (run-minmax-test 
 	      "test-board-08-a" (create-board-08) connect4::WHITE 4
-	      ;;:expected-final-scores
-	      ;;'((0 1 0.0) (1 1 1.0) (2 0 0.0) (3 0 0.0) (4 1 0.0))
 	      :expected-final-columns '(1)
-	      :engine-configuration-depth-relative-score nil
 	      ))
 
 ;;; WHITE must answer with 1.0 for 1
@@ -44,9 +41,6 @@
 (define-test test-board-08-c ()
 	     (run-minmax-test 
 	      "test-board-08-c" (create-board-08) connect4::BLACK 4
-	      :engine-configuration-depth-relative-score nil
-	      ;;:expected-final-scores
-	      ;;'((0 1 0.0) (1 1 0.0) (2 0 -1.0) (3 0 -1.0) (4 1 0.0))
 	      :expected-final-columns '(0 1 4)
 	      ))
 
