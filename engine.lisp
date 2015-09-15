@@ -35,10 +35,6 @@
   (format t "~%")
   )
 
-
-  
-  
-
 (defun board-score (board x y)
   "Evaluate the score of the board. x y: The current move. Returns a value 0 >= value <= 1, where 1 signals a winning position"
   (let ((l (max-line-length-at board x y (get-field board x y))))
@@ -143,7 +139,7 @@
 	    (format t "~%Temporary board: ~%")
 	    (format-board (make-instance 'board-formatter) board)
 	    (format t "~%")
-	    ;; enter debugger
+	    ;; Game Over
 	    (error 'internal-error :text "Temporary board is not equal to the incoming one")
 	    ))
       result
