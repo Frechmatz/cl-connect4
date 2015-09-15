@@ -21,7 +21,6 @@
 
 (define-test test-board-score-3 ()
 	     (let ( (board nil) (score nil)
-		   (connect4::*engine-configuration-score-calculation-considers-three* t)
 		    )
     (setf board (create-test-board (list
 		      "......."

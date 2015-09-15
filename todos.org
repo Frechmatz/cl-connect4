@@ -6,7 +6,7 @@ Connect4 Todos
 ** TODO Study analysis-boards
 ** DONE After Unit-Testing set default value of *engine-configuration-depth-relative-score* to t
 ** DONE After Unit-Testing set default value of *engine-configuration-peek-is-four* to t
-** TODO After Unit-Testing set default value of *engine-configuration-score-calculation-considers-three* to t
+** DONE After Unit-Testing remove variable *engine-configuration-score-calculation-considers-three*
 ** TODO Clean up the messy board-interface
 * Unit Tests
 ** TODO Remove redundancies from tests

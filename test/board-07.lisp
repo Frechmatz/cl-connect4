@@ -24,9 +24,7 @@
 (define-test test-board-07-a ()
 	     (run-minmax-test 
 	      "test-board-07-a" (create-board-07) connect4::BLACK 2
-	      :engine-configuration-depth-relative-score nil
-	      :expected-final-scores
-	      '((0 1 -1.0) (1 0 -1.0) (2 0 -1.0) (3 0 -1.0) (4 1 -1.0))
+	      :expected-final-columns '(0 1 2 3 4)
 	      ))
 
 ;;; BLACK must answer with negative value for all columns
@@ -41,9 +39,6 @@
 (define-test test-board-07-c ()
 	     (run-minmax-test 
 	      "test-board-07-c" (create-board-07) connect4::WHITE 2
-	      :engine-configuration-peek-is-four nil
-	      :expected-final-scores
-	      '((0 1 1.0) (1 0 0.0) (2 0 0.0) (3 0 0.0) (4 1 1.0))
 	      :expected-final-columns '(4 0)
 	      ))
 

@@ -23,9 +23,6 @@
 	     (run-minmax-test 
 	      "test-board-06-a" (create-board-06) connect4::WHITE 1
 	      ;; compare full final scores without quitting row evaluation on a 4
-	      :engine-configuration-peek-is-four nil
-	      :expected-final-scores
-	      '((0 2 0.0) (1 1 0.0) (2 1 0.0) (3 1 0.0) (4 1 0.0) (5 2 1.0) (6 1 0.0))
 	      :expected-final-columns '(5)
 	      ))
 
@@ -33,8 +30,6 @@
 (define-test test-board-06-b ()
 	     (run-minmax-test 
 	      "test-board-06-b" (create-board-06) connect4::BLACK 1
-	      ;;:expected-final-scores
-	      ;;'((0 2 0.0) (1 1 0.0) (2 1 0.0) (3 1 0.0) (4 1 0.0) (5 2 0.0) (6 1 0.0))
 	      :expected-final-columns '(0 1 2 3 4 5 6)
 	      ;; :print-final-scores t
 	      ))
@@ -44,9 +39,7 @@
 (define-test test-board-06-c ()
 	     (run-minmax-test 
 	      "test-board-06-c" (create-board-06) connect4::BLACK 2
-	      :engine-configuration-depth-relative-score nil
-	      :expected-final-scores
-	      '((0 2 -1.0) (1 1 -1.0) (2 1 -1.0) (3 1 -1.0) (4 1 -1.0) (5 2 0.0) (6 1 -1.0))
+;;	      :engine-configuration-depth-relative-score nil
 	      :expected-final-columns '(5)
 	      ))
 
