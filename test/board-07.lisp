@@ -2,16 +2,13 @@
 (in-package :connect4-test)
 
 
-;;;
-;;; 
-;;; Tests that
-;;; BLACK recognizes that it has lost and responds with a negative score for all columns
-;;; WHITE will choose move for direct win
-;;;
-;;; Status: Ok
-;;;
-;;; Depth: 2 half moves
-;;;
+;;;; 
+;;;; Tests that
+;;;; BLACK recognizes that it has lost and responds with a negative score for all columns
+;;;; WHITE will choose move for direct win
+;;;;
+;;;; Depth: 2 half moves
+;;;;
 
 (defun create-board-07 ()
   (create-test-board (list
@@ -20,18 +17,9 @@
 		      )))
 
 ;;; BLACK must answer with negative value for all columns
-;;; depth relative score off
 (define-test test-board-07-a ()
 	     (run-minmax-test 
 	      "test-board-07-a" (create-board-07) connect4::BLACK 2
-	      :expected-final-columns '(0 1 2 3 4)
-	      ))
-
-;;; BLACK must answer with negative value for all columns
-;;; depth relative score on
-(define-test test-board-07-b ()
-	     (run-minmax-test 
-	      "test-board-07-b" (create-board-07) connect4::BLACK 2
 	      :expected-final-columns '(0 1 2 3 4)
 	      ))
 

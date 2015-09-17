@@ -1,9 +1,5 @@
 ;;;;
 ;;;; Unit tests for connect4
-;;;; (require "connect4-test")
-;;;; (in-package :connect4-test)
-;;;; (run-tests)
-;;;;
 ;;;;
 (defsystem :connect4-test
   :serial t
@@ -14,6 +10,9 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "testutil")
+                                     (:file "detect-four")
+                                     (:file "board-score")
+                                     (:file "reduce-scores")
                                      (:file "board-00")
                                      (:file "board-01")
                                      (:file "board-02")
@@ -21,9 +20,7 @@
 				     (:file "board-07")
 				     (:file "board-08")
 				     (:file "board-09")
-                                     (:file "detect-four")
-                                     (:file "board-score")
-                                     (:file "reduce-scores")
+				     (:file "board-10")
 				     )))
   )
 

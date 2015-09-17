@@ -3,9 +3,8 @@
 (in-package :connect4-test)
 
 ;;;;
+;;;; Test board-score calculation 
 ;;;;
-;;;; Status: In work. 
-;;;; 
 
 (define-test test-board-score-4 ()
   (let ( (board nil))

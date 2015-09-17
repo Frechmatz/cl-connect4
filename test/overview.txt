@@ -3,9 +3,6 @@
 File		Tests what?
 -----------------------------------
 board-00	Direct win with one move.
-		With non-depth-relative scores and traversal depth > 1 the direct win might not be chosen.
-		Independent of traversal depth each chosen move is a winning one
-		With depth-relative scores the immediate win is chosen
 board-01	Counter threat > 4 half moves
 board-02	Win with >= 3 half moves
 board-03 	-
@@ -15,4 +12,5 @@ board-06	Direct win and counter of threat
 board-07	Game lost, all scores < 0
 board-08	Win with >= 4 half moves, Counter threat
 board-09	Win with 6 half moves
+board-10	Three pieces in a row
 

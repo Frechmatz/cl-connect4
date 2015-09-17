@@ -2,14 +2,13 @@
 (in-package :connect4-test)
 
 
-;;;
-;;;
-;;; Status: Ok
-;;;
-;;; Next move by: WHITE
-;;; WHITE must throw into 3 or 4 or 5 otherwise it will lose.
-;;; Required traversal depth: > 4 half moves
-;;;
+;;;;
+;;;;
+;;;; Next move by: WHITE
+;;;; WHITE must throw into 3 or 4 or 5 otherwise it will lose.
+;;;; Required traversal depth: > 4 half moves
+;;;;
+
 (defun create-board-01 ()
   (create-test-board (list
 		      "......."

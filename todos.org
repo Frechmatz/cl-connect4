@@ -8,15 +8,17 @@ Connect4 Todos
 ** DONE After Unit-Testing set default value of *engine-configuration-peek-is-four* to t
 ** DONE After Unit-Testing remove variable *engine-configuration-score-calculation-considers-three*
 ** TODO Clean up the messy board-interface
+** TODO Establish packages for board, engine, board-formatter
 * Unit Tests
 ** TODO Remove redundancies from tests
 ** DONE Tests should not depend on order of moves played by the Minmax
 ** DONE Remove *engine-configuration-skip-randomizer* option
 ** DONE Remove *engine-configuration-depth-relative-score* option
 ** DONE Toggle default value of *engine-configuration-depth-relative-score* and adapt/extend tests
-** TODO Toggle default value of *engine-configuration-score-calculation-considers-three* and adapt/extend tests
+** DONE Toggle default value of *engine-configuration-score-calculation-considers-three* and adapt/extend tests
+** TODO Test of peek-is-four()
 * Board Score Evaluation
-** TODO Take into account 3 pieces in a row
+** DONE Take into account 3 pieces in a row
 ** TODO Prefer moves near the center of the board
 * Engine optimization
 ** DONE Quit row evaluation when player has 4 for current column

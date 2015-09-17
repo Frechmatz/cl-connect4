@@ -2,12 +2,10 @@
 
 
 
-;;;
-;;; Test check mate in 6 half moves
-;;; WHITE must realize its win
-;;;
-;;; Status: Ok
-;;;
+;;;;
+;;;; Test check mate in 6 half moves
+;;;; WHITE must realize its win
+;;;;
 
 (in-package :connect4-test)
 
@@ -36,17 +34,8 @@
 
 
 ;;; Check that win situation is detected with traversal depth of 6
-;;; No depth relative scores
 (define-test test-board-09-b ()
 	     (run-minmax-test 
 	      "test-board-09-b" (create-board-09) connect4::WHITE 6
-	      :expected-final-columns '(1)
-	      ))
-
-;;; Check that win situation is detected with traversal depth of 6
-;;; Depth relative scores
-(define-test test-board-09-c ()
-	     (run-minmax-test 
-	      "test-board-09-c" (create-board-09) connect4::WHITE 6
 	      :expected-final-columns '(1)
 	      ))
