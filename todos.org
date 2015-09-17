@@ -12,8 +12,8 @@ Connect4 Todos
 ** TODO Remove redundancies from tests
 ** DONE Tests should not depend on order of moves played by the Minmax
 ** DONE Remove *engine-configuration-skip-randomizer* option
-** TODO Remove *engine-configuration-depth-relative-score* option
-** TODO Toggle default value of *engine-configuration-depth-relative-score* and adapt/extend tests
+** DONE Remove *engine-configuration-depth-relative-score* option
+** DONE Toggle default value of *engine-configuration-depth-relative-score* and adapt/extend tests
 ** TODO Toggle default value of *engine-configuration-score-calculation-considers-three* and adapt/extend tests
 * Board Score Evaluation
 ** TODO Take into account 3 pieces in a row

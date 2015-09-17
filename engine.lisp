@@ -22,8 +22,7 @@
 
 (defun print-engine-configuration ()
   (format t "Engine configuration:")
-  (format t "~%*engine-configuration-depth-relative-score*: ~a" *engine-configuration-depth-relative-score*)
-  (format t "~%")
+   (format t "~%")
   )
 
 (defun board-score (board x y)
