@@ -12,6 +12,7 @@
                                      (:file "testutil")
                                      (:file "detect-four")
                                      (:file "board-score")
+                                     (:file "column-weights")
                                      (:file "reduce-scores")
                                      (:file "board-00")
                                      (:file "board-01")

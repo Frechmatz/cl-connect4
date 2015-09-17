@@ -2,6 +2,11 @@
 
 File		Tests what?
 -----------------------------------
+board-score	Calculation of the score of the current move
+detect-four	Detection that 4 pieces are in a row
+move-available	Detection that a move is available (not which one)
+column-weights	The assignment of weights to the columns of the board
+reduce-scores	The maximizing/minimizing of a row of scores
 board-00	Direct win with one move.
 board-01	Counter threat > 4 half moves
 board-02	Win with >= 3 half moves

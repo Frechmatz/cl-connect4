@@ -74,7 +74,7 @@
 	(progn
 	  (assert-true
 	   (find-if (lambda (c) (equal c (first best-move))) expected-final-columns)
-	   (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%" name-of-test (first best-move) (third best-move) expected-final-column)
+	   (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%" name-of-test (first best-move) (third best-move) expected-final-columns)
 	   )
 	  ))
     (if expected-final-move-score

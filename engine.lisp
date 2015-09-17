@@ -17,13 +17,33 @@
 (defvar *engine-notification-reduced-scores*
   (lambda (board color is-opponent depth reduced-score all-scores)
   (declare (ignore board color is-opponent depth reduced-score all-scores))
-  nil))
+  nil)
+  "Handler that is called each time after a minimizing/maximizing of a row of scores took place")
+
+(defvar *engine-configuration-prefer-center* nil
+  "Experimental. Prefer moves that are near to the horizontal center of the board.")
 
 
 (defun print-engine-configuration ()
   (format t "Engine configuration:")
-   (format t "~%")
+  (format t "*engine-configuration-prefer-center*: ~a" *engine-configuration-prefer-center*)
+  (format t "~%")
   )
+
+(defvar *column-weights* nil
+  "This array defines the weight of each column of the current board. 0 > weight <= 1.0"
+  )
+
+(defun calc-column-weights (board-width prefer-center)
+  "Calculate a weight for each column. The nearer to the center the higher the weight"
+  (let ((weights (make-array board-width)))
+    (dotimes (x board-width)
+      (if (not prefer-center)
+	  (setf (aref weights x) 1.0)
+	  ;; 1 / (1 + Distance from center)
+	  (setf (aref weights x) (/ 1.0 (+ 1 (abs (- (/ board-width 2) x)))))
+	  ))
+    weights))
 
 (defun board-score (board x y)
   "Evaluate the score of the board. x y: The current move. Returns a value 0 >= value <= 1, where 1 signals a winning position"
@@ -106,7 +126,10 @@
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
   (if print-engine-configuration
       (print-engine-configuration))
-  (let ((board (clone-board the-board)) (result nil))
+  (let ((board (clone-board the-board)) (result nil)
+	(*column-weights* (calc-column-weights (connect4::get-board-width the-board)
+					       *engine-configuration-prefer-center*))
+	)
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))
