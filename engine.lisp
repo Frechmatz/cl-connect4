@@ -88,14 +88,17 @@
   ;; Maximize: #'> Minimize: #'<
   ;; skip-randomizer: nil -> If multiple moves are available choose a random one. t -> choose first one
   ;; returns move with minimum or maximum score
-  (let ((move nil) (fn (if is-opponent #'< #'>)))
-    (setf move (reduce (lambda (best item)
-			 (if (funcall fn (third item) (third best)) item best)) 
-		       moves))
-    (if (not skip-randomizer)
-	(get-random-move moves (third move))
-      move)
-    ))
+  (if (not moves) ; reduce doesn't like empty lists
+      nil
+      (progn 
+	(let ((move nil) (fn (if is-opponent #'< #'>)))
+	  (setf move (reduce (lambda (best item)
+			       (if (funcall fn (third item) (third best)) item best)) 
+			     moves))
+	  (if (not skip-randomizer)
+	      (get-random-move moves (third move))
+	      move)
+	  ))))
 
 (defun peek-is-four (moves board color)
   "Check all moves if an immediate four is present. If yes returns a list consisting of such move otherwise return the moves given into function"
@@ -107,13 +110,12 @@
 	    (setf score (board-score board (first move) (second move))) ; calc score
 	    (nset-field board (first move) (second move) EMPTY) ; undo move
 	    (if (>= score 1.0) ;; 4 pieces in a row?
-		(setf four-move move)
+		(progn
+		  (setf four-move move)
+		  )
 		))))
     (if four-move
-	(progn 
-	  ;; (princ ".")
-	  (list four-move)
-	  )
+	(list four-move)
 	moves)))
   
 ;;;

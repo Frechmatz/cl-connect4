@@ -16,7 +16,7 @@ Connect4 Todos
 ** DONE Remove *engine-configuration-depth-relative-score* option
 ** DONE Toggle default value of *engine-configuration-depth-relative-score* and adapt/extend tests
 ** DONE Toggle default value of *engine-configuration-score-calculation-considers-three* and adapt/extend tests
-** TODO Test of peek-is-four()
+** DONE Test of peek-is-four()
 ** TODO Test of generate-moves()
 * Board Score Evaluation
 ** DONE Take into account 3 pieces in a row

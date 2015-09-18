@@ -14,6 +14,8 @@
                                      (:file "board-score")
                                      (:file "column-weights")
                                      (:file "reduce-scores")
+                                     (:file "peek-is-four")
+				     (:file "no-move-available")
                                      (:file "board-00")
                                      (:file "board-01")
                                      (:file "board-02")

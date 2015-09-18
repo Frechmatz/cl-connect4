@@ -67,3 +67,13 @@
 	       ))
 
 
+;;; Empty score list
+(define-test test-reduce-scores-7 ()
+	     (let (
+		   (moves '())
+		   (move nil)
+		   )
+	       (setf move (connect4::reduce-scores moves t :skip-randomizer t))
+	       (assert-equal nil move (format t "test-reduce-scores-7: Failed~%"))
+	       ))
+
