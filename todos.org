@@ -19,6 +19,8 @@ Connect4 Todos
 ** DONE Test of peek-is-four()
 ** TODO Test of generate-moves()
 ** DONE Make lisp-unit print a stacktrace or enter into the debugger on execution errors
+** TODO Test prefer center = nil without randomizer (see test-board-10-c which passes or fails depending on
+   current randomizer seed (standalone it fails, if -b runs before it passes)
 * Board Score Evaluation
 ** DONE Take into account 3 pieces in a row
 ** TODO Prefer moves near the center of the board

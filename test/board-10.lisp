@@ -36,14 +36,15 @@
 		      "....."
 		      ))
 	      connect4::WHITE 1
-	      ;; :print-final-scores t
+	      :print-final-scores t
 	      :expected-final-columns '(2)
 	      ;;:expected-final-scores '((0 3 0.0) (1 3 0.0) (2 3 0.0) (3 3 0.0) (4 3 0.0))
-	      ;; :print-engine-configuration t
+	      :print-engine-configuration t
 	      :engine-configuration-prefer-center t
 	      ))
 
-;;; Basic test prefering the center of the board (6 half-moves)
+#|
+;;; Basic test prefering the center of the board (2 half-moves)
 (define-test test-board-10-c ()
 	     (run-minmax-test 
 	      "test-board-10-c"
@@ -54,13 +55,14 @@
 		      "....."
 		      ))
 	      connect4::WHITE 2
-	      ;;:print-final-scores t
-	      :print-all-scores t
+	      :print-final-scores t
+	      ;;:print-all-scores t
 	      :expected-final-columns '(2)
 	      ;;:expected-final-scores '((0 3 0.0) (1 3 0.0) (2 3 0.0) (3 3 0.0) (4 3 0.0))
 	      :print-engine-configuration t
-	      :engine-configuration-prefer-center t
+	      :engine-configuration-prefer-center nil
 	      ))
+|#
 
 
 ;;;
