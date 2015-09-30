@@ -20,14 +20,14 @@
   nil)
   "Handler that is called each time after a minimizing/maximizing of a row of scores took place")
 
-(defvar *engine-configuration-prefer-center* nil
+(defvar *engine-configuration-prefer-center* t
   "Experimental. Prefer moves that are near to the horizontal center of the board.")
 
 
 (defun print-engine-configuration ()
   (format t "Engine configuration:")
   (format t "*engine-configuration-prefer-center*: ~a" *engine-configuration-prefer-center*)
-  (format t "~%")
+  (format t "~%Column weights: ~a~%" *column-weights*)
   )
 
 (defvar *column-weights* nil
@@ -47,13 +47,19 @@
 
 (defun board-score (board x y)
   "Evaluate the score of the board. x y: The current move. Returns a value 0 >= value <= 1, where 1 signals a winning position"
+  (if (not *column-weights*)
+      (error 'internal-error :text "board-score: column-weights not set"))
+  (if (>= x (connect4::get-board-width board))
+      (error 'internal-error :text "board-score: x out of range"))
   (let ((l (max-line-length-at board x y (get-field board x y))))
     (if (>= l 4)
 	1.0
 	(progn
-	  (if (>= l 3) 0.5 0.0))
+	  (if (>= l 3)
+	      (+ 0.5 (* 0.49 (aref *column-weights* x))) ; 0.50 .. 0.99
+	      (+ 0.25 (* 0.24 (aref *column-weights* x))) ; 0.25 .. 0.49
 	)
-    ))
+    ))))
 
 (defun generate-moves (board)
   "Generate moves. Returns a list of (x y) coordinates of all possible moves"
@@ -126,12 +132,13 @@
 ;;; create a clone of the board that for performance reasons will be manipulated during the traversal
 (defun minmax (the-board color max-depth &key (print-engine-configuration nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
-  (if print-engine-configuration
-      (print-engine-configuration))
   (let ((board (clone-board the-board)) (result nil)
 	(*column-weights* (calc-column-weights (connect4::get-board-width the-board)
 					       *engine-configuration-prefer-center*))
 	)
+    (if print-engine-configuration
+	(print-engine-configuration))
+    
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))

@@ -10,5 +10,6 @@
 (asdf:load-system "connect4" :force t)
 (in-package :connect4-test)
 (format t "~%Running tests...~%")
+(use-debugger)
 (run-tests)
 

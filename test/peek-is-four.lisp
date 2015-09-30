@@ -3,6 +3,7 @@
 
 (define-test test-peek-is-four-a ()
 	     (let (
+		   (connect4::*column-weights* (make-array 5 :initial-element 1.0)) 
 		   (board (create-test-board (list
 					      "....."
 					      "....."
@@ -21,6 +22,7 @@
 
 (define-test test-peek-is-four-b ()
 	     (let (
+		   (connect4::*column-weights* (make-array 5 :initial-element 1.0)) 
 		   (board (create-test-board (list
 					      ".W..."
 					      ".W..."
@@ -40,6 +42,7 @@
 ;;; Test empty list passed into function
 (define-test test-peek-is-four-c ()
 	     (let (
+		   (connect4::*column-weights* (make-array 5 :initial-element 1.0)) 
 		   (board (create-test-board (list
 					      ".W..."
 					      ".W..."

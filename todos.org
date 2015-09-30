@@ -18,6 +18,7 @@ Connect4 Todos
 ** DONE Toggle default value of *engine-configuration-score-calculation-considers-three* and adapt/extend tests
 ** DONE Test of peek-is-four()
 ** TODO Test of generate-moves()
+** DONE Make lisp-unit print a stacktrace or enter into the debugger on execution errors
 * Board Score Evaluation
 ** DONE Take into account 3 pieces in a row
 ** TODO Prefer moves near the center of the board

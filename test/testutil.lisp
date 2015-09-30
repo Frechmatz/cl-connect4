@@ -44,19 +44,23 @@
 (defun run-minmax-test (name-of-test board color depth
 			&key 
 			  (print-final-scores nil)
+			  (print-all-scores nil)
 			  (expected-final-scores nil)
 			  (expected-final-columns nil)
 			  (expected-final-move-score nil)
+			  (print-engine-configuration nil)
+			  (engine-configuration-prefer-center t)
 			)
   (let ( (best-move nil)
+	(connect4::*engine-configuration-prefer-center* engine-configuration-prefer-center)
 	 (connect4::*engine-notification-reduced-scores*
 	  (lambda (board color is-opponent depth reduced-score all-scores)
 	    (declare (ignore board))
-	    (if (and print-final-scores (equal depth 1))
+	    (if (or (and print-final-scores (equal depth 1)) print-all-scores)
 		(progn
 		  (format t
-			  "~%~a: Final scores: Color: ~a Is-Opponent: ~a Score: ~a All scores:~%~a~%"
-			  name-of-test color is-opponent (third reduced-score) all-scores)
+			  "~%~a: Reduced scores: Depth: ~a Color: ~a Is-Opponent: ~a Score: ~a All scores:~%~a~%"
+			  name-of-test depth color is-opponent (third reduced-score) all-scores)
 		  )
 		)
 	    (if (and expected-final-scores (equal depth 1))
@@ -69,7 +73,7 @@
 			   ) ; endif
 	    ))
 	 )
-    (setf best-move (connect4::minmax board color depth))
+    (setf best-move (connect4::minmax board color depth :print-engine-configuration print-engine-configuration))
     (if expected-final-columns
 	(progn
 	  (assert-true
