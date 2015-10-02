@@ -50,7 +50,8 @@
 			  (expected-final-move-score nil)
 			  (print-engine-configuration nil)
 			  (engine-configuration-prefer-center t)
-			)
+			  )
+  (format t "Running minmax test ~a~%" name-of-test)
   (let ( (best-move nil)
 	(connect4::*engine-configuration-prefer-center* engine-configuration-prefer-center)
 	 (connect4::*engine-notification-reduced-scores*

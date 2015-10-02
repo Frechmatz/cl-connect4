@@ -24,15 +24,12 @@
   "Experimental. Prefer moves that are near to the horizontal center of the board.")
 
 (defvar *column-weights* nil
-  "This array defines the weight of each column of the current board. 0 > weight <= 1.0"
-  )
+  "This array defines the weight of each column of the current board. 0 > weight <= 1.0")
 
 (defun print-engine-configuration ()
-  (format t "Engine configuration:")
-  (format t "*engine-configuration-prefer-center*: ~a" *engine-configuration-prefer-center*)
-  (format t "~%Column weights: ~a~%" *column-weights*)
-  )
-
+  (format t "Engine configuration:~%")
+  (format t ">>> *engine-configuration-prefer-center*: ~a~%" *engine-configuration-prefer-center*)
+  (format t ">>> Column weights: ~a~%" *column-weights*))
 
 (defun calc-column-weights (board-width prefer-center)
   "Calculate a weight for each column. The nearer to the center the higher the weight"
@@ -68,8 +65,7 @@
       (setf row (find-row board x))
       (if row (push (list x row) moves))
       )
-    moves
-    ))
+    moves))
 
 (defun is-move-available (board)
   "Check if a move is available for the given board"
@@ -77,8 +73,10 @@
     (dotimes (x (get-board-width board))
       (if (not (is-field-set board x 0)) (setf move-left t))
       )
-  move-left
-  ))
+  move-left))
+
+;;; Initialize 'seed' of random number generator.
+(setf *random-state* (make-random-state t))
 
 (defun get-random-entry (moves)
   "Chooses a random entry of the given list."
@@ -130,8 +128,8 @@
       nil
       (progn 
 	(let ((resulting-moves (get-reduced-scores moves is-opponent)))
-;;	  (if (not skip-prefer-center)
-;;	      (setf resulting-moves (get-max-column-weighted-moves resulting-moves)))
+	  (if (not skip-prefer-center)
+	      (setf resulting-moves (get-max-column-weighted-moves resulting-moves)))
 	  (if (not skip-randomizer)
 	      (get-random-entry resulting-moves)
 	      (first resulting-moves))
@@ -156,7 +154,7 @@
 	moves)))
   
 ;;;
-;;; returns a tupel (x y score) where x represents the column, y the row and score the score of the column
+;;; Returns a tupel (x y score) where x represents the column, y the row and score the score of the column
 ;;; max-depth: Maximum number of half-moves to execute (1..n)
 ;;; color: The computers color
 ;;;
@@ -165,11 +163,9 @@
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
   (let ((board (clone-board the-board)) (result nil)
 	(*column-weights* (calc-column-weights (connect4::get-board-width the-board)
-					       *engine-configuration-prefer-center*))
-	)
+					       *engine-configuration-prefer-center*)))
     (if print-engine-configuration
 	(print-engine-configuration))
-    
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))

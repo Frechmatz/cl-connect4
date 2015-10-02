@@ -25,7 +25,7 @@
 	      :engine-configuration-prefer-center nil
 	      ))
 
-;;; Basic test prefering the center of the board (1 half-move)
+;;; Basic test of prefering the center of the board (1 half-move)
 (define-test test-board-10-b ()
 	     (run-minmax-test 
 	      "test-board-10-b"
@@ -36,14 +36,12 @@
 		      "....."
 		      ))
 	      connect4::WHITE 1
-	      :print-final-scores t
-	      :expected-final-columns '(2)
-	      ;;:expected-final-scores '((0 3 0.0) (1 3 0.0) (2 3 0.0) (3 3 0.0) (4 3 0.0))
-	      :print-engine-configuration t
+	      ;;:print-final-scores t
+	      :expected-final-columns '(2 3)
+	      ;;:print-engine-configuration t
 	      :engine-configuration-prefer-center t
 	      ))
 
-#|
 ;;; Basic test prefering the center of the board (2 half-moves)
 (define-test test-board-10-c ()
 	     (run-minmax-test 
@@ -55,15 +53,12 @@
 		      "....."
 		      ))
 	      connect4::WHITE 2
-	      :print-final-scores t
+	      ;;:print-final-scores t
 	      ;;:print-all-scores t
-	      :expected-final-columns '(2)
-	      ;;:expected-final-scores '((0 3 0.0) (1 3 0.0) (2 3 0.0) (3 3 0.0) (4 3 0.0))
-	      :print-engine-configuration t
-	      :engine-configuration-prefer-center nil
+	      :expected-final-columns '(2 3)
+	      ;;:print-engine-configuration t
+	      :engine-configuration-prefer-center t
 	      ))
-|#
-
 
 ;;;
 ;;; WHITE: Realize three pieces in a row via 3 

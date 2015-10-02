@@ -1,10 +1,6 @@
 
 (in-package :connect4-test)
 
-;;;;
-;;;; Format of moves: ((x y score) (x y score) ...)
-;;;;
-
 ;;; Maximize
 (define-test test-get-reduced-scores-1 ()
 	     (let (
