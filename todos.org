@@ -1,5 +1,4 @@
-Connect4 Todos
-==============
+#+TITLE:Connect4 Todos
 
 * General
 ** DONE Minmax should throw an exception when final board does not match with original one
@@ -9,6 +8,7 @@ Connect4 Todos
 ** DONE After Unit-Testing remove variable *engine-configuration-score-calculation-considers-three*
 ** TODO Clean up the messy board-interface
 ** TODO Establish packages for board, engine, board-formatter
+
 * Unit Tests
 ** TODO Remove redundancies from tests
 ** DONE Tests should not depend on order of moves played by the Minmax
@@ -19,13 +19,13 @@ Connect4 Todos
 ** DONE Test of peek-is-four()
 ** TODO Test of generate-moves()
 ** DONE Make lisp-unit print a stacktrace or enter into the debugger on execution errors
-** TODO Test prefer center = nil without randomizer (see test-board-10-c which passes or fails depending on
-   current randomizer seed (standalone it fails, if -b runs before it passes)
+
 * Board Score Evaluation
 ** DONE Take into account 3 pieces in a row
-** TODO Prefer moves near the center of the board
+** DONE Prefer moves near the center of the board
+
 * Engine optimization
-** DONE Quit row evaluation when player has 4 for current column
+** DONE Quit row evaluation when player has 4 pieces in a row for the current column
 ** DONE Check if for current row any column results in a direct 4 and quit row. If not then deep traverse row.
-** TODO Pruning
+** TODO Alpha/Beta-Pruning
 
