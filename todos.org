@@ -6,8 +6,8 @@
 ** DONE After Unit-Testing set default value of *engine-configuration-depth-relative-score* to t
 ** DONE After Unit-Testing set default value of *engine-configuration-peek-is-four* to t
 ** DONE After Unit-Testing remove variable *engine-configuration-score-calculation-considers-three*
-** TODO Clean up the messy board-interface
-** TODO Establish packages for board, engine, board-formatter
+** DONE Clean up the messy board-interface
+** TODO Establish packages for engine and board-formatter
 
 * Unit Tests
 ** TODO Remove redundancies from tests

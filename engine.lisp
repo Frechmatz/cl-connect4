@@ -46,23 +46,22 @@
   "Evaluate the score of the board. x y: The current move. Returns a value 0 >= value <= 1, where 1 signals a winning position"
   (if (not *column-weights*)
       (error 'internal-error :text "board-score: column-weights not set"))
-  (if (>= x (connect4::get-board-width board))
+  (if (>= x (connect4::get-width board))
       (error 'internal-error :text "board-score: x out of range"))
-  (let ((l (max-line-length-at board x y (get-field board x y))))
+  (let ((l (length (get-connected-pieces board x y (get-field board x y)))))
     (if (>= l 4)
 	1.0
 	(progn
 	  (if (>= l 3)
 	      (+ 0.5 (* 0.49 (aref *column-weights* x))) ; 0.50 .. 0.99
 	      (+ 0.25 (* 0.24 (aref *column-weights* x))) ; 0.25 .. 0.49
-	)
-    ))))
+	)))))
 
 (defun generate-moves (board)
   "Generate moves. Returns a list of (x y) coordinates of all possible moves"
   (let ( (moves ()) (row nil))
-    (dotimes (x (get-board-width board))
-      (setf row (find-row board x))
+    (dotimes (x (get-width board))
+      (setf row (drop board x))
       (if row (push (list x row) moves))
       )
     moves))
@@ -70,7 +69,7 @@
 (defun is-move-available (board)
   "Check if a move is available for the given board"
   (let (( move-left nil))
-    (dotimes (x (get-board-width board))
+    (dotimes (x (get-width board))
       (if (not (is-field-set board x 0)) (setf move-left t))
       )
   move-left))
@@ -143,7 +142,7 @@
 	  (progn 
 	    (nset-field board (first move) (second move) color) ; do move
 	    (setf score (board-score board (first move) (second move))) ; calc score
-	    (nset-field board (first move) (second move) EMPTY) ; undo move
+	    (nclear-field board (first move) (second move)) ; undo move
 	    (if (>= score 1.0) ;; 4 pieces in a row?
 		(progn
 		  (setf four-move move)
@@ -162,7 +161,7 @@
 (defun minmax (the-board color max-depth &key (print-engine-configuration nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
   (let ((board (clone-board the-board)) (result nil)
-	(*column-weights* (calc-column-weights (connect4::get-board-width the-board)
+	(*column-weights* (calc-column-weights (connect4::get-width the-board)
 					       *engine-configuration-prefer-center*)))
     (if print-engine-configuration
 	(print-engine-configuration))
@@ -183,9 +182,9 @@
 			   (push (list (first move) (second move) score) moves)
 			   )
 			 (progn
-			   (setf score (minmax-inner board (invert-color color) (not is-opponent) (+ cur-depth 1)))
+			   (setf score (minmax-inner board (toggle-color color) (not is-opponent) (+ cur-depth 1)))
 			   (push (list (first move) (second move) (third score)) moves)))
-		     (nset-field board (first move) (second move) EMPTY) ; undo move
+		     (nclear-field board (first move) (second move)) ; undo move
 		     )
 		   )
 		 (let ((result (reduce-scores moves is-opponent :skip-randomizer (if (equal cur-depth 1) nil t))))

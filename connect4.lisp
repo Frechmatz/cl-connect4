@@ -205,7 +205,7 @@
 	 (context
 	  (let ((context (make-instance 'context)))
 	    (setf (slot-value context 'board) (create-board CLASSIC-WIDTH CLASSIC-HEIGHT))
-	    (setf (slot-value context 'players-color) 'W)
+	    (setf (slot-value context 'players-color) board:WHITE)
 	    (setf (slot-value context 'difficulty-level) 6)
 	    context))
 	 )

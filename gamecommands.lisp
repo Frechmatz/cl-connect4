@@ -66,13 +66,13 @@
   t)
 
 (defun game-command-toggle-color (context)
-  (setf (slot-value context 'players-color) (invert-color (slot-value context 'players-color)))
+  (setf (slot-value context 'players-color) (toggle-color (slot-value context 'players-color)))
   (format-context context)
   (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   t)
 
 (defun game-command-restart (context)
-  (game-command-set-board-size context (get-board-width (slot-value context 'board)) (get-board-height (slot-value context 'board)))
+  (game-command-set-board-size context (get-width (slot-value context 'board)) (get-height (slot-value context 'board)))
   (format-context context)
   (format-message *message-formatter* "Restarted game")
   (setf (slot-value context 'state) GAME-STATE-CONTINUE)
@@ -80,7 +80,7 @@
 
 (defun game-command-play-computer (context)
   (setf (slot-value context 'state) GAME-STATE-CONTINUE)
-  (let ((computers-color (invert-color (slot-value context 'players-color)))
+  (let ((computers-color (toggle-color (slot-value context 'players-color)))
 	(counter-move nil) (counter-x nil) (counter-y nil) (counter-board nil))
     (setf counter-move (minmax (slot-value context 'board) computers-color (slot-value context 'difficulty-level)))
     (if (not counter-move)
@@ -97,7 +97,7 @@
 	  (if (is-four counter-board counter-x counter-y)
 	      (progn
 		(setf (slot-value context 'loses) (+ 1 (slot-value context 'loses)))
-		(format-context context (max-line-at counter-board counter-x counter-y computers-color))
+		(format-context context (get-connected-pieces counter-board counter-x counter-y computers-color))
 		(format-message *message-formatter* (format nil "Computers move is ~a with a score of ~a" counter-x (third counter-move)))
 		(format-message *message-formatter* "COMPUTER HAS WON")
 		(setf (slot-value context 'state) GAME-STATE-FINAL)
@@ -113,7 +113,7 @@
 (defun game-command-play-human (context x)
   (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   (let ((players-color (slot-value context 'players-color)) (y nil) (counter-board nil))
-    (setf y (find-row (slot-value context 'board) x))
+    (setf y (drop (slot-value context 'board) x))
     (if (not y)
 	(format-message *message-formatter* "Invalid move. No place left in given column")
 	(progn
@@ -122,7 +122,7 @@
 	  (if (is-four counter-board x y)
 	      (progn
 		(setf (slot-value context 'wins) (+ 1 (slot-value context 'wins)))
-		(format-context context (max-line-at counter-board x y players-color))
+		(format-context context (get-connected-pieces counter-board x y players-color))
 		(format-message *message-formatter* "YOU ARE THE WINNER")
 		(setf (slot-value context 'state) GAME-STATE-FINAL)
 		)

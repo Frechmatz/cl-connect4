@@ -97,7 +97,7 @@
 
 
 (defmethod format-board ( (formatter board-formatter) board &optional highlight-cells)
-  (let ((inner-height (get-board-height board)) (inner-width (get-board-width board)))
+  (let ((inner-height (get-height board)) (inner-width (get-width board)))
     (let ( (formatted-board (make-array (list (+ 2 inner-height) (+ 2 inner-width)) :initial-element "X")))
       ;; format inner field
       (dotimes (y inner-height)

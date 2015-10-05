@@ -39,7 +39,7 @@
     ))
 
 (defun parse-x (x context)
-  (parse-number x 0 (get-max-x (slot-value context 'board)) :radix 16))
+  (parse-number x 0 (+ -1 (get-width (slot-value context 'board))) :radix 16))
 
 (defun parse-level (level context)
   (declare (ignore context))
