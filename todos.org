@@ -8,8 +8,10 @@
 ** DONE After Unit-Testing remove variable *engine-configuration-score-calculation-considers-three*
 ** DONE Clean up the messy board-interface
 ** DONE Establish package for engine
-** TODO Establish package for boardformatter
+** TODO boardformatter should not provide default implementation of some methods
+** TODO Split boardformatter into interface decl and console-board-formatter packages
 ** TODO Establish package for gamecommands (requires some refactoring)
+** TODO Re-think format-context function
 
 * Unit Tests
 ** TODO Remove redundancies from tests
@@ -21,6 +23,7 @@
 ** DONE Test of peek-is-four()
 ** TODO Test of generate-moves()
 ** DONE Make lisp-unit print a stacktrace or enter into the debugger on execution errors
+** DONE Run tests with abcl
 
 * Board Score Evaluation
 ** DONE Take into account 3 pieces in a row
