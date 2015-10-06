@@ -2,7 +2,7 @@
 ;;;; Engine of classic Connect4
 ;;;;
 
-(in-package :connect4)
+(in-package :engine)
 
 ;;;
 ;;; Condition that signals an implementation error of the engine
@@ -21,7 +21,7 @@
   "Handler that is called each time after a minimizing/maximizing of a row of scores took place")
 
 (defvar *engine-configuration-prefer-center* t
-  "Experimental. Prefer moves that are near to the horizontal center of the board.")
+  "Prefer moves that are near to the horizontal center of the board.")
 
 (defvar *column-weights* nil
   "This array defines the weight of each column of the current board. 0 > weight <= 1.0")
@@ -46,7 +46,7 @@
   "Evaluate the score of the board. x y: The current move. Returns a value 0 >= value <= 1, where 1 signals a winning position"
   (if (not *column-weights*)
       (error 'internal-error :text "board-score: column-weights not set"))
-  (if (>= x (connect4::get-width board))
+  (if (>= x (get-width board))
       (error 'internal-error :text "board-score: x out of range"))
   (let ((l (length (get-connected-pieces board x y (get-field board x y)))))
     (if (>= l 4)
@@ -161,7 +161,7 @@
 (defun minmax (the-board color max-depth &key (print-engine-configuration nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
   (let ((board (clone-board the-board)) (result nil)
-	(*column-weights* (calc-column-weights (connect4::get-width the-board)
+	(*column-weights* (calc-column-weights (get-width the-board)
 					       *engine-configuration-prefer-center*)))
     (if print-engine-configuration
 	(print-engine-configuration))

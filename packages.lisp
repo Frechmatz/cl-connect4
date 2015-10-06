@@ -20,8 +20,19 @@
   (:export :toggle-color)
   )
 
+(defpackage :engine
+  (:use :cl)
+  (:use :board)
+  (:export :CLASSIC-WIDTH)
+  (:export :CLASSIC-HEIGHT)
+  (:export :MINMAX)
+  (:export :IS-MOVE-AVAILABLE)
+  (:export :*ENGINE-NOTIFICATION-REDUCED-SCORES*)
+  )
+
 (defpackage :connect4
   (:use :board)
+  (:use :engine)
   (:use :cl :cl-ppcre)
   (:export :lets-play)
   (:export :lets-play-colorful)

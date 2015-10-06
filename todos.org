@@ -7,7 +7,9 @@
 ** DONE After Unit-Testing set default value of *engine-configuration-peek-is-four* to t
 ** DONE After Unit-Testing remove variable *engine-configuration-score-calculation-considers-three*
 ** DONE Clean up the messy board-interface
-** TODO Establish packages for engine and board-formatter
+** DONE Establish package for engine
+** TODO Establish package for boardformatter
+** TODO Establish package for gamecommands (requires some refactoring)
 
 * Unit Tests
 ** TODO Remove redundancies from tests
@@ -23,6 +25,7 @@
 * Board Score Evaluation
 ** DONE Take into account 3 pieces in a row
 ** DONE Prefer moves near the center of the board
+** TODO Check calculation of column-weights for width 7
 
 * Engine optimization
 ** DONE Quit row evaluation when player has 4 pieces in a row for the current column

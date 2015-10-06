@@ -53,8 +53,8 @@
 			  )
   (format t "Running minmax test ~a~%" name-of-test)
   (let ( (best-move nil)
-	(connect4::*engine-configuration-prefer-center* engine-configuration-prefer-center)
-	 (connect4::*engine-notification-reduced-scores*
+	(engine::*engine-configuration-prefer-center* engine-configuration-prefer-center)
+	 (engine:*engine-notification-reduced-scores*
 	  (lambda (board color is-opponent depth reduced-score all-scores)
 	    (declare (ignore board))
 	    (if (or (and print-final-scores (equal depth 1)) print-all-scores)

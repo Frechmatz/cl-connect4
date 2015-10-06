@@ -3,7 +3,7 @@
 
 (define-test test-peek-is-four-a ()
 	     (let (
-		   (connect4::*column-weights* (make-array 5 :initial-element 1.0)) 
+		   (engine::*column-weights* (make-array 5 :initial-element 1.0)) 
 		   (board (create-test-board (list
 					      "....."
 					      "....."
@@ -13,7 +13,7 @@
 		     )
 		   (moves nil)
 		   )
-	       (setf moves (connect4::peek-is-four 
+	       (setf moves (engine::peek-is-four 
 			    '((0 3) (1 3) (2 3) (3 3) (4 3))
 			    board connect4::WHITE))
 	       (assert-true (equalp moves '((0 3) (1 3) (2 3) (3 3) (4 3)))
@@ -22,7 +22,7 @@
 
 (define-test test-peek-is-four-b ()
 	     (let (
-		   (connect4::*column-weights* (make-array 5 :initial-element 1.0)) 
+		   (engine::*column-weights* (make-array 5 :initial-element 1.0)) 
 		   (board (create-test-board (list
 					      ".W..."
 					      ".W..."
@@ -32,7 +32,7 @@
 		     )
 		   (moves nil)
 		   )
-	       (setf moves (connect4::peek-is-four 
+	       (setf moves (engine::peek-is-four 
 			    '((0 3) (1 0) (2 3) (3 3) (4 3))
 			    board connect4::WHITE))
 	       (assert-true (equalp moves '((1 0)))
@@ -42,7 +42,7 @@
 ;;; Test empty list passed into function
 (define-test test-peek-is-four-c ()
 	     (let (
-		   (connect4::*column-weights* (make-array 5 :initial-element 1.0)) 
+		   (engine::*column-weights* (make-array 5 :initial-element 1.0)) 
 		   (board (create-test-board (list
 					      ".W..."
 					      ".W..."
@@ -52,7 +52,7 @@
 		     )
 		   (moves nil)
 		   )
-	       (setf moves (connect4::peek-is-four 
+	       (setf moves (engine::peek-is-four 
 			    '()
 			    board connect4::WHITE))
 	       (assert-true (equalp moves '())
