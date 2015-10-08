@@ -196,9 +196,9 @@
 	  (progn
 	    (format t "~%Fatal error: Temporary board is not equal to incoming one~%")
 	    (format t "Original board: ~%")
-	    (format-board (make-instance 'board-formatter) the-board)
+	    (format t the-board)
 	    (format t "~%Temporary board: ~%")
-	    (format-board (make-instance 'board-formatter) board)
+	    (format t board)
 	    (format t "~%")
 	    ;; Game Over
 	    (error 'internal-error :text "Temporary board is not equal to the incoming one")

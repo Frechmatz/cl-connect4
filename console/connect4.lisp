@@ -11,7 +11,7 @@
 ;;;;
 
 
-(in-package :connect4)
+(in-package :connect4-console)
 
 ;;;
 ;;; The game repl specific code 

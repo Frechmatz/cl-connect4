@@ -14,7 +14,7 @@
 		      "wbwbw"
 		      "bwbwb"
 		      ))
-	      connect4::WHITE 6
+	      board:WHITE 6
 	      ;; :print-final-scores t
 	      :expected-final-columns '()
 	      ))

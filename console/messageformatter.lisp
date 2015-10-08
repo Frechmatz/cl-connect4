@@ -1,5 +1,5 @@
 
-(in-package :connect4)
+(in-package :connect4-console)
 
 (defclass message-formatter () ())
 (defgeneric format-message (message-formatter message)

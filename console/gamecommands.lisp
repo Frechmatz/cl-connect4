@@ -1,5 +1,5 @@
 
-(in-package :connect4)
+(in-package :connect4-console)
 
 
 ;;;;

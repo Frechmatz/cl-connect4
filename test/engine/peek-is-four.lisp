@@ -15,7 +15,7 @@
 		   )
 	       (setf moves (engine::peek-is-four 
 			    '((0 3) (1 3) (2 3) (3 3) (4 3))
-			    board connect4::WHITE))
+			    board board:WHITE))
 	       (assert-true (equalp moves '((0 3) (1 3) (2 3) (3 3) (4 3)))
 			    (format t "test-peek-is-four-a has failed"))
 	       ))
@@ -34,7 +34,7 @@
 		   )
 	       (setf moves (engine::peek-is-four 
 			    '((0 3) (1 0) (2 3) (3 3) (4 3))
-			    board connect4::WHITE))
+			    board board:WHITE))
 	       (assert-true (equalp moves '((1 0)))
 			    (format t "test-peek-is-four-b has failed"))
 	       ))
@@ -54,7 +54,7 @@
 		   )
 	       (setf moves (engine::peek-is-four 
 			    '()
-			    board connect4::WHITE))
+			    board board:WHITE))
 	       (assert-true (equalp moves '())
 			    (format t "test-peek-is-four-c has failed"))
 	       ))

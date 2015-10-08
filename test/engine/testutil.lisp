@@ -14,14 +14,14 @@
   (if (< (length rows) 2) (error 'invalid-arguments :text "minimum number of rows is 2"))
   (let ((width (length (car rows))))
     (if (< width 2) (error 'invalid-arguments :text "minimum length of a row is 2"))
-    (let ((board (connect4::create-board width (length rows))) (row nil))
+    (let ((board (board:create-board width (length rows))) (row nil))
       (dotimes (y (length rows))
 	(setf row (nth y rows))
 	(if (not (equal (length row) width)) (error 'invalid-arguments :text "all rows must have same length"))
 	(dotimes (x (length row))
 	  (cond
-	   ((or (equal (aref row x) #\W) (equal (aref row x) #\w)) (connect4::nset-field board x y connect4::WHITE))
-	   ((or (equal (aref row x) #\B) (equal (aref row x) #\b)) (connect4::nset-field board x y connect4::BLACK))
+	   ((or (equal (aref row x) #\W) (equal (aref row x) #\w)) (board:nset-field board x y board:WHITE))
+	   ((or (equal (aref row x) #\B) (equal (aref row x) #\b)) (board:nset-field board x y board:BLACK))
 	   )))
       board)))
 
@@ -51,7 +51,7 @@
 			  (print-engine-configuration nil)
 			  (engine-configuration-prefer-center t)
 			  )
-  (format t "Running minmax test ~a~%" name-of-test)
+  ;; (format t "Running minmax test ~a~%" name-of-test)
   (let ( (best-move nil)
 	(engine::*engine-configuration-prefer-center* engine-configuration-prefer-center)
 	 (engine:*engine-notification-reduced-scores*
@@ -71,10 +71,10 @@
 			     (format t "~a: Final scores do not match. Expected:~%~a~%Resulting:~%~a~%"
 				     name-of-test expected-final-scores all-scores)
 			     )
-			   ) ; endif
+			   ) 
 	    ))
 	 )
-    (setf best-move (connect4::minmax board color depth :print-engine-configuration print-engine-configuration))
+    (setf best-move (engine:minmax board color depth :print-engine-configuration print-engine-configuration))
     (if expected-final-columns
 	(progn
 	  (assert-true

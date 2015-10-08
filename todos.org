@@ -7,11 +7,7 @@
 ** DONE After Unit-Testing set default value of *engine-configuration-peek-is-four* to t
 ** DONE After Unit-Testing remove variable *engine-configuration-score-calculation-considers-three*
 ** DONE Clean up the messy board-interface
-** DONE Establish package for engine
-** TODO boardformatter should not provide default implementation of some methods
-** TODO Split boardformatter into interface decl and console-board-formatter packages
-** TODO Establish package for gamecommands (requires some refactoring)
-** TODO Re-think format-context function
+** DONE Establish packages for engine, board and console related stuff
 
 * Unit Tests
 ** TODO Remove redundancies from tests
@@ -24,11 +20,12 @@
 ** TODO Test of generate-moves()
 ** DONE Make lisp-unit print a stacktrace or enter into the debugger on execution errors
 ** DONE Run tests with abcl
+** DONE connect4-test.asd should not declare dependency on console related stuff
 
 * Board Score Evaluation
 ** DONE Take into account 3 pieces in a row
 ** DONE Prefer moves near the center of the board
-** TODO Check calculation of column-weights for width 7
+** TODO Check calculation of column-weights for width 7 (weights should differ for each column)
 
 * Engine optimization
 ** DONE Quit row evaluation when player has 4 pieces in a row for the current column

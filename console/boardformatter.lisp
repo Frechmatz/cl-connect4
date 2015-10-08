@@ -3,7 +3,7 @@
 ;;;; Pretty printer for a board
 ;;;;
 
-(in-package :connect4)
+(in-package :connect4-console)
 
 (defclass board-formatter () ())
 

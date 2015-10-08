@@ -27,7 +27,7 @@
 ;;; Check that win situation won't be detected with traversal depth of 4
 (define-test test-board-09-a ()
 	     (run-minmax-test 
-	      "test-board-09-a" (create-board-09) connect4::WHITE 4
+	      "test-board-09-a" (create-board-09) board:WHITE 4
 	      :expected-final-columns '(0 1 2 3 4)
 	      ;; :print-final-scores t
 	      ))
@@ -36,6 +36,6 @@
 ;;; Check that win situation is detected with traversal depth of 6
 (define-test test-board-09-b ()
 	     (run-minmax-test 
-	      "test-board-09-b" (create-board-09) connect4::WHITE 6
+	      "test-board-09-b" (create-board-09) board:WHITE 6
 	      :expected-final-columns '(1)
 	      ))

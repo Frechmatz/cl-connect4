@@ -1,5 +1,5 @@
 
-(in-package :connect4)
+(in-package :connect4-console)
 
 (defun format-context (context &optional highlight-cells)
   "Print board and statuses"

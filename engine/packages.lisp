@@ -1,4 +1,5 @@
 
+
 (defpackage :board
   (:use :cl)
   (:export :BLACK)
@@ -30,10 +31,4 @@
   (:export :*ENGINE-NOTIFICATION-REDUCED-SCORES*)
   )
 
-(defpackage :connect4
-  (:use :board)
-  (:use :engine)
-  (:use :cl :cl-ppcre)
-  (:export :lets-play)
-  (:export :lets-play-colorful)
-  )
+

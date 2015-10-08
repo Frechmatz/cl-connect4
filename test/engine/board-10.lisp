@@ -17,7 +17,7 @@
 		      "....."
 		      "....."
 		      ))
-	      connect4::WHITE 6
+	      board:WHITE 6
 	      ;; :print-final-scores t
 	      :expected-final-columns '(0 1 2 3 4)
 	      ;;:expected-final-scores '((0 3 0.0) (1 3 0.0) (2 3 0.0) (3 3 0.0) (4 3 0.0))
@@ -35,7 +35,7 @@
 		      "....."
 		      "....."
 		      ))
-	      connect4::WHITE 1
+	      board:WHITE 1
 	      ;;:print-final-scores t
 	      :expected-final-columns '(2 3)
 	      ;;:print-engine-configuration t
@@ -52,7 +52,7 @@
 		      "....."
 		      "....."
 		      ))
-	      connect4::WHITE 2
+	      board:WHITE 2
 	      ;;:print-final-scores t
 	      ;;:print-all-scores t
 	      :expected-final-columns '(2 3)
@@ -72,7 +72,7 @@
 		      "...w."
 		      "...w."
 		      ))
-	      connect4::WHITE 1
+	      board:WHITE 1
 	      ;; :print-final-scores t
 	      :expected-final-columns '(3)
 	      ;;:expected-final-scores '((0 3 0.0) (1 3 0.0) (2 3 0.0) (3 1 0.5) (4 3 0.0))
@@ -90,7 +90,7 @@
 		      "...w."
 		      "...w."
 		      ))
-	      connect4::BLACK 2
+	      board:BLACK 2
 	      ;; :print-final-scores t
 	      :expected-final-columns '(3)
 	      ;;:expected-final-scores '((0 3 -0.05) (1 3 -0.05) (2 3 -0.05) (3 1 0.0) (4 3 -0.05))

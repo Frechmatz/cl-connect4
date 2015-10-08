@@ -21,7 +21,7 @@
 ;;; test with traversal depth 2 (win situation won't be recognized)
 (define-test test-board-02-a ()
 	     (run-minmax-test 
-	      "test-board-02-a" (create-board-02) connect4::WHITE 2
+	      "test-board-02-a" (create-board-02) board:WHITE 2
 	      :expected-final-columns '(2 3 4 5)
 	      ;; :expected-final-move-score 0.0
 	      ))
@@ -29,6 +29,6 @@
 ;;; test with traversal depth 3 (win situation will be recognized)
 (define-test test-board-02-b ()
 	     (run-minmax-test 
-	      "test-board-02-b" (create-board-02) connect4::WHITE 3
+	      "test-board-02-b" (create-board-02) board:WHITE 3
 	      :expected-final-columns '(4)
 	      ))

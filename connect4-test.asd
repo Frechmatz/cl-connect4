@@ -5,8 +5,14 @@
   :serial t
   :description "Tests of the Connect Four game"
   :long-description "Tests of the Connect Four game"
-  :depends-on (:connect4 :lisp-unit)
-  :components ((:module "test"
+  :depends-on (:lisp-unit)
+  :components (
+	       (:module "engine"
+                        :serial t
+                        :components ((:file "packages")
+                                     (:file "board")
+                                     (:file "engine")))
+	       (:module "test/engine"
                         :serial t
                         :components ((:file "packages")
                                      (:file "testutil")
@@ -25,8 +31,9 @@
 				     (:file "board-08")
 				     (:file "board-09")
 				     (:file "board-10")
-				     )))
-  )
+				     ))
+	       
+  ))
 
 
 
