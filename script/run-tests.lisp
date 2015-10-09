@@ -5,6 +5,8 @@
   (when (probe-file quicklisp-init)
     (load quicklisp-init)))
 
+;;; Tests do not depend on connect4 system. Just try to compile the stuff as part of testing.
+(asdf:load-system "connect4" :force t)
 (asdf:load-system "connect4-test" :force t)
 (in-package :connect4-test)
 (format t "~%Running tests...~%")

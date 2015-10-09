@@ -43,7 +43,8 @@
     weights))
 
 (defun board-score (board x y)
-  "Evaluate the score of the board. x y: The current move. Returns a value 0 >= value <= 1, where 1 signals a winning position"
+  "Evaluate the score of the board. x y: The current move. 
+Returns a value 0 >= value <= 1, where 1 signals a winning position"
   (if (not *column-weights*)
       (error 'internal-error :text "board-score: column-weights not set"))
   (if (>= x (get-width board))
@@ -66,8 +67,8 @@
       )
     moves))
 
+;;; Internal method for fast check if a move is available for given board
 (defun is-move-available (board)
-  "Check if a move is available for the given board"
   (let (( move-left nil))
     (dotimes (x (get-width board))
       (if (not (is-field-set board x 0)) (setf move-left t))
@@ -86,9 +87,10 @@
     )))
 
 (defun get-reduced-scores (moves is-opponent)
-  "Get list of all moves that belong to max/min score of the given moves. moves must not be nil"
-  ;; is-opponent: t -> score will be minimized, nil -> score will be maximized
-  ;; Maximize: #'> Minimize: #'<
+  "Get list of all moves that belong to max/min score of the given moves. 
+moves must not be nil
+is-opponent: t -> score will be minimized, nil -> score will be maximized
+Maximize: #'> Minimize: #'<"
   (if (equal 1 (length moves))
       moves
       (let ((comparison-fn (if is-opponent #'< #'>)))
@@ -119,10 +121,10 @@
 
 
 (defun reduce-scores (moves is-opponent &key (skip-randomizer nil) (skip-prefer-center nil))
-  "Reduce list of possible moves."
-  ;; moves: list of tupels (x y score)
-  ;; skip-randomizer: nil -> If multiple moves are available choose a random one. t -> choose first one
-  ;; returns move with minimum or maximum score
+  "Reduce list of possible moves.
+  moves: list of tupels (x y score)
+  skip-randomizer: nil -> If multiple moves are available choose a random one. t -> choose first one
+  returns move with minimum or maximum score"
   (if (not moves) ; reduce doesn't like empty lists
       nil
       (progn 
@@ -135,7 +137,8 @@
 	  ))))
 
 (defun peek-is-four (moves board color)
-  "Check all moves if an immediate four is present. If yes returns a list consisting of such move otherwise return the moves given into function"
+  "Check all moves if an immediate four is present. 
+If t returns a list consisting of such move otherwise return the moves given into function"
   (let ((four-move nil) (score nil))
     (dolist (move moves)
       (if (not four-move)

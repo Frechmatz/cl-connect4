@@ -64,11 +64,10 @@
   (nset-field board x y EMPTY))
 
 (defun scan (board x y dx dy color)
-  "Determine the connected pieces at the given position, direction and color"
+  "Determine the connected pieces for the given position, direction and color"
   ;; x y: Starting point from which adjacent points are checked for the same color
   ;; dx dy: Direction to traverse ("as is" and inverted)
   ;; returns list of (x y) tupels
-  ;;  (declare (fixnum x y dx dy))
   (let ((length '())) 
     (labels (
 	     (traverse (x y dx dy)
@@ -76,7 +75,6 @@
 		       (if (eq (get-field board x y) color)
 			   (progn
 			     (push (list x y) length)
-			     ;; boundary checking via the border
 			     (traverse (+ x dx) (+ y dy) dx dy)
 			     ))))
 	    ;; traverse initial direction
@@ -89,11 +87,11 @@
 	    )
     length))
 
-(defparameter *DIRECTIONS* '((0 1) (1 0) (1 1) (1 -1)))
 (defun get-connected-pieces (board x y color)
-  "Returns tupels of (x y) which describe the most length sequence of connected pieces of the given color"
+  "Returns a list of tupels (x y) which describe the most length sequence 
+of connected pieces for the given position and color"
   (let ( (all '()))
-    (dolist (d *DIRECTIONS*)
+    (dolist (d '((0 1) (1 0) (1 1) (1 -1)))
       (push (scan board x y (first d) (second d) color) all))
     (reduce (lambda (best item)
 	      (if (> (length best) (length item)) best item)) 
@@ -109,7 +107,8 @@
     (if (>= l 4) t nil)))
 
 (defun drop (board x)
-  "Calculate the row into which a piece will fall if its thrown into the given column. Returns nil if no place left in column."
+  "Calculate the row into which a piece will fall if its thrown into the given column. 
+Returns nil if no place left in column."
   (if (not (is-field-set board x 0))
       (+ (length (scan board x 0 0 1 EMPTY)) -1)
     nil))

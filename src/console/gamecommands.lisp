@@ -19,13 +19,13 @@
 
 (defun check-if-move-is-available (context)
   "Helper function to detect a final state"
-  (if (not (is-move-available (slot-value context 'board)))
-      (progn
-	(setf (slot-value context 'draws) (+ 1 (slot-value context 'draws)))
-	(format-message *message-formatter* "Draw! No more moves left.")
-	(setf (slot-value context 'state) GAME-STATE-FINAL)
-	)))
-
+  (let ((moves (generate-moves (slot-value context 'board))))
+    (if (or (not moves) (= 0 (length moves)))
+	(progn
+	  (setf (slot-value context 'draws) (+ 1 (slot-value context 'draws)))
+	  (format-message *message-formatter* "Draw! No more moves left.")
+	  (setf (slot-value context 'state) GAME-STATE-FINAL)
+	  ))))
 
 (define-condition quit-game (error)
   ((text :initarg :text :reader text)))

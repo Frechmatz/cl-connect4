@@ -24,10 +24,8 @@
 (defpackage :engine
   (:use :cl)
   (:use :board)
-  (:export :CLASSIC-WIDTH)
-  (:export :CLASSIC-HEIGHT)
   (:export :MINMAX)
-  (:export :IS-MOVE-AVAILABLE)
+  (:export :GENERATE-MOVES)
   (:export :*ENGINE-NOTIFICATION-REDUCED-SCORES*)
   )
 
