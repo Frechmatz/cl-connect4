@@ -7,7 +7,7 @@
   :long-description "Tests of the Connect Four game"
   :depends-on (:lisp-unit)
   :components (
-	       (:module "engine"
+	       (:module "src/engine"
                         :serial t
                         :components ((:file "packages")
                                      (:file "board")

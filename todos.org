@@ -8,6 +8,7 @@
 ** DONE After Unit-Testing remove variable *engine-configuration-score-calculation-considers-three*
 ** DONE Clean up the messy board-interface
 ** DONE Establish packages for engine, board and console related stuff
+** TODO Define a proper engine interface
 
 * Unit Tests
 ** TODO Remove redundancies from tests

@@ -7,12 +7,12 @@
   "Implementation of the Connect 4 game"
   :depends-on (:cl-ppcre)
   :components (
-	       (:module "engine"
+	       (:module "src/engine"
 			:serial t
 			:components ((:file "packages")
                                      (:file "board")
 				     (:file "engine")))
-	       (:module "console"
+	       (:module "src/console"
 			:serial t
 			:components ((:file "packages")
 				     (:file "context")
