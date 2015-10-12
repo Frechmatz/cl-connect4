@@ -10,10 +10,6 @@
 (define-condition internal-error (error)
   ((text :initarg :text :reader text)))
 
-
-(defconstant CLASSIC-WIDTH 7 "Board width of the original game") 
-(defconstant CLASSIC-HEIGHT 6 "Board height of the original game") 
-
 (defvar *engine-notification-reduced-scores*
   (lambda (board color is-opponent depth reduced-score all-scores)
   (declare (ignore board color is-opponent depth reduced-score all-scores))
