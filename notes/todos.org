@@ -8,7 +8,6 @@
 ** DONE After Unit-Testing remove variable *engine-configuration-score-calculation-considers-three*
 ** DONE Clean up the messy board-interface
 ** DONE Establish packages for engine, board and console related stuff
-** TODO Define a proper engine interface
 
 * Unit Tests
 ** TODO Remove redundancies from tests
@@ -32,4 +31,16 @@
 ** DONE Quit row evaluation when player has 4 pieces in a row for the current column
 ** DONE Check if for current row any column results in a direct 4 and quit row. If not then deep traverse row.
 ** TODO Alpha/Beta-Pruning
+
+* Refactoring
+** First Step
+*** TODO Define a proper engine interface
+*** TODO Engine should encapsulate board and minmax related functionality
+*** TODO Engine should expose minimal interface
+*** TODO Implementations such as connect4-console should talk with engine only
+** Second Step
+*** TODO Generalize hard coded logic of gamecommands.lisp
+*** TODO Maybe define some kind of language on top of engine
+
+
 
