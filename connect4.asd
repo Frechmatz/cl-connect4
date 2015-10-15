@@ -11,10 +11,13 @@
 			:serial t
 			:components ((:file "packages")
 				     (:file "constants")))
+	       (:module "src/board"
+			:serial t
+			:components ((:file "packages")
+                                     (:file "board")))
 	       (:module "src/engine"
 			:serial t
 			:components ((:file "packages")
-                                     (:file "board")
 				     (:file "engine")))
 	       (:module "src/console"
 			:serial t

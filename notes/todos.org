@@ -33,9 +33,11 @@
 ** TODO Alpha/Beta-Pruning
 
 * Refactoring
+** Cleanup
+*** DONE Move board code out of engine into separate folder
 ** First Step
 *** TODO Define a proper engine interface
-*** TODO Engine should encapsulate board and minmax related functionality
+*** DONE Engine should encapsulate board and minmax related functionality
 *** TODO Engine should expose minimal interface
 *** TODO Implementations such as connect4-console should talk with engine only
 ** Second Step

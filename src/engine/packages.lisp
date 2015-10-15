@@ -1,32 +1,22 @@
 
 
-(defpackage :board
-  (:use :cl)
-  (:export :BLACK)
-  (:export :WHITE)
-  (:export :EMPTY)
-  (:export :create-board)
-  (:export :clone-board)
-  (:export :get-height)
-  (:export :get-width)
-  (:export :get-field)
-  (:export :is-field-set)
-  (:export :is-four)
-  (:export :drop)
-  (:export :get-connected-pieces)
-  (:export :nset-field)
-  (:export :set-field)
-  (:export :nclear-field)
-  (:export :clear-field)
-  (:export :toggle-color)
-  )
-
 (defpackage :engine
   (:use :cl)
   (:use :board)
   (:export :MINMAX)
   (:export :GENERATE-MOVES)
   (:export :*ENGINE-NOTIFICATION-REDUCED-SCORES*)
+  (:export :BLACK)
+  (:export :WHITE)
+  (:export :CREATE-BOARD)
+  (:export :DROP)
+  (:export :GET-CONNECTED-PIECES)
+  (:export :GET-FIELD)
+  (:export :GET-HEIGHT)
+  (:export :GET-WIDTH)
+  (:export :IS-FOUR)
+  (:export :SET-FIELD)
+  (:export :TOGGLE-COLOR)
   )
 
 
