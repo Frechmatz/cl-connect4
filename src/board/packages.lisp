@@ -18,6 +18,5 @@
   (:export :set-field)
   (:export :nclear-field)
   (:export :clear-field)
-  (:export :toggle-color)
   )
 

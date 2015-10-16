@@ -113,6 +113,3 @@ Returns nil if no place left in column."
       (+ (length (scan board x 0 0 1 EMPTY)) -1)
     nil))
 
-(defun toggle-color (color)
-  "Toggle the given color"
-  (if (eq color WHITE) BLACK WHITE))

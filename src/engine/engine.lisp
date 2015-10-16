@@ -27,6 +27,9 @@
   (format t ">>> *engine-configuration-prefer-center*: ~a~%" *engine-configuration-prefer-center*)
   (format t ">>> Column weights: ~a~%" *column-weights*))
 
+(defun toggle-color (color)
+  (if (eq color WHITE) BLACK WHITE))
+
 (defun calc-column-weights (board-width prefer-center)
   "Calculate a weight for each column. The nearer to the center the higher the weight"
   (let ((weights (make-array board-width)))

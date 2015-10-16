@@ -27,6 +27,9 @@
 	  (setf (slot-value context 'state) GAME-STATE-FINAL)
 	  ))))
 
+(defun toggle-color (color)
+  (if (eq color WHITE) BLACK WHITE))
+
 (define-condition quit-game (error)
   ((text :initarg :text :reader text)))
 
