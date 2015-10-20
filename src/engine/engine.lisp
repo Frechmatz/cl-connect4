@@ -48,7 +48,7 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
       (error 'internal-error :text "board-score: column-weights not set"))
   (if (>= x (get-width board))
       (error 'internal-error :text "board-score: x out of range"))
-  (let ((l (length (get-connected-pieces board x y (get-field board x y)))))
+  (let ((l (length (get-connected-pieces board x y))))
     (if (>= l 4)
 	1.0
 	(progn
@@ -70,7 +70,7 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
 (defun is-move-available (board)
   (let (( move-left nil))
     (dotimes (x (get-width board))
-      (if (not (is-field-set board x 0)) (setf move-left t))
+      (if (not (field-set-p board x 0)) (setf move-left t))
       )
   move-left))
 

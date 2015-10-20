@@ -87,29 +87,26 @@
 	    )
     length))
 
-(defun get-connected-pieces (board x y color)
+(defun get-connected-pieces (board x y)
   "Returns a list of tupels (x y) which describe the most length sequence 
-of connected pieces for the given position and color"
-  (let ( (all '()))
-    (dolist (d '((0 1) (1 0) (1 1) (1 -1)))
-      (push (scan board x y (first d) (second d) color) all))
-    (reduce (lambda (best item)
-	      (if (> (length best) (length item)) best item)) 
-	    all)))
+of connected pieces for the given position."
+  (if (not (field-set-p board x y))
+      nil
+      (let ( (all '()))
+	(dolist (d '((0 1) (1 0) (1 1) (1 -1)))
+	  (push (scan board x y (first d) (second d) (get-field board x y)) all))
+	(reduce (lambda (best item)
+		  (if (> (length best) (length item)) best item)) 
+		all))))
 
-(defun is-field-set (board x y)
+(defun field-set-p (board x y)
   "Check if given field is BLACK or WHITE."
   (if (not (eq (get-field board x y) EMPTY)) t NIL))
-
-(defun is-four (board x y)
-  "Check if four pieces are in a row"
-  (let ((l (length (get-connected-pieces board x y (get-field board x y)))))
-    (if (>= l 4) t nil)))
 
 (defun drop (board x)
   "Calculate the row into which a piece will fall if its thrown into the given column. 
 Returns nil if no place left in column."
-  (if (not (is-field-set board x 0))
+  (if (not (field-set-p board x 0))
       (+ (length (scan board x 0 0 1 EMPTY)) -1)
     nil))
 

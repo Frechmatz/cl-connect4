@@ -27,6 +27,10 @@
 	  (setf (slot-value context 'state) GAME-STATE-FINAL)
 	  ))))
 
+;; TODO: Integrate into code. Remove second call to get-connected-pieces
+(defun is-four (board x y)
+  (>= (length (get-connected-pieces board x y)) 4))
+
 (defun toggle-color (color)
   (if (eq color WHITE) BLACK WHITE))
 
@@ -100,7 +104,7 @@
 	  (if (is-four counter-board counter-x counter-y)
 	      (progn
 		(setf (slot-value context 'loses) (+ 1 (slot-value context 'loses)))
-		(format-context context (get-connected-pieces counter-board counter-x counter-y computers-color))
+		(format-context context (get-connected-pieces counter-board counter-x counter-y))
 		(format-message *message-formatter* (format nil "Computers move is ~a with a score of ~a" counter-x (third counter-move)))
 		(format-message *message-formatter* "COMPUTER HAS WON")
 		(setf (slot-value context 'state) GAME-STATE-FINAL)
@@ -125,7 +129,7 @@
 	  (if (is-four counter-board x y)
 	      (progn
 		(setf (slot-value context 'wins) (+ 1 (slot-value context 'wins)))
-		(format-context context (get-connected-pieces counter-board x y players-color))
+		(format-context context (get-connected-pieces counter-board x y))
 		(format-message *message-formatter* "YOU ARE THE WINNER")
 		(setf (slot-value context 'state) GAME-STATE-FINAL)
 		)
