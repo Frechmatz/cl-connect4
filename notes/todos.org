@@ -35,14 +35,3 @@
 * Refactoring
 ** Cleanup
 *** DONE Move board code out of engine into separate folder
-** First Step
-*** TODO Define a proper engine interface
-*** DONE Engine should encapsulate board and minmax related functionality
-*** TODO Engine should expose minimal interface
-*** TODO Implementations such as connect4-console should talk with engine only
-** Second Step
-*** TODO Generalize hard coded logic of gamecommands.lisp
-*** TODO Maybe define some kind of language on top of engine
-
-
-
