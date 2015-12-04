@@ -21,6 +21,7 @@
   (
    (name :initarg :name)
    (infoFn :initarg :infoFn)
+   (shortInfoFn :initarg :shortInfoFn)
    (parseArgsFn :initarg :parseArgsFn)
    (execFn :initarg :execFn)
    )
@@ -29,9 +30,21 @@
 
 (defun print-help-text (command-table)
   "Prints an overview of the commands that can by entered into the game repl"
-  (format t "Commands:~%")
+  (format t "Commands:~%help~%")
   (dolist (cmd command-table)
-    (format t "~a~c"  (funcall (slot-value cmd 'infoFn)) #\newline))
+    (format t "~a~%"  (funcall (slot-value cmd 'infoFn))))
+  (format t "~%")
+  )
+
+(defun print-help-text-short (command-table)
+  "Prints an short overview of the commands that can by entered into the game repl"
+  (format t "Commands: help")
+  (labels ((inner (command-table first)
+	     (format t (if first "~a" ", ~a")
+		     (funcall (slot-value (first command-table) 'shortInfoFn)))
+	     (if (> (length command-table) 1)
+		 (inner (cdr command-table) nil))))
+    (inner command-table nil))
   (format t "~%")
   )
 
@@ -42,27 +55,29 @@
 
 (defun do-cmd (context command-table command-string)
   "Executes a command entered via the game repl. command-string: list of strings, consisting of the command and additional arguments."
-  (let ((result t))
-    (if (equal (car command-string) '())
+  (let ((result t) (cmd (car command-string)))
+    (if (equal cmd '())
 	(progn
 	  (format-context context)
-	  (print-help-text command-table))
-	(let ((opcode (find-if (lambda (c) (equal (car command-string) (slot-value c 'name))) command-table)))
-	  (if opcode
-	      (let ((parsed-args
-		     (handler-case
-			 (funcall (slot-value opcode 'parseArgsFn) (cdr command-string) context)
-		       (invalid-arguments (err) err)
-		       )))
-		(if (listp parsed-args)
-		    (setf result (apply (slot-value opcode 'execFn) context parsed-args))
-		    ;; print parsing error
-		    (format-message *message-formatter* (slot-value parsed-args 'text))
-		    ))
-	      (format t "Command not found~%")
-	      )
-	  ))
-    result))
+	  (print-help-text-short command-table))
+	(if (equal cmd "help")
+	    (print-help-text command-table)
+	    (let ((opcode (find-if (lambda (c) (equal cmd (slot-value c 'name))) command-table)))
+	      (if opcode
+		  (let ((parsed-args
+			  (handler-case
+			      (funcall (slot-value opcode 'parseArgsFn) (cdr command-string) context)
+			    (invalid-arguments (err) err)
+			    )))
+		    (if (listp parsed-args)
+			(setf result (apply (slot-value opcode 'execFn) context parsed-args))
+			;; print parsing error
+			(format-message *message-formatter* (slot-value parsed-args 'text))
+			))
+		  (format t "Command not found: ~a~%" cmd)
+		  )
+	      )))
+	result))
   
 
 (defun cmd-loop (context command-table)
@@ -70,7 +85,7 @@
   (let ((cmd nil))
     (format-context context)
     (princ #\newline)
-    (print-help-text command-table)
+    (print-help-text-short command-table)
     (labels ((do-command (command-table)
 	       (format t "Enter command: ")
 	       (finish-output)
@@ -84,15 +99,17 @@
 			 (do-command (let ((table ()))
 				       (push (make-instance
 					      'command
-					      :name "q"
-					      :infoFn (lambda () "q: Quit game")
+					      :name "quit"
+					      :infoFn (lambda () "quit: Quit game")
+					      :shortInfoFn (lambda () "quit: Quit game")
 					      :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 					      :execFn (lambda (context) (game-command-quit context))
 					      ) table)
 				       (push (make-instance
 					      'command
-					      :name "r"
-					      :infoFn (lambda () "r: To start a new game")
+					      :name "restart"
+					      :shortInfoFn (lambda () "restart: To start a new game")
+					      :infoFn (lambda () "restart: To start a new game")
 					      :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 					      :execFn (lambda (context) (game-command-restart context) nil) ; quit loop by returning nil
 					      ) table)
@@ -132,6 +149,7 @@
 	    (push (make-instance
 		   'command
 		   :name "play"
+		   :shortInfoFn (lambda () "play <column>")
 		   :infoFn (lambda () "play <column>: Play a move and get computers counter move. Column: 0..9 A..F")
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-x) context))
 		   :execFn (lambda (context x) (game-command-play-human context x))
@@ -139,6 +157,7 @@
 	    (push (make-instance
 		   'command
 		   :name "board"
+		   :shortInfoFn (lambda () "board")
 		   :infoFn (lambda () "board: Print current board")
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-print-board context))
@@ -146,6 +165,7 @@
 	    (push (make-instance
 		   'command
 		   :name "set-level"
+		   :shortInfoFn (lambda () "set-level <n>")
 		   :infoFn (lambda () "set-level <n>: Set the number of half-moves the computer will execute to determine it's best counter-move")
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-level) context))
 		   :execFn (lambda (context level) (game-command-set-level context level))
@@ -153,6 +173,7 @@
 	    (push (make-instance
 		   'command
 		   :name "set-board-size"
+		   :shortInfoFn (lambda () "set-board-size <width> <height>")
 		   :infoFn (lambda () "set-board-size <width> <height>: Set size of the board")
 		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-board-dimension #'parse-board-dimension) context))
 		   :execFn (lambda (context width height) (game-command-set-board-size context width height))
@@ -160,6 +181,7 @@
 	    (push (make-instance
 		   'command
 		   :name "hint"
+		   :shortInfoFn (lambda () "hint")
 		   :infoFn (lambda () "hint: Show next move the computer would do")
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-hint context))
@@ -167,6 +189,7 @@
 	    (push (make-instance
 		   'command
 		   :name "toggle-color"
+		   :shortInfoFn (lambda () "toggle-color")
 		   :infoFn (lambda () "toggle-color: Toggle the players color")
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-toggle-color context))
@@ -174,28 +197,31 @@
 	    (push (make-instance
 		   'command
 		   :name "continue"
+		   :shortInfoFn (lambda () "continue")
 		   :infoFn (lambda () "continue: Computer plays next move")
 		   :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		   :execFn (lambda (context) (game-command-play-computer context))
 		   ) table)
-	    (push (make-instance
-		   'command
-		   :name "set-board"
-		   :infoFn (lambda () "set-board <function>. <package-name>::<function-name> A function that returns a board.")
-		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-symbol) context))
-		   :execFn (lambda (context creator-fn) (game-command-set-board context creator-fn))
-		   ) table)
+	    ;; (push (make-instance
+	    ;;		   'command
+	    ;;		   :name "set-board"
+	    ;;		   :infoFn (lambda () "set-board <function>. <package-name>::<function-name> A function that returns a board.")
+	    ;;		   :parseArgsFn (lambda (args context) (parse-arguments args (list #'parse-symbol) context))
+	    ;;		   :execFn (lambda (context creator-fn) (game-command-set-board context creator-fn))
+	    ;;		   ) table)
 	    (push (make-instance
 		    'command
-		    :name "r"
-		    :infoFn (lambda () "r: Restart game")
+		    :name "restart"
+		    :shortInfoFn (lambda () "restart")
+		    :infoFn (lambda () "restart: Restart game")
 		    :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		    :execFn (lambda (context) (game-command-restart context))
 		    ) table)
 	    (push (make-instance
 		    'command
-		    :name "q"
-		    :infoFn (lambda () "q: Quit game")
+		    :name "quit"
+		    :shortInfoFn (lambda () "quit")
+		    :infoFn (lambda () "quit: Quit game")
 		    :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 		    :execFn (lambda (context) (game-command-quit context))
 		    ) table)
