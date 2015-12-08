@@ -101,15 +101,15 @@
 					      'command
 					      :name "quit"
 					      :infoFn (lambda () "quit: Quit game")
-					      :shortInfoFn (lambda () "quit: Quit game")
+					      :shortInfoFn (lambda () "quit")
 					      :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 					      :execFn (lambda (context) (game-command-quit context))
 					      ) table)
 				       (push (make-instance
 					      'command
 					      :name "restart"
-					      :shortInfoFn (lambda () "restart: To start a new game")
-					      :infoFn (lambda () "restart: To start a new game")
+					      :shortInfoFn (lambda () "restart")
+					      :infoFn (lambda () "restart: Start new game")
 					      :parseArgsFn (lambda (args context) (parse-arguments args '() context))
 					      :execFn (lambda (context) (game-command-restart context) nil) ; quit loop by returning nil
 					      ) table)
