@@ -8,20 +8,27 @@
   :depends-on (:hunchentoot)
   :components (
 	       (:module "src/board"
-                        :serial t
-                        :components ((:file "packages")
-                                     (:file "board")))
+		:serial t
+		:components ((:file "packages")
+			     (:file "board")))
 	       (:module "src/engine"
-                        :serial t
-                        :components ((:file "packages")
-                                     (:file "engine")))
+		:serial t
+		:components ((:file "packages")
+			     (:file "engine")))
+	       (:module "src/ccfi"
+		:serial t
+		:components ((:file "packages")
+			     (:file "constants")
+			     (:file "encode")
+			     (:file "decode")
+			     ))
 	       (:module "src/server"
                         :serial t
-                        :components ((:file "packages")
-                                     (:file "server")
-				     ))
+		:components ((:file "packages")
+			     (:file "server")
+			     ))
 	       
-  ))
+	       ))
 
 
 
