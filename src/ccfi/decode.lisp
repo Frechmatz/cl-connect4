@@ -8,15 +8,22 @@
   (or (equal str "o") (equal str "x")))
   
 (defun scan-row (str)
-  (let ((items '()) (tokens (cl-ppcre:all-matches-as-strings "[ox]|\\d+" str)))
-    (dolist (token tokens)
-      (if (field-token-p token)
-	  (push token items)
-	  (handler-case
-	      (push (parse-integer (format nil "~a" token) :radix 10) items)
-	    (parse-error () (error 'invalid-field-definition-error :text (format nil "Not a number: ~a" token))))
-      ))
-    (nreverse items)))
+  ;; Empty row check
+  (if (or (not str) (equal str ""))
+      (error 'invalid-field-definition-error :text (format nil "Row must not be empty"))
+      ;; Illegal character check
+      (if (cl-ppcre:all-matches-as-strings "[^ox\\d]" str)
+	  (error 'invalid-field-definition-error :text (format nil "Invalid characters in row: ~a" str))
+	  ;; let's parse
+	  (let ((items '()) (tokens (cl-ppcre:all-matches-as-strings "[ox]|\\d+" str)))
+	    (dolist (token tokens)
+	      (if (field-token-p token)
+		  (push token items)
+		  (handler-case
+		      (push (parse-integer (format nil "~a" token) :radix 10) items)
+		    (parse-error () (error 'invalid-field-definition-error :text (format nil "Not a number: ~a" token))))
+		  ))
+	  (nreverse items)))))
 
 (defun row-width (scanned-row)
   (let ((w 0))
