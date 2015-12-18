@@ -5,7 +5,7 @@
   :serial t
   :description "Tests of the Connect Four game"
   :long-description "Tests of the Connect Four game"
-  :depends-on (:lisp-unit)
+  :depends-on (:lisp-unit :cl-ppcre)
   :components (
 	       (:module "src/board"
                         :serial t
@@ -15,10 +15,16 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "engine")))
-	       (:module "test/engine"
+	       (:module "src/ccfi"
                         :serial t
                         :components ((:file "packages")
-                                     (:file "testutil")
+                                     (:file "decode")))
+	       (:module "test"
+                        :serial t
+                        :components ((:file "packages")))
+	       (:module "test/engine"
+                        :serial t
+                        :components ((:file "testutil")
                                      (:file "detect-four")
                                      (:file "board-score")
                                      (:file "column-weights")
@@ -35,7 +41,9 @@
 				     (:file "board-09")
 				     (:file "board-10")
 				     ))
-	       
+	       (:module "test/ccfi"
+                        :serial t
+                        :components ((:file "tests")))
   ))
 
 

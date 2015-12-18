@@ -1,3 +1,4 @@
+
 ;;;;
 ;;;; Connect Four Server
 ;;;;
@@ -5,7 +6,7 @@
   :serial t
   :description "Connect Four Server"
   :long-description "A Connect Four Server"
-  :depends-on (:hunchentoot)
+  :depends-on (:hunchentoot :cl-ppcre)
   :components (
 	       (:module "src/board"
 		:serial t
