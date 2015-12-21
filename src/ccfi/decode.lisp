@@ -14,14 +14,12 @@
       ;; Illegal character check
       (if (cl-ppcre:all-matches-as-strings "[^ox\\d]" str)
 	  (error 'invalid-field-definition-error :text (format nil "Invalid characters in row: ~a" str))
-	  ;; let's parse
+	  ;; let's go
 	  (let ((items '()) (tokens (cl-ppcre:all-matches-as-strings "[ox]|\\d+" str)))
 	    (dolist (token tokens)
 	      (if (field-token-p token)
 		  (push token items)
-		  (handler-case
-		      (push (parse-integer (format nil "~a" token) :radix 10) items)
-		    (parse-error () (error 'invalid-field-definition-error :text (format nil "Not a number: ~a" token))))
+		  (push (parse-integer token :radix 10) items)
 		  ))
 	  (nreverse items)))))
 
@@ -33,17 +31,34 @@
 	  (setf w (+ w element))))
     w))
 
+(defun split-board-to-rows (ccfiStr)
+  (if (or (not ccfiStr) (equal ccfiStr ""))
+      (error 'invalid-field-definition-error :text (format nil "Board must not be empty"))
+      (let ((rows (cl-ppcre:split "/" ccfiStr)))
+	(if (not rows)
+	    (error 'invalid-field-definition-error :text (format nil "Board must not be empty"))
+	    rows))))
+
 (defun decode-board (ccfiStr createBoardFn setBoardFieldFn)
   "Create an array out of the ccfi representation of a board
 createBoardFn (dx dy)
 setBoardFieldFn (x y)
 "
-  (declare (ignore createBoardFn))
   (declare (ignore setBoardFieldFn))
-  (let ((rows (cl-ppcre:split "/" ccfiStr)))
-    (dolist (row rows)
-      (format t "~%~a~%" row)
-      (scan-row row)
-      )))
-
+      (let ((rows (split-board-to-rows ccfiStr)))
+	(let ((height (cl:length rows)) (width nil) )
+	  (dolist (row rows)
+	    (let ((scanned-row (scan-row row)))
+	      (let ((cur-row-width (row-width scanned-row)))
+		(if (not width)
+		    (progn
+		      (setf width cur-row-width)
+		      (funcall createBoardFn width height))
+		    (progn
+		      (if (not (equal width cur-row-width))
+			  (error 'invalid-field-definition-error :text "Rows must have same length"))
+		  ;;; und weiter gehts gleich....
+		      )
+		    )
+		))))))
 
