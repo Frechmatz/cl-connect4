@@ -39,6 +39,9 @@
 	    (error 'invalid-field-definition-error :text (format nil "Board must not be empty"))
 	    rows))))
 
+(defun set-row (setBoardFieldFn y scanned-row)
+  nil)
+
 (defun decode-board (ccfiStr createBoardFn setBoardFieldFn)
   "Create an array out of the ccfi representation of a board
 createBoardFn (dx dy)
@@ -46,7 +49,7 @@ setBoardFieldFn (x y)
 "
   (declare (ignore setBoardFieldFn))
       (let ((rows (split-board-to-rows ccfiStr)))
-	(let ((height (cl:length rows)) (width nil) )
+	(let ((height (cl:length rows)) (width nil) (y 0))
 	  (dolist (row rows)
 	    (let ((scanned-row (scan-row row)))
 	      (let ((cur-row-width (row-width scanned-row)))
@@ -56,9 +59,9 @@ setBoardFieldFn (x y)
 		      (funcall createBoardFn width height))
 		    (progn
 		      (if (not (equal width cur-row-width))
-			  (error 'invalid-field-definition-error :text "Rows must have same length"))
-		  ;;; und weiter gehts gleich....
-		      )
-		    )
-		))))))
+			  (error 'invalid-field-definition-error :text "Rows must have same length")
+			  (progn
+			    (set-row setBoardFieldFn y scanned-row)
+			    (setf y (+ 1 y)))
+			  )))))))))
 
