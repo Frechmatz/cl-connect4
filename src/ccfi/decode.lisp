@@ -23,12 +23,26 @@
 		  ))
 	  (nreverse items)))))
 
-(defun row-width (scanned-row)
-  (let ((w 0))
+(defun process-parsed-row (setBoardFieldFn y scanned-row)
+  (let ((x 0))
     (dolist (element scanned-row)
       (if (field-token-p element)
-	  (setf w (+ w 1))
-	  (setf w (+ w element))))
+	  (progn
+	    (funcall setBoardFieldFn x y element)
+	    (setf x (+ x 1)))
+	  (dotimes (col element)
+	    (funcall setBoardFieldFn x y nil)
+	    (setf x (+ x 1)))
+	  ))))
+		    
+(defun row-width (scanned-row)
+  (let ((w 0))
+    (process-parsed-row
+     (lambda (x y token)
+       (declare (ignore x))
+       (declare (ignore y))
+       (declare (ignore token))
+       (setf w (+ w 1))) 0 scanned-row)
     w))
 
 (defun split-board-to-rows (ccfiStr)
@@ -39,10 +53,7 @@
 	    (error 'invalid-field-definition-error :text (format nil "Board must not be empty"))
 	    rows))))
 
-(defun set-row (setBoardFieldFn y scanned-row)
-  nil)
-
-(defun decode-board (ccfiStr createBoardFn setBoardFieldFn)
+(defun decode-board-old (ccfiStr createBoardFn setBoardFieldFn)
   "Create an array out of the ccfi representation of a board
 createBoardFn (dx dy)
 setBoardFieldFn (x y)
@@ -65,3 +76,26 @@ setBoardFieldFn (x y)
 			    (setf y (+ 1 y)))
 			  )))))))))
 
+
+(defun decode-board (ccfiStr createBoardFn setBoardFieldFn)
+  "Create an array out of the ccfi representation of a board
+createBoardFn (dx dy)
+setBoardFieldFn (x y)
+"
+  (let ((rows (split-board-to-rows ccfiStr)))
+    (let ((height (cl:length rows)) (width nil) (y 0))
+      (dolist (row rows)
+	(let ((scanned-row (scan-row row)))
+	  (let ((cur-row-width (row-width scanned-row)))
+	    (if (not width)
+		(progn
+		  (setf width cur-row-width)
+		  (funcall createBoardFn width height))
+		(process-parsed-row 
+		 (lambda (x y token)
+		   (if (>= x width)
+		       (error 'invalid-field-definition-error :text "Rows must have same length")
+		       (funcall setBoardFieldFn x y token)))
+		 y scanned-row))))
+      (setf y (+ y 1))
+      ))))

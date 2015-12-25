@@ -53,20 +53,37 @@
 ;; simple dimension detection
 (define-test test-ccfi-decode-board-3 ()
 	     (let ((width nil) (height nil))
-	       (ccfi:decode-board "xxx/xxx" (lambda (dx dy) (setf width dx) (setf height dy)) nil)
+	       (ccfi:decode-board "xxx/xxx"
+				  (lambda (dx dy) (setf width dx) (setf height dy))
+				  (lambda (x y token) nil))
 	       (assert-true (equal width 3) "test-ccfi-decode-board-3: Failed 1")
 	       (assert-true (equal height 2) "test-ccfi-decode-board-3: Failed 2")
 	       ))
 
-;; different lenghts of rows
+;; second row longer than first one
 (define-test test-ccfi-decode-board-4 ()
 	     (let ( (got-error nil))
-	       (handler-case (ccfi::decode-board "xxx/xxxx" (lambda (dx dy) nil) nil)
+	       (handler-case
+		   (ccfi::decode-board "xxx/xxxx"
+				       (lambda (dx dy) nil)
+				       (lambda (x y token) nil))
 		 (ccfi::invalid-field-definition-error () (setf got-error t)))
 	       (assert-true got-error (format t "test-ccfi-decode-board-4 failed"))
 	       ))
 
+#|
+;; second row shorter than first one
+(define-test test-ccfi-decode-board-5 ()
+	     (let ( (got-error nil))
+	       (handler-case
+		   (ccfi::decode-board "xxx/xx"
+				       (lambda (dx dy) nil)
+				       (lambda (x y token) nil))
+		 (ccfi::invalid-field-definition-error () (setf got-error t)))
+	       (assert-true got-error (format t "test-ccfi-decode-board-5 failed"))
+	       ))
 
+|#
 
 	     
 	     
