@@ -21,7 +21,7 @@
 ;;; Empty row
 (define-test test-ccfi-scan-invalid-row-1 ()
   (let ( (got-error nil))
-    (handler-case (ccfi::scan-row "")
+    (handler-case (ccfi::parse-row "")
       (ccfi::invalid-field-definition-error () (setf got-error t)))
     (assert-true got-error (format t "test-ccfi-scan-invalid-row-1 failed"))
     ))
@@ -29,7 +29,7 @@
 ;;; Imvalid characters
 (define-test test-ccfi-scan-invalid-row-2 ()
   (let ( (got-error nil))
-    (handler-case (ccfi::scan-row "xabcdo")
+    (handler-case (ccfi::parse-row "xabcdo")
       (ccfi::invalid-field-definition-error () (setf got-error t)))
     (assert-true got-error (format t "test-ccfi-scan-invalid-row-2 failed"))
     ))
@@ -71,7 +71,6 @@
 	       (assert-true got-error (format t "test-ccfi-decode-board-4 failed"))
 	       ))
 
-#|
 ;; second row shorter than first one
 (define-test test-ccfi-decode-board-5 ()
 	     (let ( (got-error nil))
@@ -83,7 +82,67 @@
 	       (assert-true got-error (format t "test-ccfi-decode-board-5 failed"))
 	       ))
 
-|#
+(define-test test-ccfi-board-1 ()
+	     (let (
+		   (expected-board
+		    (make-array
+		     '(2 3)
+		     :initial-contents '(("x" "x" "x") ("o" "o" "o"))))
+		   (board nil))
+	       (ccfi::decode-board
+		"xxx/ooo"
+		(lambda (dx dy)
+		  (setf board (make-array (list dy dx) :initial-element "Q")))
+		(lambda (x y token)
+		  (setf (aref board y x) token)))
+	       (assert-true (equalp expected-board board) (format t "test-ccfi-board-1 failed"))
+	       ))
 
-	     
-	     
+
+(define-test test-ccfi-board-2 ()
+	     (let (
+		   (expected-board
+		    (make-array
+		     '(3 3)
+		     :initial-contents '(("x" "x" "x") (nil nil nil) ("o" "o" "o"))))
+		   (board nil))
+	       (ccfi::decode-board
+		"xxx/3/ooo"
+		(lambda (dx dy)
+		  (setf board (make-array (list dy dx) :initial-element "Q")))
+		(lambda (x y token)
+		  (setf (aref board y x) token)))
+	       (assert-true (equalp expected-board board) (format t "test-ccfi-board-2 failed"))
+	       ))
+
+(define-test test-ccfi-board-3 ()
+	     (let (
+		   (expected-board
+		    (make-array
+		     '(3 4)
+		     :initial-contents '((nil "x" "x" "x") (nil nil nil nil) ("o" "o" "o" nil))))
+		   (board nil))
+	       (ccfi::decode-board
+		"1xxx/4/ooo1"
+		(lambda (dx dy)
+		  (setf board (make-array (list dy dx) :initial-element "Q")))
+		(lambda (x y token)
+		  (setf (aref board y x) token)))
+	       (assert-true (equalp expected-board board) (format t "test-ccfi-board-3 failed"))
+	       ))
+
+(define-test test-ccfi-board-4 ()
+	     (let (
+		   (expected-board
+		    (make-array
+		     '(3 4)
+		     :initial-contents '((nil "x" "o" "x") (nil nil nil nil) ("o" "x" "o" nil))))
+		   (board nil))
+	       (ccfi::decode-board
+		"1xox/4/oxo1"
+		(lambda (dx dy)
+		  (setf board (make-array (list dy dx) :initial-element "Q")))
+		(lambda (x y token)
+		  (setf (aref board y x) token)))
+	       (assert-true (equalp expected-board board) (format t "test-ccfi-board-4 failed"))
+	       ))
