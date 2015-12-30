@@ -57,7 +57,7 @@
 	    (error 'invalid-field-definition-error :text (format nil "Board must not be empty"))
 	    rows))))
 
-(defun decode-board (ccfiStr createBoardFn setBoardFieldFn)
+(defun decode-position (ccfiStr createBoardFn setBoardFieldFn)
   "Parse a ccfi board definition
 ccfiStr The board in ccfi representation
 createBoardFn (dx dy): Called once. Set dimensions of board

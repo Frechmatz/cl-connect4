@@ -20,8 +20,8 @@
 		:serial t
 		:components ((:file "packages")
 			     (:file "constants")
-			     (:file "encode")
-			     (:file "decode")
+			     (:file "encode-position")
+			     (:file "decode-position")
 			     ))
 	       (:module "src/server"
                         :serial t
