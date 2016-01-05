@@ -22,6 +22,7 @@
 ** DONE Run tests with abcl
 ** DONE connect4-test.asd should not declare dependency on console related stuff
 
+** TODO Write tests for ccfi-server (server.lisp)
 * Board Score Evaluation
 ** DONE Take into account 3 pieces in a row
 ** DONE Prefer moves near the center of the board
@@ -36,4 +37,9 @@
 ** Cleanup
 *** DONE Move board code out of engine into separate folder
 * Server
-** TODO ccfi: Error Type for parsing errors    
+** TODO     
+* CCFI-Server
+** TODO Error handling (invalid placement error)
+** TODO More robust parsing
+** TODO How to signal wins/loses
+** TODO Suppress NIL output

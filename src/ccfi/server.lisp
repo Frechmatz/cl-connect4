@@ -9,7 +9,7 @@
 
 (defun ccfi-placement-to-board (placement)
   (let ((board nil))
-    (decode-position
+    (decode-placement
      placement
      (lambda (dx dy)
        (setf board (board:create-board dx dy)))
@@ -25,6 +25,7 @@
 	  (first result)
 	  nil))))
 
+;;; TODO: Error handling
 (defun process-queue (command-queue)
   (let ((cur-placement nil) (cur-players-color nil))
     (dolist (command command-queue)
@@ -37,7 +38,7 @@
 		(if (equal (first items) "newgame")
 		    (progn
 		      (setf cur-placement nil)
-		      (set cur-players-color nil)))))))
+		      (setf cur-players-color nil)))))))
     (if cur-placement (format nil "bestmove ~a" (best-move cur-placement cur-players-color)) nil)
     ))
 

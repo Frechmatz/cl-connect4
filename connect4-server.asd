@@ -19,9 +19,7 @@
 	       (:module "src/ccfi"
 		:serial t
 		:components ((:file "packages")
-			     (:file "constants")
-			     (:file "encode-position")
-			     (:file "decode-position")
+			     (:file "decode-placement")
 			     (:file "server")
 			     ))
 	       (:module "src/server"

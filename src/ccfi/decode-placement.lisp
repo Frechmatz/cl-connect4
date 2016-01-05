@@ -1,7 +1,7 @@
 
 (in-package :ccfi)
 
-(define-condition invalid-field-definition-error (error)
+(define-condition invalid-placement-error (error)
   ((text :initarg :text :reader text)))
 
 (defun field-token-p (str)
@@ -11,10 +11,10 @@
   "Parse one row of a ccfi representation of a board"
   ;; Empty row check
   (if (or (not str) (equal str ""))
-      (error 'invalid-field-definition-error :text (format nil "Row must not be empty"))
+      (error 'invalid-placement-error :text (format nil "Row must not be empty"))
       ;; Illegal character check
       (if (cl-ppcre:all-matches-as-strings "[^ox\\d]" str)
-	  (error 'invalid-field-definition-error :text (format nil "Invalid characters in row: ~a" str))
+	  (error 'invalid-placement-error :text (format nil "Invalid characters in row: ~a" str))
 	  ;; let's go
 	  (let ((items '()) (tokens (cl-ppcre:all-matches-as-strings "[ox]|\\d+" str)))
 	    (dolist (token tokens)
@@ -51,13 +51,13 @@
 (defun split-board-to-rows (ccfiStr)
   "Split ccfi board representation into separate rows"
   (if (or (not ccfiStr) (equal ccfiStr ""))
-      (error 'invalid-field-definition-error :text (format nil "Board must not be empty"))
+      (error 'invalid-placement-error :text (format nil "Board must not be empty"))
       (let ((rows (cl-ppcre:split "/" ccfiStr)))
 	(if (not rows)
-	    (error 'invalid-field-definition-error :text (format nil "Board must not be empty"))
+	    (error 'invalid-placement-error :text (format nil "Board must not be empty"))
 	    rows))))
 
-(defun decode-position (ccfiStr createBoardFn setBoardFieldFn)
+(defun decode-placement (ccfiStr createBoardFn setBoardFieldFn)
   "Parse a ccfi board representation
 ccfiStr The board in ccfi representation
 createBoardFn (dx dy): Callback function to signal the dimension of the board. This function is called 
@@ -77,11 +77,11 @@ Token values are o x and nil. This function will not not be called with out-of-b
 	     (lambda (x y token)
 	       (setf cur-width (+ x 1))
 	       (if (>= x width)
-		   (error 'invalid-field-definition-error :text "Row is too long")
+		   (error 'invalid-placement-error :text "Row is too long")
 		   (funcall setBoardFieldFn x y token)))
 	     y scanned-row)
 	    (if (< cur-width width)
-		(error 'invalid-field-definition-error :text "Row is too short"))
+		(error 'invalid-placement-error :text "Row is too short"))
 	    ))
 	(setf y (+ y 1))
       ))))

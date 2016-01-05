@@ -18,7 +18,7 @@
 	       (:module "src/ccfi"
                         :serial t
                         :components ((:file "packages")
-                                     (:file "decode-position")))
+                                     (:file "decode-placement")))
 	       (:module "test"
                         :serial t
                         :components ((:file "packages")))
@@ -43,7 +43,7 @@
 				     ))
 	       (:module "test/ccfi"
                         :serial t
-                        :components ((:file "decode-position-tests")))
+                        :components ((:file "decode-placement-tests")))
   ))
 
 
