@@ -49,7 +49,7 @@
     w))
 
 (defun split-board-to-rows (ccfiStr)
-  "Split ccfi board definition into row definitions"
+  "Split ccfi board representation into separate rows"
   (if (or (not ccfiStr) (equal ccfiStr ""))
       (error 'invalid-field-definition-error :text (format nil "Board must not be empty"))
       (let ((rows (cl-ppcre:split "/" ccfiStr)))
@@ -58,10 +58,12 @@
 	    rows))))
 
 (defun decode-position (ccfiStr createBoardFn setBoardFieldFn)
-  "Parse a ccfi board definition
+  "Parse a ccfi board representation
 ccfiStr The board in ccfi representation
-createBoardFn (dx dy): Called once. Set dimensions of board
-setBoardFieldFn (x y token): Won't be called with out of range coordinates. Set field value of the board"
+createBoardFn (dx dy): Callback function to signal the dimension of the board. This function is called 
+once and before any to call to the field setter function.
+setBoardFieldFn (x y token): Callback function to set a field of the board. 
+Token values are o x and nil. This function will not not be called with out-of-boundary coordinates."
   (let ((rows (split-board-to-rows ccfiStr)))
     (let ((height (cl:length rows)) (width nil) (y 0))
       (dolist (row rows)

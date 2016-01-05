@@ -22,6 +22,7 @@
 			     (:file "constants")
 			     (:file "encode-position")
 			     (:file "decode-position")
+			     (:file "server")
 			     ))
 	       (:module "src/server"
                         :serial t
