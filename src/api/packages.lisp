@@ -6,6 +6,7 @@
   (:use :engine)
   (:export :BLACK)
   (:export :WHITE)
+  (:export :EMPTY)
   (:export :CLASSIC-WIDTH)
   (:export :CLASSIC-HEIGHT)
   (:export :MINMAX)

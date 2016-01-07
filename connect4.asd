@@ -2,9 +2,9 @@
   :serial t
   :version "1.0.0"
   :licence "Public Domain / 0-clause MIT"
-  :description "Console implementation of the Connect Four game"
+  :description "Implementation of the Connect Four game"
   :long-description
-  "Console implementation of the Connect 4 game"
+  "Implementation of the Connect 4 game"
   :depends-on (:cl-ppcre)
   :components (
 	       (:module "src/board"
@@ -15,20 +15,13 @@
 			:serial t
 			:components ((:file "packages")
 				     (:file "engine")))
+	       (:module "src/ccfi"
+			:serial t
+			:components ((:file "packages")
+				     (:file "decode-placement")
+				     ))
 	       (:module "src/api"
 			:serial t
 			:components ((:file "packages")
 				     (:file "constants")))
-	       (:module "src/console"
-			:serial t
-			:components ((:file "packages")
-				     (:file "context")
-				     (:file "parsers")
-				     (:file "boardformatter")
-				     (:file "messageformatter")
-				     (:file "formatters")
-				     (:file "formatcontext")
-				     (:file "gamecommands")
-				     (:file "connect4")
-				     ))
    ))
