@@ -43,3 +43,4 @@
 ** TODO More robust parsing
 ** TODO How to signal wins/loses
 ** TODO Suppress NIL output
+** TODO How to signal that no move is available because all fields are occupied?

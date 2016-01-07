@@ -1,11 +1,13 @@
 
 
-(defpackage :api
+(defpackage :connect4-api
   (:use :cl)
   (:use :board)
   (:use :engine)
   (:export :BLACK)
   (:export :WHITE)
+  (:export :CLASSIC-WIDTH)
+  (:export :CLASSIC-HEIGHT)
   (:export :MINMAX)
   (:export :GENERATE-MOVES)
   (:export :*ENGINE-NOTIFICATION-REDUCED-SCORES*)
