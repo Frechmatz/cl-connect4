@@ -44,3 +44,6 @@
 ** TODO How to signal wins/loses
 ** TODO Suppress NIL output
 ** TODO How to signal that no move is available because all fields are occupied?
+** TODO GUI -> Server: Implement 'depth' parameter of go command 
+** TODO Engine -> GUI: Send 'info'
+** TODO nset-field(EMPTY) -> nclear-field() 
