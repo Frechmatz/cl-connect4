@@ -41,6 +41,9 @@
       )
     result))
 
+(defun is-line-mate (line)
+  (equal (third (car (last line))) "MATE"))
+
 (defun run-minmax-test (name-of-test board color depth
 			&key 
 			  (print-final-scores nil)
@@ -49,6 +52,7 @@
 			  (expected-final-columns nil)
 			  (expected-final-move-score nil)
 			  (print-engine-configuration nil)
+			  (is-mate-expected nil) 
 			  (engine-configuration-prefer-center t)
 			  )
   ;; (format t "Running minmax test ~a~%" name-of-test)
@@ -88,7 +92,13 @@
 	 ;; http://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node74.html
 	 (= expected-final-move-score (third best-move))
 	 (format t "~a: Unexpected final score value: ~a Expected score value: ~a~%" name-of-test (third best-move) expected-final-move-score)))
+
     
+    (if (eq is-mate-expected 0)
+	(assert-true (not (is-line-mate (fourth best-move))) (format nil "Must not be mate")))
+    (if (eq is-mate-expected 1)
+	(assert-true (is-line-mate (fourth best-move)) (format t "~a: Must be mate~%" name-of-test)))
+    	
     ))
 
 

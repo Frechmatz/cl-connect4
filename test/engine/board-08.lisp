@@ -25,6 +25,7 @@
 	     (run-minmax-test 
 	      "test-board-08-a" (create-board-08) board:WHITE 4
 	      :expected-final-columns '(1)
+	      :is-mate-expected 1
 	      ))
 
 ;;; BLACK must answer with 0.0 for 0 or 1 or 4 and with -1.0 for 2 and 3 
@@ -32,5 +33,6 @@
 	     (run-minmax-test 
 	      "test-board-08-c" (create-board-08) board:BLACK 4
 	      :expected-final-columns '(0 1 4)
+	      :is-mate-expected 0
 	      ))
 

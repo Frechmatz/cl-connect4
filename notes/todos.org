@@ -33,11 +33,12 @@
 ** DONE Check if for current row any column results in a direct 4 and quit row. If not then deep traverse row.
 ** TODO Alpha/Beta-Pruning
 
-* Refactoring
-** Cleanup
-*** DONE Move board code out of engine into separate folder
-* Server
-** TODO     
+* Engine
+** TODO Establish a board traverser
+*** Holds current board and traversal path
+*** Hides board cloning/manipulation related logic
+*** Used by minmax function
+** TODO MATE-Konstante definieren (engine.lisp)
 * CCFI-Server
 ** TODO Error handling (invalid placement error)
 ** TODO More robust parsing

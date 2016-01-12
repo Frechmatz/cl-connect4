@@ -24,11 +24,14 @@
 	      "test-board-02-a" (create-board-02) board:WHITE 2
 	      :expected-final-columns '(2 3 4 5)
 	      ;; :expected-final-move-score 0.0
+	      :is-mate-expected 0
 	      ))
 
 ;;; test with traversal depth 3 (win situation will be recognized)
 (define-test test-board-02-b ()
 	     (run-minmax-test 
 	      "test-board-02-b" (create-board-02) board:WHITE 3
-	      :expected-final-columns '(4)
+	      :expected-final-columns '(4) ;;; 4 
+	      ;; :print-final-scores t
+	      :is-mate-expected 1
 	      ))

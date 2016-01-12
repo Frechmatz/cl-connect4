@@ -4,6 +4,8 @@
 
 (in-package :engine)
 
+;; (defconstant MATE "MATE" "Mate condition determined") 
+
 ;;;
 ;;; Condition that signals an implementation error of the engine
 ;;;
@@ -155,14 +157,19 @@ If t returns a list consisting of such move otherwise return the moves given int
 	moves)))
   
 ;;;
-;;; Returns a tupel (x y score) where x represents the column, y the row and score the score of the column
+;;; Returns a tupel (x y score line) where
+;;; x: represents the column,
+;;; y: the row,
+;;; score: the score of the column
+;;; line: a list of moves. Each move consists of a list
+;;;     (x color status) The status value "MATE" indicates a mate situation. 
 ;;; max-depth: Maximum number of half-moves to execute (1..n)
 ;;; color: The computers color
 ;;;
 ;;; create a clone of the board that for performance reasons will be manipulated during the traversal
 (defun minmax (the-board color max-depth &key (print-engine-configuration nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
-  (let ((board (clone-board the-board)) (result nil)
+  (let ((board (clone-board the-board)) (result nil) (cur-line '())
 	(*column-weights* (calc-column-weights (get-width the-board)
 					       *engine-configuration-prefer-center*)))
     (if print-engine-configuration
@@ -178,15 +185,17 @@ If t returns a list consisting of such move otherwise return the moves given int
 		     (setf is-four (>= score 1.0)) ; 4 pieces in a row?
 		     (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
 		     (setf score (/ score (expt 10 (- cur-depth 1))))
+		     (push (list (first move) color (if is-four "MATE" nil)) cur-line)
 		     ;; final state or no more moves availabe or max depth reached
 		     (if (or is-four (not (is-move-available board)) (equal cur-depth max-depth))
 			 (progn
-			   (push (list (first move) (second move) score) moves)
+			   (push (list (first move) (second move) score (copy-list cur-line)) moves)
 			   )
 			 (progn
 			   (setf score (minmax-inner board (toggle-color color) (not is-opponent) (+ cur-depth 1)))
-			   (push (list (first move) (second move) (third score)) moves)))
+			   (push (list (first move) (second move) (third score) (fourth score)) moves)))
 		     (nclear-field board (first move) (second move)) ; undo move
+		     (setf cur-line (cdr cur-line))
 		     )
 		   )
 		 (let ((result (reduce-scores moves is-opponent :skip-randomizer (if (equal cur-depth 1) nil t))))
@@ -194,6 +203,8 @@ If t returns a list consisting of such move otherwise return the moves given int
 		   result)
 		 )))
       (setf result (minmax-inner board color nil 1))
+      ;; revert best line
+      (setf result (list (first result) (second result) (third result) (reverse (fourth result))))
       (if (not (equalp board the-board))
 	  (progn
 	    (format t "~%Fatal error: Temporary board is not equal to incoming one~%")
