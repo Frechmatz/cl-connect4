@@ -23,6 +23,7 @@
 ** DONE connect4-test.asd should not declare dependency on console related stuff
 
 ** TODO Write tests for ccfi-server (server.lisp)
+** TODO asdf:load-system tests for server components
 * Board Score Evaluation
 ** DONE Take into account 3 pieces in a row
 ** DONE Prefer moves near the center of the board

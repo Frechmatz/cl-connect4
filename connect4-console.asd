@@ -5,7 +5,7 @@
   :description "Connect Four console interface"
   :long-description
   "Connect Four console interface"
-  :depends-on (:cl-ppcre :connect4)
+  :depends-on (:cl-ppcre :alexandria :connect4)
   :components (
 	       (:module "src/console"
 			:serial t

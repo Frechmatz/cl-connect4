@@ -5,7 +5,7 @@
   :description "Implementation of the Connect Four game"
   :long-description
   "Implementation of the Connect 4 game"
-  :depends-on (:cl-ppcre)
+  :depends-on (:cl-ppcre :alexandria)
   :components (
 	       (:module "src/board"
 			:serial t
@@ -18,6 +18,7 @@
 	       (:module "src/ccfi"
 			:serial t
 			:components ((:file "packages")
+				     (:file "constants")
 				     (:file "decode-placement")
 				     ))
 	       (:module "src/api"

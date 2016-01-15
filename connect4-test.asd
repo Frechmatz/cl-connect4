@@ -5,7 +5,7 @@
   :serial t
   :description "Tests of the Connect Four game"
   :long-description "Tests of the Connect Four game"
-  :depends-on (:lisp-unit :cl-ppcre)
+  :depends-on (:lisp-unit :alexandria :cl-ppcre)
   :components (
 	       (:module "src/board"
                         :serial t
@@ -18,6 +18,7 @@
 	       (:module "src/ccfi"
                         :serial t
                         :components ((:file "packages")
+				     (:file "constants")
                                      (:file "decode-placement")))
 	       (:module "test"
                         :serial t
