@@ -2,8 +2,8 @@
   :serial t
   :version "1.0.0"
   :licence "Public Domain / 0-clause MIT"
-  :description "Defines and implementation a Connect Four API"
-  :long-description "Defines and implementation a Connect Four API"
+  :description "Defines and implements a Connect Four API"
+  :long-description "Defines and implements a Connect Four API"
   :depends-on (:cl-ppcre :alexandria)
   :components (
 	       (:module "src/connect4/board"
