@@ -1,6 +1,6 @@
 
 
-(in-package :connect4-ccfi-server)
+(in-package :connect4-ccfi-console)
 
 (defun ccfi-token-to-color (token)
   (if (not token)

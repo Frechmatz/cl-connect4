@@ -7,11 +7,11 @@
   :long-description "Tests of the Connect Four game"
   :depends-on (:lisp-unit :alexandria :cl-ppcre)
   :components (
-	       (:module "src/board"
+	       (:module "src/connect4/board"
                         :serial t
                         :components ((:file "packages")
                                      (:file "board")))
-	       (:module "src/engine"
+	       (:module "src/connect4/engine"
                         :serial t
                         :components ((:file "packages")
                                      (:file "engine")))

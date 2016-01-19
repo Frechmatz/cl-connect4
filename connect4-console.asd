@@ -2,9 +2,9 @@
   :serial t
   :version "1.0.0"
   :licence "Public Domain / 0-clause MIT"
-  :description "Connect Four console interface"
+  :description "Connect Four console implementation"
   :long-description
-  "Connect Four console interface"
+  "Connect Four console implementation"
   :depends-on (:cl-ppcre :alexandria :connect4)
   :components (
 	       (:module "src/console"
