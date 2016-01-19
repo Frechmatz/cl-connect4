@@ -1,29 +1,29 @@
 # Connect4
 #### A Common Lisp implementation of the Connect Four game with customizable board size and difficulty level.
 
-### Installation
+### Installation (via quicklisp)
 
-To use the program you need an implementation of Common Lisp such as clisp (http://www.clisp.org) or sbcl (http://www.sbcl.org).
-
-Download the project via
+Download the project
 
 ```bash
+cd ~/src/lisp
 git clone https://github.com/Frechmatz/connect4.git
 ```
 
-and add connect4 to the asdf system path.
-
-### Running the program
-
-#### Using Quicklisp
-
+add connect4 and connect4-console to the asdf system path.
 
 ```bash
-(asdf:load-system "connect4")
-# Terminal doesn't support ansi color escape sequences
-(connect4-console:lets-play)
-# otherwise
-# (connect4-console:lets-play-colorful)
+cd ~/quicklisp/local-projects
+ln -s ~/src/lisp/connect4 connect4
+ln -s ~/src/lisp/connect4 connect4-console
+```
+
+Run the program (using sbcl)
+
+```bash
+sbcl
+* (asdf:load-system "connect4-console")
+* (connect4-console:lets-play-colorful)
 ```
 
 ### Screenshots
