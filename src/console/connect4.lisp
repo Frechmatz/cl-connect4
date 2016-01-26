@@ -38,12 +38,17 @@
    :exec-fn (lambda (context &rest the-rest) (apply target-fn context the-rest))
    ))
 
-
+(defun create-help-text (command &key (short nil))
+  (if short
+      (slot-value command 'short-info)
+      (slot-value command 'info)
+  ))
+  
 (defun print-help-text (command-table)
   "Prints an overview of the commands that can by entered into the game repl"
   (format t "Commands:~%help~%")
   (dolist (cmd command-table)
-    (format t "~a~%" (slot-value cmd 'info)))
+    (format t "~a~%" (create-help-text cmd :short nil)))
   (format t "~%")
   )
 
@@ -52,7 +57,7 @@
   (format t "Commands: help")
   (labels ((inner (command-table first)
 	     (format t (if first "~a" ", ~a")
-		     (slot-value (first command-table) 'short-info))
+		     (create-help-text (first command-table) :short 1))
 	     (if (> (length command-table) 1)
 		 (inner (cdr command-table) nil))))
     (inner command-table nil))
