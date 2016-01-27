@@ -1,5 +1,5 @@
 
-(defpackage :connect4-http-server
+(defpackage :connect4-web-server
   (:use :cl)
   (:export :start)
   (:export :stop)

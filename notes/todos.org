@@ -40,7 +40,11 @@
 *** Hides board cloning/manipulation related logic
 *** Used by minmax function
 ** TODO MATE-Konstante definieren (engine.lisp)
-* CCFI-Server
+* Connect4-Console
+** Add help method to command-table
+** Merge help-text functions into one and use reduce function
+* CCFI-Server / CCFI-Core
+** TODO Move server code into core
 ** TODO Error handling (invalid placement error)
 ** TODO More robust parsing
 ** TODO How to signal wins/loses

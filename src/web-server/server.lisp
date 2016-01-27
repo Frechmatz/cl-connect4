@@ -1,5 +1,5 @@
 
-(in-package :connect4-http-server)
+(in-package :connect4-web-server)
 
 (defparameter *server* nil)
 (defparameter *port* 8002)
@@ -10,8 +10,11 @@
       (progn
 	(setf *server* (hunchentoot:start (make-instance 'hunchentoot:easy-acceptor :port *port*)))
 	(format t "~%Hi there. The server has been started.")
-	(format t "~%The server can be reached via http://localhost:~a~%" *port*))
-  ))
+	(format t "~%The server can be reached via http://localhost:~a~%" *port*)
+	(hunchentoot:define-easy-handler (connect4-js :uri "/connect4.js") (name)
+	  (setf (hunchentoot:content-type*) "application/json")
+	  (connect4-web-server::encode-placement))
+  )))
 
 (defun stop ()
   (if (not *server*)

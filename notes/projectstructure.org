@@ -1,0 +1,31 @@
+
+#+TITLE:Project Overview
+
+ 
+* Project structure proposal
+
+** src/connect4 (defines system "connect4")
+
+*** Declares and implements a Connect4 engine 
+*** Implements minmax, move generator, board stuff, etc
+*** Exposes the Connect4-Api
+*** The Api is synchronous
+*** The Api supports callback handlers to stop execution etc. 
+
+** src/console (defines system "connect4-console")
+
+*** Console application using the Connect4-Api
+*** Provides a fancy, friendly user interface
+
+** src/ccfi (defines system "connect4-ccfi")
+
+*** Declares and implements a CCFI engine (Common Connect Four Interface)
+*** Uses the Connect4-Api
+*** Parses input and formats output
+*** Exposes the CCFI-Api
+*** The Api uses input/output queues
+
+** src/ccfi-console (defines system "connect4-ccfi-console")
+
+*** Console based application using the CCFI-Api
+*** Very user unfriendly
