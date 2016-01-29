@@ -51,10 +51,4 @@
 
 (defun message ()
   "Welcome to Connect 4!")
-;;
-;; (start-page)
-;; (serve-connect4-css)
-;;
-
-
 
