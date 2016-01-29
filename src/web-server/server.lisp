@@ -11,9 +11,17 @@
 	(setf *server* (hunchentoot:start (make-instance 'hunchentoot:easy-acceptor :port *port*)))
 	(format t "~%Hi there. The server has been started.")
 	(format t "~%The server can be reached via http://localhost:~a~%" *port*)
-	(hunchentoot:define-easy-handler (connect4-js :uri "/connect4.js") (name)
-	  (setf (hunchentoot:content-type*) "application/json")
+	(hunchentoot:define-easy-handler (connect4-css :uri "/connect4.css") ()
+	  (setf (hunchentoot:content-type*) "text/css")
+	  (serve-connect4-css)
+	  )
+	(hunchentoot:define-easy-handler (connect4-js :uri "/connect4.js") ()
+	  (setf (hunchentoot:content-type*) "text/javascript")
 	  (connect4-web-server::encode-placement))
+	(hunchentoot:define-easy-handler (root :uri "/") ()
+	  (setf (hunchentoot:content-type*) "text/html")
+	  (start-page))
+	nil
   )))
 
 (defun stop ()
@@ -24,6 +32,29 @@
 	(hunchentoot:stop srv)
 	(format t "The server has been stopped.")
 	)))
+
+(defun serve-connect4-css ()
+  (cl-css:css '(
+		(.header :background-color "yellow")
+		(.board :background-color "green")
+	      )))
+
+(defun start-page ()
+  (cl-who:with-html-output-to-string (s)
+			 (:html
+			  (:head (:title "Connect 4")
+				 (:link :rel "stylesheet" :href "connect4.css"))
+			  (:body
+			   (:div :class "header" (cl-who:str (funcall #'message)))
+			   (:div :class "board" "board")
+			   ))))
+
+(defun message ()
+  "Welcome to Connect 4!")
+;;
+;; (start-page)
+;; (serve-connect4-css)
+;;
 
 
 
