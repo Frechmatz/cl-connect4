@@ -8,7 +8,8 @@
   (if *server*
       (format t "~%Server already running~%")
       (progn
-	(setf *server* (hunchentoot:start (make-instance 'hunchentoot:easy-acceptor :port *port*)))
+	(setf *server* (hunchentoot:start
+			(make-instance 'hunchentoot:easy-acceptor :port *port* :document-root "/static/")))
 	(format t "~%Hi there. The server has been started.")
 	(format t "~%The server can be reached via http://localhost:~a~%" *port*)
 	(hunchentoot:define-easy-handler (connect4-css :uri "/connect4.css") ()
@@ -35,7 +36,15 @@
 
 (defun serve-connect4-css ()
   (cl-css:css '(
-		(.header :background-color "yellow")
+		(.header
+		 :background-color "yellow"
+		 :background-image "url(/static/made-with-lisp-logo.jpg)"
+		 :background-repeat "no-repeat"
+		 :background-size "contain"
+		 :height "100px"
+		 :background-position "right"
+		 :font-size "5vw"
+		 )
 		(.board :background-color "green")
 	      )))
 
@@ -50,5 +59,5 @@
 			   ))))
 
 (defun message ()
-  "Welcome to Connect 4!")
+  "Welcome to Connect 4")
 
