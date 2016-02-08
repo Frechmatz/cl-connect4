@@ -25,10 +25,9 @@
 			 :port *port*)))
 	(format t "~%Hi there. The server has been started.")
 	(format t "~%The server can be reached via http://localhost:~a" *port*)
-	(format t "~%Enter http://localhost:~a/static/showcase.html for a case study~%" *port*)
 	(hunchentoot:define-easy-handler (connect4-css :uri "/connect4.css") ()
 	  (setf (hunchentoot:content-type*) "text/css")
-	  (serve-connect4-css)
+	  (connect4-css:css)
 	  )
 	(hunchentoot:define-easy-handler (connect4-js :uri "/connect4.js") ()
 	  (setf (hunchentoot:content-type*) "text/javascript")
@@ -61,65 +60,6 @@
 	(format t "The server has been stopped.")
 	)))
 
-(defun body-background-color ()
-  "linen"
-  )
-
-(defun serve-connect4-css ()
-  (cl-css:css `(
-		(.header
-		 :background-color "LightGoldenRodYellow"
-		 :background-image "url(/static/made-with-lisp-logo.png)"
-		 :background-repeat "no-repeat"
-		 :background-size "contain"
-		 :height "100px"
-		 :background-position "right"
-		 ;;:font-size "5vw"
-		 :position relative
-		 )
-		(.board :background-color "green")
-		(body :background-color ,(body-background-color))
-		(".header h1" 
-			 :margin "0"
-			 :position "absolute"
-			 :top "50%"
-			 :-webkit-transform "translate(0, -50%)" ;;; Safari
-			 :transform "translate(0, -50%)"
-			 )
-		(.board
-		 :width "70%"
-		 :float "left"
-		 )
-		(.board-table
-		 :width "100%"
-		 )
-		(.console
-		 :width "30%"
-		 :float "left"
-		 )
-		(".board-table > td[board-field='X']"
-		 :background-color "red")
-	      )))
-
-(defun render-board (dx dy)
-  (cl-who:with-html-output-to-string (s)
-    (:table :class "board-table"
-     (:tr
-      (:td :board-field "X")
-      (:td "X")
-      (:td "X"))
-     (:tr
-      (:td "X")
-      (:td "X")
-      (:td "X"))
-     (:tr
-      (:td "X")
-      (:td "X")
-      (:td "X"))
-    )))
-
-;; (render-board 5 6)
-
 (defun start-page ()
   (cl-who:with-html-output-to-string (s)
 			 (:html
@@ -128,7 +68,7 @@
 			  (:body
 			   (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
 			   (:div :class "board"
-				 (cl-who:str (funcall #'render-board 7 6))
+				 (cl-who:str (funcall #'connect4-board-renderer:render-board 7 6))
 				 )
 			   ))))
 

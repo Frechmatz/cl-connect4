@@ -9,6 +9,8 @@
 			:components ((:file "packages")
 				     (:file "connect4-js")
 				     (:file "server")
+				     (:file "css")
+				     (:file "board-renderer")
 				     ))
 	       ))
 
