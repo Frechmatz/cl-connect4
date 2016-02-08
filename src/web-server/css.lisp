@@ -22,7 +22,7 @@
 		 ;;:font-size "5vw"
 		 :position relative
 		 )
-		(.board :background-color "green")
+		(.board :background-color "black")
 		(body :background-color ,(body-background-color))
 		(".header h1" 
 			 :margin "0"
@@ -38,6 +38,17 @@
 		(.board-table
 		 :width "100%"
 		 )
+		(.board-cell-content
+		 :height 80%
+		 :width 80%
+		 :padding 10% 10%
+		 )
+		(,(format nil ".board-cell-content[token=~ax~a]" #\" #\" )
+		 :background-color "red")
+		(,(format nil ".board-cell-content[token=~a_~a]" #\" #\" )
+		 :background-color "white")
+		(,(format nil ".board-cell-content[token=~ao~a]" #\" #\" )
+		 :background-color "green")
 		(.console
 		 :width "30%"
 		 :float "left"
