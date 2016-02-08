@@ -1,6 +1,6 @@
 
 
-(in-package :connect4-web-server)
+(in-package :connect4-javascript)
 
 (defun encode-placement ()
   "Generates the JavaScript function 'encodePlacement( dx, dy, getTokenFn)' function that returns a CCFI board placement representation"
@@ -33,6 +33,5 @@
 	result
 	))))
 
-
-(encode-placement)
-
+(defun javascript()
+  (encode-placement))

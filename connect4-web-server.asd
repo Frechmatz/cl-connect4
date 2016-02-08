@@ -7,7 +7,7 @@
 	       (:module "src/web-server"
 			:serial t
 			:components ((:file "packages")
-				     (:file "connect4-js")
+				     (:file "javascript")
 				     (:file "server")
 				     (:file "css")
 				     (:file "board-renderer")

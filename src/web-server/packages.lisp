@@ -9,6 +9,11 @@
   (:export :CSS)
   )
 
+(defpackage :connect4-javascript
+  (:use :cl)
+  (:export :javascript)
+  )
+
 (defpackage :connect4-web-server
   (:use :cl)
   (:export :start)
