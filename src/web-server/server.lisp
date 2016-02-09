@@ -65,13 +65,16 @@
 			  (:head (:title "Connect 4")
 				 (:link :rel "stylesheet" :href "connect4.css"))
 			  (:body
+			   (:script :src "static/onload.js")
 			   (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
 			   (:div :class "board"
-;;				 (cl-who:str (funcall #'connect4-board-renderer:render-board 7 6))
 				 (cl-who:str (funcall
 					      #'connect4-board-renderer:render-ccfi-board
-					      "xxx4/4ooo/7/7"))
-				 )
+					      "xxx4/4ooo/7/7")))
+			   (:div :class "console"
+				 (:div :class "console-content"
+				       (:textarea :class "console-textarea" :id "console-textarea")
+				 ))
 			   ))))
 
 (defun message ()

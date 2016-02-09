@@ -35,6 +35,22 @@
 		 :width "40%"
 		 :float "left"
 		 )
+		(.console
+		 :width "30%"
+		 :float "right"
+		 )
+		(.console-content
+		 :width "100%"
+		 :height "200px"
+		 :background-color "black"
+		 )
+		(.console-textarea
+		 :width "100%"
+		 :background-color "black"
+		 :color "white"
+		 ;; http://stackoverflow.com/questions/2034544/textareas-rows-and-cols-attribute-in-css
+		 :height "20em"
+		 )
 		(.board-table
 		 :width "100%"
 		 )
@@ -49,9 +65,5 @@
 		 :background-color "white")
 		(,(format nil ".board-cell-content[token=~ao~a]" #\" #\" )
 		 :background-color "green")
-		(.console
-		 :width "30%"
-		 :float "left"
-		 )
 		(,(mausi-style))
 	      )))

@@ -1,10 +1,15 @@
 
 (in-package :connect4-board-renderer)
 
+(defun width-in-percent (dx)
+  ;; precision of two digits
+  (/ (floor (/ 10000 dx)) 100))
+
+(width-in-percent 7)
 
 (defun render-cell (percent token)
   ;; http://stackoverflow.com/questions/20456694/grid-of-responsive-squares/20457076#20457076
-  (let ((style (format nil "float: left; width:~a%; padding-bottom: ~a%; position: relative;" percent percent)))
+  (let ((style (format nil "float: left; width:~$%; padding-bottom: ~$%; position: relative;" percent percent)))
     (cl-who:with-html-output-to-string (s)
       (:div
        :class "board-cell"
@@ -19,7 +24,7 @@
       )))
 
 (defun render-row (width get-token-fn)
-  (let ((percent (floor (/ 100 width))))
+  (let ((percent (width-in-percent width)))
     (cl-who:with-html-output-to-string (s)
       (:div :class "board-row"
 	    (dotimes (col width)
