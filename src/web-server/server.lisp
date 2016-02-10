@@ -3,6 +3,8 @@
 
 (defparameter *server* nil)
 (defparameter *port* 8002)
+(defparameter *websocket-server* nil)
+(defparameter *websocket-port* 8003)
 
 (defvar *this-file* (load-time-value
                      (or #.*compile-file-pathname* *load-pathname*)))
@@ -14,16 +16,15 @@
     (format nil "~astatic/" basepath) 
     ))
 
-
-(defun start ()
+(defun start-main-server ()
   (if *server*
-      (format t "~%Server already running~%")
+      (format t "~%Main server already running~%")
       (progn
 	(setf *server* (hunchentoot:start
 			(make-instance
 			 'hunchentoot:easy-acceptor
 			 :port *port*)))
-	(format t "~%Hi there. The server has been started.")
+	(format t "~%Hi there. The main server has been started.")
 	(format t "~%The server can be reached via http://localhost:~a" *port*)
 	(hunchentoot:define-easy-handler (connect4-css :uri "/connect4.css") ()
 	  (setf (hunchentoot:content-type*) "text/css")
@@ -49,15 +50,46 @@
 	nil
   )))
 
-  
-(defun stop ()
+(defun stop-main-server ()
   (if (not *server*)
-      (format t "~%Server is not running")
+      (format t "~%Main server is not running")
       (let ((srv *server*))
 	(setf *server* nil)
 	(hunchentoot:stop srv)
-	(format t "The server has been stopped.")
+	(format t "The main server has been stopped.")
 	)))
+
+(defun start-websocket-server ()
+  (if *websocket-server*
+      (format t "~%Websocket server already running~%")
+      (progn
+	(setf *websocket-server* (make-instance 'hunchensocket:websocket-acceptor :port *websocket-port*))
+	(hunchentoot:start *websocket-server*)
+	(format t "~%The websocket server has been started.")
+	(format t "~%The websocket server can be reached via http://localhost:~a" *websocket-port*)
+	)
+  ))
+
+(defun stop-websocket-server ()
+  (if (not *websocket-server*)
+      (format t "~%Websocket server is not running")
+      (let ((srv *websocket-server*))
+	(setf *websocket-server* nil)
+	(hunchentoot:stop srv)
+	(format t "The websocket server has been stopped.")
+	)))
+
+
+(defun start ()
+  (start-main-server)
+  (start-websocket-server)
+  )
+
+  
+(defun stop ()
+  (stop-main-server)
+  (stop-websocket-server)
+  )
 
 (defun start-page ()
   (cl-who:with-html-output-to-string (s)

@@ -15,6 +15,10 @@
   (:export :javascript)
   )
 
+(defpackage :connect4-ccfi-websocket
+  (:use :cl :hunchensocket)
+  )
+
 (defpackage :connect4-web-server
   (:use :cl)
   (:export :start)
