@@ -1,4 +1,6 @@
-
+#|
+CCFI-Server as a websocket
+|#
 
 (in-package :connect4-ccfi-websocket)
 

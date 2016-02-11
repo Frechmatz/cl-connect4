@@ -12,17 +12,43 @@
 
 (defun css ()
   (cl-css:css `(
+		;; Placement of main blocks
+		(.header :height "20%")
+		(.body :height "70%")
+		(.footer :height "10%")
+
+		;;
+		;; Body: Consists of Playground and CCFI Console
+		;;
+		
+		;; Playground (board)
+		(".body .board" :width "40%" :float "left")
+		;; CCFI console
+		(".body .console" :width "30%" :float "right" :height "100%")
+
+		;;
+		;; Inner playground
+		;;
+		(".board .board-table" :width "100%")
+		(".board-table .board-cell-content" :height 80% :width 80% :padding 10% 10%)
+
+		;;
+		;; Inner CCFI console
+		;;
+		(".console .console-content" :width "100%" :height "100%")
+		(".console .console-textarea" :width "100%" :height "100%")
+		
+		;;
+		;; Colors, fonts, background images, etc
+		;;
 		(.header
 		 :background-color "LightGoldenRodYellow"
 		 :background-image "url(/static/made-with-lisp-logo.png)"
 		 :background-repeat "no-repeat"
 		 :background-size "contain"
-		 :height "100px"
 		 :background-position "right"
-		 ;;:font-size "5vw"
 		 :position relative
 		 )
-		(.board :background-color "black")
 		(body :background-color ,(body-background-color))
 		(".header h1" 
 			 :margin "0"
@@ -31,33 +57,9 @@
 			 :-webkit-transform "translate(0, -50%)" ;;; Safari
 			 :transform "translate(0, -50%)"
 			 )
-		(.board
-		 :width "40%"
-		 :float "left"
-		 )
-		(.console
-		 :width "30%"
-		 :float "right"
-		 )
-		(.console-content
-		 :width "100%"
-		 :height "200px"
-		 :background-color "black"
-		 )
 		(.console-textarea
-		 :width "100%"
 		 :background-color "black"
-		 :color "white"
-		 ;; http://stackoverflow.com/questions/2034544/textareas-rows-and-cols-attribute-in-css
-		 :height "20em"
-		 )
-		(.board-table
-		 :width "100%"
-		 )
-		(.board-cell-content
-		 :height 80%
-		 :width 80%
-		 :padding 10% 10%
+		 :color "green"
 		 )
 		(,(format nil ".board-cell-content[token=~ax~a]" #\" #\" )
 		 :background-color "red")

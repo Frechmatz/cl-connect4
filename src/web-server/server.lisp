@@ -76,7 +76,7 @@
       (let ((srv *websocket-server*))
 	(setf *websocket-server* nil)
 	(hunchentoot:stop srv)
-	(format t "The websocket server has been stopped.")
+	(format t "~%The websocket server has been stopped.")
 	)))
 
 
@@ -97,16 +97,19 @@
 			  (:head (:title "Connect 4")
 				 (:link :rel "stylesheet" :href "connect4.css"))
 			  (:body
+			   ;; hard coded onload.js to be replaced with generator function
 			   (:script :src "static/onload.js")
 			   (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
-			   (:div :class "board"
-				 (cl-who:str (funcall
-					      #'connect4-board-renderer:render-ccfi-board
-					      "xxx4/4ooo/7/7")))
-			   (:div :class "console"
-				 (:div :class "console-content"
-				       (:textarea :class "console-textarea" :id "console-textarea")
-				 ))
+			   (:div :class "body" 
+				 (:div :class "board"
+				       (cl-who:str (funcall
+						    #'connect4-board-renderer:render-ccfi-board
+						    "xxx4/4ooo/7/7")))
+				 (:div :class "console"
+				       (:div :class "console-content"
+					     (:textarea :class "console-textarea" :id "console-textarea")
+					     ))
+				 )
 			   ))))
 
 (defun message ()
