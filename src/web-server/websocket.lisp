@@ -22,18 +22,18 @@ CCFI-Server as a websocket
 
 (pushnew 'find-ccfi-resource hunchensocket:*websocket-dispatch-table*)
 
-(defun broadcast (room message &rest args)
-  (loop for peer in (hunchensocket:clients room)
+(defun broadcast (the-ccfi-resource message &rest args)
+  (loop for peer in (hunchensocket:clients the-ccfi-resource)
         do (hunchensocket:send-text-message peer (apply #'format nil message args))))
 
-(defmethod hunchensocket:client-connected ((room ccfi-resource) ccfi-client)
-  (broadcast room "~a has joined ~a" (name ccfi-client) (name room)))
+(defmethod hunchensocket:client-connected ((the-ccfi-resource ccfi-resource) ccfi-client)
+  (broadcast the-ccfi-resource "~a has joined ~a" (name ccfi-client) (name the-ccfi-resource)))
 
-(defmethod hunchensocket:client-disconnected ((room ccfi-resource) ccfi-client)
-  (broadcast room "~a has left ~a" (name ccfi-client) (name room)))
+(defmethod hunchensocket:client-disconnected ((the-ccfi-resource ccfi-resource) ccfi-client)
+  (broadcast the-ccfi-resource "~a has left ~a" (name ccfi-client) (name the-ccfi-resource)))
 
-(defmethod hunchensocket:text-message-received ((room ccfi-resource) ccfi-client message)
-  (broadcast room "~a says ~a" (name ccfi-client) message))
+(defmethod hunchensocket:text-message-received ((the-ccfi-resource ccfi-resource) ccfi-client message)
+  (broadcast the-ccfi-resource "~a says ~a" (name ccfi-client) message))
 
 
 
