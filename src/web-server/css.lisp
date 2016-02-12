@@ -55,15 +55,16 @@
 		 :background-color "red")
 		(body :background-color ,(body-background-color))
 		(".header h1" 
-			 :margin "0"
-			 :position "absolute"
-			 :top "50%"
-			 :-webkit-transform "translate(0, -50%)" ;;; Safari
-			 :transform "translate(0, -50%)"
-			 )
+		 :margin "0"
+		 :color "yellow"
+		 :position "absolute"
+		 :top "50%"
+		 :-webkit-transform "translate(0, -50%)" ;;; Safari
+		 :transform "translate(0, -50%)"
+		 )
 		(.console-textarea
 		 :background-color "black"
-		 :color "green"
+		 :color "lime"
 		 )
 		(.board-cell-content
 		 :border "solid")
