@@ -5,7 +5,7 @@
 function testWebSocket()
 {
     //websocket = new WebSocket('ws://echo.websocket.org');
-    websocket = new WebSocket('ws://localhost:8003/bongo');
+    websocket = new WebSocket('ws://localhost:8003/ccfi');
     websocket.onopen = function(evt) { onOpen(evt) };
     websocket.onclose = function(evt) { onClose(evt) };
     websocket.onmessage = function(evt) { onMessage(evt) };
