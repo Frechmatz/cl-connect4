@@ -17,10 +17,10 @@ CCFI-Server as a websocket
   (list
    (make-instance 'ccfi-resource :name "/ccfi")))
 
-(defun find-room (request)
+(defun find-ccfi-resource (request)
   (find (hunchentoot:script-name request) *ccfi-resources* :test #'string= :key #'name))
 
-(pushnew 'find-room hunchensocket:*websocket-dispatch-table*)
+(pushnew 'find-ccfi-resource hunchensocket:*websocket-dispatch-table*)
 
 
 (defun broadcast (room message &rest args)
