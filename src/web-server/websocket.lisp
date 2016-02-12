@@ -18,10 +18,9 @@ CCFI-Server as a websocket
    (make-instance 'ccfi-resource :name "/ccfi")))
 
 (defun find-ccfi-resource (request)
-  (find (hunchentoot:script-name request) *ccfi-resources* :test #'string= :key #'name))
+  (first *ccfi-resources*))
 
 (pushnew 'find-ccfi-resource hunchensocket:*websocket-dispatch-table*)
-
 
 (defun broadcast (room message &rest args)
   (loop for peer in (hunchensocket:clients room)
