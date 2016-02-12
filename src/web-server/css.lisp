@@ -14,15 +14,16 @@
   (cl-css:css `(
 		;; Placement of main blocks
 		(.header :height "20%")
-		(.body :height "70%")
+		(.body :height "70%;")
 		(.footer :height "10%")
 
+		
 		;;
 		;; Body: Consists of Playground and CCFI Console
 		;;
 		
 		;; Playground (board)
-		(".body .board" :width "40%" :float "left")
+		(".body .board" :width "40%" :float "left" :margin-top "40px")
 		;; CCFI console
 		(".body .console" :width "30%" :float "right" :height "100%")
 
@@ -42,13 +43,16 @@
 		;; Colors, fonts, background images, etc
 		;;
 		(.header
-		 :background-color "LightGoldenRodYellow"
-		 :background-image "url(/static/made-with-lisp-logo.png)"
+		 :background-color "blue"
+		 ;; :background-image "url(/static/made-with-lisp-logo.png)"
+		 :background-image "url(/static/made-with-lisp-ellipse.png)"
 		 :background-repeat "no-repeat"
 		 :background-size "contain"
 		 :background-position "right"
 		 :position relative
 		 )
+		(.footer
+		 :background-color "red")
 		(body :background-color ,(body-background-color))
 		(".header h1" 
 			 :margin "0"
@@ -61,6 +65,8 @@
 		 :background-color "black"
 		 :color "green"
 		 )
+		(.board-cell-content
+		 :border "solid")
 		(,(format nil ".board-cell-content[token=~ax~a]" #\" #\" )
 		 :background-color "red")
 		(,(format nil ".board-cell-content[token=~a_~a]" #\" #\" )

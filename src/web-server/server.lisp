@@ -110,6 +110,7 @@
 					     (:textarea :class "console-textarea" :id "console-textarea")
 					     ))
 				 )
+			   (:div :class "footer")
 			   ))))
 
 (defun message ()

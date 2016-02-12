@@ -13,10 +13,10 @@
     (cl-who:with-html-output-to-string (s)
       (:div
        :class "board-cell"
-       :style style 
+       :style style
 	    (:div
 	     :class "board-cell-content"
-	     :style "position: absolute"
+	     :style "position: absolute;"
 	     :token token
 	     (cl-who:str (format nil "~a" token))
 	     )
