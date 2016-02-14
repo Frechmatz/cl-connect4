@@ -1,7 +1,6 @@
 
 (defpackage :connect4-board-renderer
   (:use :cl)
-  (:export :RENDER-BOARD)
   (:export :RENDER-CCFI-BOARD)
   )
 

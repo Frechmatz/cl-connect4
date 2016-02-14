@@ -37,7 +37,6 @@
 		;; Inner playground
 		;;
 		(".board .board-table" :width "100%")
-		(".board-table .board-cell-content" :height 80% :width 80% :padding 10% 10%)
 
 		;;
 		;; Inner CCFI console
@@ -72,13 +71,22 @@
 		 :background-color "black"
 		 :color "lime"
 		 )
-		(.board-cell-content
-		 :border "solid")
-		(,(format nil ".board-cell-content[token=~ax~a]" #\" #\" )
+
+		;; Board styling
+		;; https://www.w3.org/wiki/Styling_tables
+		(.board-table
+		 :border "1px solid black;"
+		 :border-collapse "collapse"
+		 )
+		(".board-table th, .board-table td"
+		 :border "1px solid black;"
+		 :border-collapse "collapse"
+		 )
+		(,(format nil ".board-cell[token=~ax~a]" #\" #\" )
 		 :background-color "red")
-		(,(format nil ".board-cell-content[token=~a_~a]" #\" #\" )
+		(,(format nil ".board-cell[token=~a_~a]" #\" #\" )
 		 :background-color "white")
-		(,(format nil ".board-cell-content[token=~ao~a]" #\" #\" )
+		(,(format nil ".board-cell[token=~ao~a]" #\" #\" )
 		 :background-color "green")
 		(,(mausi-style))
 	      )))

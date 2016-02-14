@@ -109,8 +109,8 @@
 				       (:div :class "console"
 					     (:div :class "console-content"
 						   (:textarea :class "console-textarea" :id "console-textarea")))
-				       ;; (:div :style "clear: both")
-				       ;; (:p)
+				       ;; "Close" body (parts may be positioned floating) 
+				       (:div :style "clear: both")
 				       )
 				 (:div :class "footer" "Footer")
 				 )))))
