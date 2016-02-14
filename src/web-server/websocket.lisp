@@ -26,13 +26,14 @@ CCFI-Server as a websocket
         do (hunchensocket:send-text-message peer (apply #'format nil message args))))
 
 (defmethod hunchensocket:client-connected ((cur-ccfi-resource ccfi-resource) ccfi-client)
-  (broadcast cur-ccfi-resource "~a has joined ~a" (name ccfi-client) (name cur-ccfi-resource)))
+;;  (broadcast cur-ccfi-resource "Connected to ccfi server " (name ccfi-client) (name cur-ccfi-resource)))
+  )
 
 (defmethod hunchensocket:client-disconnected ((cur-ccfi-resource ccfi-resource) ccfi-client)
-  (broadcast cur-ccfi-resource "~a has left ~a" (name ccfi-client) (name cur-ccfi-resource)))
+  (broadcast cur-ccfi-resource "Disconnected from ccfi server" (name ccfi-client) (name cur-ccfi-resource)))
 
 (defmethod hunchensocket:text-message-received ((cur-ccfi-resource ccfi-resource) ccfi-client message)
-  (broadcast cur-ccfi-resource "~a says ~a" (name ccfi-client) message))
+  (broadcast cur-ccfi-resource "ccfiok" (name ccfi-client) message))
 
 
 

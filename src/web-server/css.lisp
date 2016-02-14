@@ -17,8 +17,8 @@
 		
 		;; Placement of main blocks
 		(.header :height "20%")
-		(.body :margin-top "40px")
-		(.footer :margin-top "10px")
+		(.body :margin-top "20px")
+		(.footer :margin-top "20px")
 
 		
 		;;
@@ -31,7 +31,7 @@
 		(".body .console" :width "30%" :float "right"
 				  :height "200px"
 				  )
-		(".footer" :clear "both") 
+		(".footer" :clear "both" :color "yellow") 
 		
 		;;
 		;; Inner playground

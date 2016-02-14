@@ -105,7 +105,7 @@
 				       (:div :class "board"
 					     (cl-who:str (funcall
 							  #'connect4-board-renderer:render-ccfi-board
-							  "xxx4/4ooo/7/7/7/7")))
+							  "xxx4/4ooo/7/7/2oooxx/7")))
 				       (:div :class "console"
 					     (:div :class "console-content"
 						   (:textarea :class "console-textarea" :id "console-textarea")))
@@ -116,5 +116,5 @@
 				 )))))
 
 (defun message ()
-  "Welcome to Connect 4")
+  "Connect 4")
 

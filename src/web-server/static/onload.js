@@ -1,10 +1,9 @@
 
 
-
+var websocket = null;
 
 function testWebSocket()
 {
-    //websocket = new WebSocket('ws://echo.websocket.org');
     websocket = new WebSocket('ws://localhost:8003/ccfi');
     websocket.onopen = function(evt) { onOpen(evt) };
     websocket.onclose = function(evt) { onClose(evt) };
@@ -14,8 +13,8 @@ function testWebSocket()
 
 function onOpen(evt)
 {
-    writeToScreen("CONNECTED");
-    doSend("WebSocket rocks");
+    writeToScreen("Connected");
+    doSend("ccfi");
 }
 
 function onClose(evt)
@@ -25,8 +24,7 @@ function onClose(evt)
 
 function onMessage(evt)
 {
-    writeToScreen('RECEIVED: ' + evt.data);
-    websocket.close();
+    writeToScreen('< ' + evt.data);
 }
 
 function onError(evt)
@@ -36,7 +34,7 @@ function onError(evt)
 
 function doSend(message)
 {
-    writeToScreen("SENT: " + message);
+    writeToScreen("> " + message);
     websocket.send(message);
 }
 
@@ -47,11 +45,9 @@ function writeToScreen(message)
 }
 
 function loaded() {
-    console.log('Loaded');
     var element = document.getElementById('console-textarea');
-    element.value = 'Loaded';
+    element.value = 'Connecting with CCFI server...';
     testWebSocket();
-    
 };
 
 document.addEventListener("DOMContentLoaded", loaded, false);
