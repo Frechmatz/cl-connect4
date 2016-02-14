@@ -99,19 +99,21 @@
 			  (:body
 			   ;; hard coded onload.js to be replaced with generator function
 			   (:script :src "static/onload.js")
-			   (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
-			   (:div :class "body" 
-				 (:div :class "board"
-				       (cl-who:str (funcall
-						    #'connect4-board-renderer:render-ccfi-board
-						    "xxx4/4ooo/7/7")))
-				 (:div :class "console"
-				       (:div :class "console-content"
-					     (:textarea :class "console-textarea" :id "console-textarea")
-					     ))
-				 )
-			   (:div :class "footer")
-			   ))))
+			   (:div :class "page-wrapper"
+				 (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
+				 (:div :class "body" 
+				       (:div :class "board"
+					     (cl-who:str (funcall
+							  #'connect4-board-renderer:render-ccfi-board
+							  "xxx4/4ooo/7/7/7/7")))
+				       (:div :class "console"
+					     (:div :class "console-content"
+						   (:textarea :class "console-textarea" :id "console-textarea")))
+				       ;; (:div :style "clear: both")
+				       ;; (:p)
+				       )
+				 (:div :class "footer" "Footer")
+				 )))))
 
 (defun message ()
   "Welcome to Connect 4")

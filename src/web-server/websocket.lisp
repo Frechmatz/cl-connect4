@@ -13,12 +13,11 @@ CCFI-Server as a websocket
   ((name :initarg :user-agent :reader name :initform (error "Name this ccfi-client!"))))
 
 
-(defvar *ccfi-resources*
-  (list
-   (make-instance 'ccfi-resource :name "/ccfi")))
+(defvar *the-ccfi-resource*
+   (make-instance 'ccfi-resource :name "/ccfi"))
 
 (defun find-ccfi-resource (request)
-  (first *ccfi-resources*))
+  *the-ccfi-resource*)
 
 (pushnew 'find-ccfi-resource hunchensocket:*websocket-dispatch-table*)
 

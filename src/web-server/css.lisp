@@ -12,10 +12,13 @@
 
 (defun css ()
   (cl-css:css `(
+		
+		(.page-wrapper :padding "20px")
+		
 		;; Placement of main blocks
 		(.header :height "20%")
-		(.body :height "70%;")
-		(.footer :height "10%")
+		(.body :margin-top "40px")
+		(.footer :margin-top "10px")
 
 		
 		;;
@@ -23,10 +26,13 @@
 		;;
 		
 		;; Playground (board)
-		(".body .board" :width "40%" :float "left" :margin-top "40px")
+		(".body .board" :width "40%" :float "left")
 		;; CCFI console
-		(".body .console" :width "30%" :float "right" :height "100%")
-
+		(".body .console" :width "30%" :float "right"
+				  :height "200px"
+				  )
+		(".footer" :clear "both") 
+		
 		;;
 		;; Inner playground
 		;;
@@ -36,7 +42,7 @@
 		;;
 		;; Inner CCFI console
 		;;
-		(".console .console-content" :width "100%" :height "100%")
+		(".console .console-content" :width "100%":height "100%")
 		(".console .console-textarea" :width "100%" :height "100%")
 		
 		;;
@@ -52,7 +58,7 @@
 		 :position relative
 		 )
 		(.footer
-		 :background-color "red")
+		 :background-color "blue")
 		(body :background-color ,(body-background-color))
 		(".header h1" 
 		 :margin "0"
