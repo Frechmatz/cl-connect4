@@ -38,13 +38,14 @@
 		;; Playground (board)
 		(.body
 		 :flex-flow "row"
-		 :height "60vh" ;; Höhe des Bodies = 60% 
+		 :width "100%"
+		 :height "60%" ;; Höhe des Bodies = 60% 
 		 )
 		(,(display-flex ".body"))
 
 		
 		(".body .board"
-		 :width "100%" ;; Breite des Feldes = Höhe des Parents
+		 :width "20vh" ;; Breite des Feldes = Höhe des Parents
 		 ;; :flex "1"
 		 )
 		;; CCFI console
