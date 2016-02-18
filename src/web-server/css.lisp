@@ -19,17 +19,12 @@
 
 (defun css ()
   (cl-css:css `(
-		
-		(.page-wrapper
-		 :padding "20px"
-		 )
-		
+		(.page-wrapper :padding "20px")
 		;; Placement of main blocks
-		(.header :height "20vh")
-		(.footer :height "10vh"
-			 :margin-top "20px"
-			 )
+		(.header :height "20vh" :width "100%")
+		(.footer :height "10vh" :margin-top "20px" :width "100%")
 		(.body
+		 :width "100%"
 		 :margin-top "20px"
 		 ;; 100%
 		 ;; - 2*WrapperPadding
@@ -40,37 +35,14 @@
 		 :height "calc(100vh - 40px - 20vh - 10vh - 20px - 20px)"
 		 )
 
-		
 		;;
-		;; Body: Consists of Navbar, Playground and CCFI Console
+		;; Layout of Body: Navbar, Playground, Console
 		;;
-
-		;; Playground (board)
-		(.body
-		 :flex-flow "row"
-		 :width "100%"
-		 )
 		(,(display-flex ".body"))
-
-		(".body .navbar"
-		 :width "100px")
-		(".body .board"
-		 :width "20vh" ;; Breite des Feldes = Höhe des Parents
-		 :background-color "green"
-		 ;;:flex "1"
-		 )
-		(,(flex ".body .board"))
-		
-		;; CCFI console
-		(".body .console"
-		 :width "20em"
-		 :background-color "yellow"
-		 ;;:flex 1
-		 ;;:-webkit-flex 1
-		 ;;:display "flex"
-		 )
-
-		(".footer" :clear "both" :color "yellow") 
+		(.body :flex-flow "row")
+		(".body .navbar" :width "100px" :margin-right "20px")
+		(".body .console" :width "20em" :margin-left "20px")
+		(,(flex ".body .playground"))
 		
 		;;
 		;; Inner playground
@@ -90,6 +62,9 @@
 		 :height "100%"
 		 ;;:flex "1"
 		 )
+
+		;; Styling Background
+		(.page-wrapper :background-color "yellow")
 		
 		;; Styling: Body
 		(body :background-color ,(body-background-color))
@@ -98,6 +73,8 @@
 		(.navbar
 		 :background-color "red"
 		 )
+		;; Styling playground 
+		(".body .playground" :background-color "green" )
 		
 		;; Styling: Header
 		(.header
@@ -127,6 +104,7 @@
 		 :background-color "black"
 		 :color "lime"
 		 )
+		(".body .console" :background-color "yellow")
 
 		;; Styling: Board
 		(.board-table
