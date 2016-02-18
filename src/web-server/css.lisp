@@ -42,18 +42,9 @@
 
 		
 		;;
-		;; Body: Consists of Playground and CCFI Console
+		;; Body: Consists of Navbar, Playground and CCFI Console
 		;;
-		
-		;; box layout of body
-		;; ;; Playground (board)
-		;; (".body .board" :width "40%" :float "left")
-		;; ;; CCFI console
-		;; (".body .console" :width "30%" :float "right"
-		;; 		  :height "200px"
-		;; 		  )
 
-		;; flex layout of body
 		;; Playground (board)
 		(.body
 		 :flex-flow "row"
