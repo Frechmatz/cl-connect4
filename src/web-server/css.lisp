@@ -47,7 +47,7 @@
 		;;
 		;; Inner playground
 		;;
-		(".board .board-table" :width "100%")
+		(".board .board-table" :width "300px")
 
 		;;
 		;; Inner CCFI console
@@ -74,7 +74,7 @@
 		 :background-color "red"
 		 )
 		;; Styling playground 
-		(".body .playground" :background-color "green" )
+		(".body .playground" :background-color "violet" )
 		
 		;; Styling: Header
 		(.header
