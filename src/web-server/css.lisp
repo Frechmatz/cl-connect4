@@ -11,15 +11,34 @@
     :display "-webkit-flex"
 ))))
 
+(defun flex (selector)
+  (cl-css:css `((,selector
+    :flex "1"
+    :-webkit-flex "1"
+))))
+
 (defun css ()
   (cl-css:css `(
 		
-		(.page-wrapper :padding "20px")
+		(.page-wrapper
+		 :padding "20px"
+		 )
 		
 		;; Placement of main blocks
 		(.header :height "20vh")
-		(.body :margin-top "20px")
-		(.footer :margin-top "20px")
+		(.footer :height "10vh"
+			 :margin-top "20px"
+			 )
+		(.body
+		 :margin-top "20px"
+		 ;; 100%
+		 ;; - 2*WrapperPadding
+		 ;; - HeaderHeight
+		 ;; - FooterHeight
+		 ;; - FooterMargin
+		 ;; - BodyMargin
+		 :height "calc(100vh - 40px - 20vh - 10vh - 20px - 20px)"
+		 )
 
 		
 		;;
@@ -39,21 +58,24 @@
 		(.body
 		 :flex-flow "row"
 		 :width "100%"
-		 :height "60%" ;; Höhe des Bodies = 60% 
 		 )
 		(,(display-flex ".body"))
 
-		
+		(".body .navbar"
+		 :width "100px")
 		(".body .board"
 		 :width "20vh" ;; Breite des Feldes = Höhe des Parents
-		 ;; :flex "1"
+		 :background-color "green"
+		 ;;:flex "1"
 		 )
+		(,(flex ".body .board"))
+		
 		;; CCFI console
 		(".body .console"
-		 ;;:width "100px"
+		 :width "20em"
 		 :background-color "yellow"
-		 :flex 1
-		 :-webkit-flex 1
+		 ;;:flex 1
+		 ;;:-webkit-flex 1
 		 ;;:display "flex"
 		 )
 
@@ -81,6 +103,11 @@
 		;; Styling: Body
 		(body :background-color ,(body-background-color))
 
+		;; Styling navbar
+		(.navbar
+		 :background-color "red"
+		 )
+		
 		;; Styling: Header
 		(.header
 		 :background-color "blue"
