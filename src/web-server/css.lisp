@@ -71,7 +71,7 @@
 
 		;; Styling navbar
 		(.navbar
-		 :background-color "red"
+		 :background-color "blue"
 		 )
 		;; Styling playground 
 		(".body .playground" :background-color "violet" )
@@ -88,6 +88,7 @@
 		 )
 		(".header h1" 
 		 :margin "0"
+		 :margin-left "5px"
 		 :color "yellow"
 		 :position "absolute"
 		 :top "50%"
