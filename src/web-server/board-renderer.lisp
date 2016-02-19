@@ -10,7 +10,7 @@ Render a board using a HTML table
 
 ;;(width-in-percent 7)
 
-(defun render-cell (percent token)
+(defun render-cell (x y percent token)
   ;; If borders are enabled, the resulting cells are not exactly square
   ;; because the borders expand the content area
   (let ((style (format nil "width:~$%; padding-bottom: ~$%;" percent percent)))
@@ -18,15 +18,17 @@ Render a board using a HTML table
       (:td
        :class "board-cell"
        :style style
-       :token token
+       :data-token token
+       :data-column x
+       :data-row y
       ))))
 
-(defun render-row (width get-token-fn)
+(defun render-row (row-number width get-token-fn)
   (let ((percent (width-in-percent width)))
     (cl-who:with-html-output-to-string (s)
-      (:tr :class "board-row"
+      (:tr :class "board-row" :data-row row-number
 	    (dotimes (col width)
-	      (cl-who:str (funcall #'render-cell percent (funcall get-token-fn col))))))))
+	      (cl-who:str (funcall #'render-cell row-number col percent (funcall get-token-fn col))))))))
 
 (defun render-ccfi-board (ccfi-placement)
   (let ((board nil) (width nil) (height nil))
@@ -39,11 +41,11 @@ Render a board using a HTML table
      (lambda (x y token)
        (setf (aref board y x) token)))
     (cl-who:with-html-output-to-string (s)
-      (:table :class "board-table"
+      (:table :class "board-table" :data-width width :data-height height
 	    (dotimes (row height)
 	      (cl-who:str
 	       (funcall
-		#'render-row width
+		#'render-row row width
 		(lambda (x)
 		  (let ((field (aref board (- height row 1) x)))
 		    (if (not field)

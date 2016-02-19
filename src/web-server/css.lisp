@@ -65,13 +65,12 @@
       (.body :flex-flow "row" :display "flex")
       (".body .navbar" :width "100px" :margin-right "20px")
       (".body .console" :width "20em" :margin-left "20px")
-      ;;(,(flex ".body .playground"))
       (".body .playground" :flex 1)
       
       ;;
       ;; Inner playground
       ;;
-      (".board .board-table" :width "300px")
+      (".board .board-table" :width "40%")
 
       ;;
       ;; Inner CCFI console
@@ -79,12 +78,10 @@
       (".console .console-content"
        :width "100%"
        :height "100%"
-       ;;:display "flex"
        )
       (".console .console-textarea"
        :width "100%"
        :height "100%"
-       ;;:flex "1"
        )
 
       ;; Styling Background
@@ -140,10 +137,10 @@
        :border "1px solid black;"
        :border-collapse "collapse"
        )
-      (,(format nil ".board-cell[token=~ax~a]" #\" #\" )
+      (,(format nil ".board-cell[data-token=~ax~a]" #\" #\" )
 	:background-color "red")
-      (,(format nil ".board-cell[token=~a_~a]" #\" #\" )
+      (,(format nil ".board-cell[data-token=~a_~a]" #\" #\" )
 	:background-color "white")
-      (,(format nil ".board-cell[token=~ao~a]" #\" #\" )
+      (,(format nil ".board-cell[data-token=~ao~a]" #\" #\" )
 	:background-color "green")
       ))))
