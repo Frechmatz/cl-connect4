@@ -35,6 +35,13 @@
 	(hunchentoot:define-easy-handler (root :uri "/") ()
 	  (setf (hunchentoot:content-type*) "text/html")
 	  (start-page))
+	(hunchentoot:define-easy-handler (buttons-debug :uri "/buttons/debug.svg") ()
+	  (setf (hunchentoot:content-type*) "image/svg+xml")
+	  (connect4-buttons:get-debug-button))
+	(hunchentoot:define-easy-handler (buttons-newgame :uri "/buttons/newgame.svg") ()
+	  (setf (hunchentoot:content-type*) "image/svg+xml")
+	  (connect4-buttons:get-start-new-game-button))
+
 	(hunchentoot:define-easy-handler (root-path :uri "/root-path") ()
 	  (setf (hunchentoot:content-type*) "text/plain")
 	  (concatenate

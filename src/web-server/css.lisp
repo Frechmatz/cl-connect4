@@ -110,10 +110,10 @@
        )
       (".navbar .link-new-game" 
        :stroke-width "20"
-       :background-image "url('/static/new-game.svg')"
+       :background-image "url('/buttons/newgame.svg')"
        )
       (".navbar .link-debug" 
-       :background-image "url('/static/debug.svg')"
+       :background-image "url('/buttons/debug.svg')"
        )
       
       ;; Styling playground 

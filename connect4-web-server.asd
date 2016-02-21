@@ -10,7 +10,8 @@
 	       :parenscript
 	       :cl-who
 	       :cl-css
-	       :hunchensocket)
+	       :hunchensocket
+	       :cl-svg)
   :components (
 	       (:module "src/web-server"
 			:serial t
@@ -20,6 +21,7 @@
 				     (:file "server")
 				     (:file "css")
 				     (:file "board-renderer")
+				     (:file "buttons")
 				     ))
 	       ))
 

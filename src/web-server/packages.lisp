@@ -7,7 +7,6 @@
 (defpackage :connect4-css
   (:use :cl)
   (:export :CSS)
-  (:export :SVG-CSS)
   )
 
 (defpackage :connect4-javascript
@@ -17,6 +16,12 @@
 
 (defpackage :connect4-ccfi-websocket
   (:use :cl :hunchensocket)
+  )
+
+(defpackage :connect4-buttons
+  (:use :cl :cl-svg)
+  (:export :get-debug-button)
+  (:export :get-start-new-game-button)
   )
 
 (defpackage :connect4-web-server
