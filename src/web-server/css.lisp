@@ -17,11 +17,11 @@
     :-webkit-flex "1"
 ))))
 
-
-
+#|
 (defun cssklein ()
   (ollicss '((.page-wrapper :padding "20px")
 	     (.body :flex-flow "row" :display "flex" :flex 1))))
+|#
 
 (defun css-safarify (expr)
   (mapcar #'(lambda (statement)
@@ -38,7 +38,7 @@
 				  (T item)))
 			statement)
 		(append statement (reverse to-append))))
-	  expr)))
+	  expr))
 
 (defun css ()
   (cl-css:css
@@ -63,7 +63,7 @@
       ;; Layout of Body: Navbar, Playground, Console
       ;;
       (.body :flex-flow "row" :display "flex")
-      (".body .navbar" :width "100px" :margin-right "20px")
+      (".body .navbar" :width "60px" :margin-right "20px")
       (".body .console" :width "20em" :margin-left "20px")
       (".body .playground" :flex 1)
       
@@ -94,13 +94,34 @@
       (.navbar
        :background-color "blue"
        )
+      (".navbar span"
+       :color "yellow"
+       )
+      (".navbar a" 
+       :background-repeat "no-repeat"
+       :display "block"
+       :width "50px"
+       :height "50px"
+       :background-size "contain"
+       :margin "5px"
+       )
+      (".navbar a span"
+       :display "none"
+       )
+      (".navbar .link-new-game" 
+       :stroke-width "20"
+       :background-image "url('/static/new-game.svg')"
+       )
+      (".navbar .link-debug" 
+       :background-image "url('/static/debug.svg')"
+       )
+      
       ;; Styling playground 
       (".body .playground" :background-color "violet" )
       
       ;; Styling: Header
       (.header
        :background-color "blue"
-       ;; :background-image "url(/static/made-with-lisp-logo.png)"
        :background-image "url(/static/made-with-lisp-ellipse.png)"
        :background-repeat "no-repeat"
        :background-size "contain"
@@ -144,3 +165,4 @@
       (,(format nil ".board-cell[data-token=~ao~a]" #\" #\" )
 	:background-color "green")
       ))))
+

@@ -7,6 +7,7 @@
 (defpackage :connect4-css
   (:use :cl)
   (:export :CSS)
+  (:export :SVG-CSS)
   )
 
 (defpackage :connect4-javascript

@@ -93,31 +93,30 @@
 
 (defun start-page ()
   (cl-who:with-html-output-to-string (s)
-			 (:html
-			  (:head (:title "Connect 4")
-				 (:link :rel "stylesheet" :href "connect4.css"))
-			  (:body
-			   ;; hard coded onload.js to be replaced with generator function
-			   (:script :src "static/onload.js")
-			   (:div :class "page-wrapper"
-				 (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
-				 (:div :class "body" 
-				       (:div :class "navbar" "Navbar")
-				       (:div :class "playground"
-					     (:div :class "board"
-						   (cl-who:str (funcall
-								#'connect4-board-renderer:render-ccfi-board
-								"xxx4/4ooo/7/7/2oooxx/7"))
-						   )
-					     )
-				       (:div :class "console"
-					     (:div :class "console-content"
-						   (:textarea :class "console-textarea" :id "console-textarea")))
-				       ;; "Close" body (parts may be positioned floating) 
-				       (:div :style "clear: both")
-				       )
-				 (:div :class "footer" "Footer")
-				 )))))
+    (:html
+     (:head (:title "Connect 4")
+	    (:link :rel "stylesheet" :href "connect4.css"))
+     (:body
+      ;; hard coded onload.js to be replaced with generator function
+      (:script :src "static/onload.js")
+      (:div :class "page-wrapper"
+	    (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
+	    (:div :class "body" 
+		  (:div :class "navbar"
+			(:a :class "link-new-game" :href "#" (:span "New game"))
+			(:a :class "link-debug" :href "#" (:span "Debug"))
+			)
+		  (:div :class "playground"
+			(:div :class "board"
+			      (cl-who:str
+			       (funcall
+				#'connect4-board-renderer:render-ccfi-board
+				"xxx4/4ooo/7/7/2oooxx/7"))))
+		  (:div :class "console"
+			(:div :class "console-content"
+			      (:textarea :class "console-textarea" :id "console-textarea"))))
+	    (:div :class "footer" "Footer")
+	    )))))
 
 (defun message ()
   "Connect 4")
