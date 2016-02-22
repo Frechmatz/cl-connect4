@@ -108,8 +108,8 @@
 	    (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
 	    (:div :class "body" 
 		  (:div :class "navbar"
-			(:a :class "link-new-game" :id "link-new-game" :href "#" (:span "New game"))
-			(:a :class "link-debug" :id "link-debug" :href "#" (:span "Debug"))
+			(:a :class "link-new-game" :id "link-new-game" :title "New Game" :href "#" (:span "New game"))
+			(:a :class "link-debug" :id "link-debug" :title "Debug" :href "#" (:span "Debug"))
 			)
 		  (:div :class "playground"
 			(:div :class "board"

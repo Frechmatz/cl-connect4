@@ -17,7 +17,8 @@ document.addEventListener(
 	
 	document.getElementById("link-debug").onclick = function(event) {
 	    event.preventDefault();
-	    document.connect4.board.setFieldToX(3,3);
+	    document.connect4.board.setFieldToX(2,3);
+	    console.log(document.connect4.board.getCcfiPlacement());
 	};
     },
     false);
