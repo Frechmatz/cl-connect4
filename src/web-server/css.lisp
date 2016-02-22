@@ -151,11 +151,11 @@
 
       ;; Styling: Board
       (.board-table
-       :border "1px solid black;"
+       :border "1px solid black"
        :border-collapse "collapse"
        )
       (".board-table th, .board-table td"
-       :border "1px solid black;"
+       :border "1px solid black"
        :border-collapse "collapse"
        )
       (,(format nil ".board-cell[data-token=~ax~a]" #\" #\" )

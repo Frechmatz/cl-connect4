@@ -29,9 +29,6 @@
 	(hunchentoot:define-easy-handler (connect4-css :uri "/connect4.css") ()
 	  (setf (hunchentoot:content-type*) "text/css")
 	  (connect4-css:css))
-	(hunchentoot:define-easy-handler (connect4-js :uri "/connect4.js") ()
-	  (setf (hunchentoot:content-type*) "text/javascript")
-	  (connect4-javascript:javascript))
 	(hunchentoot:define-easy-handler (root :uri "/") ()
 	  (setf (hunchentoot:content-type*) "text/html")
 	  (start-page))
@@ -104,14 +101,15 @@
      (:head (:title "Connect 4")
 	    (:link :rel "stylesheet" :href "connect4.css"))
      (:body
-      ;; hard coded onload.js to be replaced with generator function
+      (:script :src "static/board.js")
+      (:script :src "static/ccfiserver.js")
       (:script :src "static/onload.js")
       (:div :class "page-wrapper"
 	    (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
 	    (:div :class "body" 
 		  (:div :class "navbar"
-			(:a :class "link-new-game" :href "#" (:span "New game"))
-			(:a :class "link-debug" :href "#" (:span "Debug"))
+			(:a :class "link-new-game" :id "link-new-game" :href "#" (:span "New game"))
+			(:a :class "link-debug" :id "link-debug" :href "#" (:span "Debug"))
 			)
 		  (:div :class "playground"
 			(:div :class "board"

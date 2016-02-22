@@ -1,54 +1,24 @@
 
+document.addEventListener(
+    "DOMContentLoaded",
+    function loaded() {
+	document.connect4 = {};
+	
+	document.connect4.ccfiServer = new CcfiServer();
+	document.connect4.board = new Board();
 
-var websocket = null;
+	document.connect4.ccfiServer.init();
+	console.log(document.connect4.board.getCcfiPlacement());
 
-function testWebSocket()
-{
-    websocket = new WebSocket('ws://localhost:8003/ccfi');
-    websocket.onopen = function(evt) { onOpen(evt) };
-    websocket.onclose = function(evt) { onClose(evt) };
-    websocket.onmessage = function(evt) { onMessage(evt) };
-    websocket.onerror = function(evt) { onError(evt) };
-}
-
-function onOpen(evt)
-{
-    writeToScreen("Connected");
-    doSend("ccfi");
-}
-
-function onClose(evt)
-{
-    writeToScreen("DISCONNECTED");
-}
-
-function onMessage(evt)
-{
-    writeToScreen('< ' + evt.data);
-}
-
-function onError(evt)
-{
-    writeToScreen('ERROR: ' + evt.data);
-}
-
-function doSend(message)
-{
-    writeToScreen("> " + message);
-    websocket.send(message);
-}
-
-function writeToScreen(message)
-{
-    var element = document.getElementById('console-textarea');
-    element.value = element.value + '\n' + message;
-}
-
-function loaded() {
-    var element = document.getElementById('console-textarea');
-    element.value = 'Connecting with CCFI server...';
-    testWebSocket();
-};
-
-document.addEventListener("DOMContentLoaded", loaded, false);
+	document.getElementById("link-new-game").onclick = function(event) {
+	    event.preventDefault();
+	    document.connect4.board.clear();
+	};
+	
+	document.getElementById("link-debug").onclick = function(event) {
+	    event.preventDefault();
+	    document.connect4.board.setFieldToX(3,3);
+	};
+    },
+    false);
 

@@ -7,7 +7,6 @@
 	       :cl-ppcre
 	       :alexandria
 	       :connect4-ccfi
-	       :parenscript
 	       :cl-who
 	       :cl-css
 	       :hunchensocket
@@ -16,7 +15,6 @@
 	       (:module "src/web-server"
 			:serial t
 			:components ((:file "packages")
-				     (:file "javascript")
 				     (:file "websocket")
 				     (:file "server")
 				     (:file "css")

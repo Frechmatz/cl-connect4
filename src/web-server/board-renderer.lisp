@@ -28,7 +28,7 @@ Render a board using a HTML table
     (cl-who:with-html-output-to-string (s)
       (:tr :class "board-row" :data-row row-number
 	    (dotimes (col width)
-	      (cl-who:str (funcall #'render-cell row-number col percent (funcall get-token-fn col))))))))
+	      (cl-who:str (funcall #'render-cell col row-number percent (funcall get-token-fn col))))))))
 
 (defun render-ccfi-board (ccfi-placement)
   (let ((board nil) (width nil) (height nil))
@@ -41,7 +41,7 @@ Render a board using a HTML table
      (lambda (x y token)
        (setf (aref board y x) token)))
     (cl-who:with-html-output-to-string (s)
-      (:table :class "board-table" :data-width width :data-height height
+      (:table :class "board-table" :id "board-table" :data-width width :data-height height
 	    (dotimes (row height)
 	      (cl-who:str
 	       (funcall
