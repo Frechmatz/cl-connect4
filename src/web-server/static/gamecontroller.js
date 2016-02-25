@@ -6,6 +6,10 @@ var GameController = function() {
 	return document.connect4.board;
     };
 
+    var footer = function() {
+	return document.connect4.footer;
+    };
+
     var ccfiClient = function() {
 	return document.connect4.ccfiClient;
     };
@@ -36,5 +40,6 @@ var GameController = function() {
 	this.humanPlayersToken = token;
 	// Let :hover CSS rules match
 	board().setHumanPlayersToken(this.humanPlayersToken);
+	footer().setHumanPlayersToken(this.humanPlayersToken);
     };
 }; 

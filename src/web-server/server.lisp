@@ -104,6 +104,7 @@
       (:script :src "static/board.js")
       (:script :src "static/ccficlient.js")
       (:script :src "static/gamecontroller.js")
+      (:script :src "static/footer.js")
       (:script :src "static/onload.js")
       (:div :class "page-wrapper"
 	    (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
@@ -121,7 +122,9 @@
 		  (:div :class "console"
 			(:div :class "console-content"
 			      (:textarea :class "console-textarea" :id "console-textarea"))))
-	    (:div :class "footer" "Footer")
+	    (:div :class "footer" :id "footer"
+		  (:div :class "human-players-token-indicator")
+		  )
 	    )))))
 
 (defun message ()

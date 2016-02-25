@@ -141,7 +141,18 @@
       ;; Styling: Footer
       (.footer
        :background-color "blue")
-
+      (".footer .human-players-token-indicator"
+       :height "20px" :width "20px" :margin-top "5px" :margin-left "5px")
+      (".footer .human-players-token"
+       :background-color "yellow"
+       )
+      (,(format nil ".footer .human-players-token-indicator[data-human-players-token=~ax~a]" #\" #\")
+       :background-color "red"
+       )
+      (,(format nil ".footer .human-players-token-indicator[data-human-players-token=~ao~a]" #\" #\")
+       :background-color "green"
+       )
+      
       ;; Styling: Console
       (.console-textarea
        :background-color "black"
