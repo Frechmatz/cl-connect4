@@ -102,7 +102,8 @@
 	    (:link :rel "stylesheet" :href "connect4.css"))
      (:body
       (:script :src "static/board.js")
-      (:script :src "static/ccfiserver.js")
+      (:script :src "static/ccficlient.js")
+      (:script :src "static/gamecontroller.js")
       (:script :src "static/onload.js")
       (:div :class "page-wrapper"
 	    (:div :class "header" (:h1 (cl-who:str (funcall #'message))))

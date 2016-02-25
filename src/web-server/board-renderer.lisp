@@ -21,6 +21,7 @@ Render a board using a HTML table
        :data-token token
        :data-column x
        :data-row y
+       :data-human-players-token "?"
       ))))
 
 (defun render-row (row-number width get-token-fn)

@@ -164,5 +164,17 @@
 	:background-color "white")
       (,(format nil ".board-cell[data-token=~ao~a]" #\" #\" )
 	:background-color "green")
+      ;; hover cell styles must be declared after non-hover ones
+      ;; data-human-players-token will be set during gameplay
+      ;; the purpose of this token is to avoid css injection via javascript
+      (,(format nil ".board-cell[data-token=~a_~a][data-human-players-token=~ax~a]:hover" #\" #\" #\" #\")
+       :background-color "red"
+       :cursor "s-resize"
+       )
+      (,(format nil ".board-cell[data-token=~a_~a][data-human-players-token=~ao~a]:hover" #\" #\" #\" #\")
+       :background-color "green"
+       :cursor "s-resize"
+       )
+      
       ))))
 

@@ -75,20 +75,42 @@ var Board = function() {
 	return encodeToCcfiPlacement(s.width, s.height, this.getField.bind(this));
     };
 
-    this.clear = function() {
+    this.forEachCell = function(fn) {
 	var b = document.getElementById(tableId);
 	var c = b.querySelectorAll('.board-cell');
 	for( var i = 0; i < c.length; i++) {
-	    c.item(i).setAttribute('data-token', '_');
+	    fn(c.item(i));
 	}
+    };
+    
+    this.clear = function() {
+	this.forEachCell( function(item) {
+	    item.setAttribute('data-token', '_');
+	});
+    };
+
+    this.setHumanPlayersToken = function(token) {
+	this.forEachCell( function(item) {
+	    item.setAttribute('data-human-players-token', token);
+	});
     };
 
     function setFieldImpl(x,y,token) {
 	var b = document.getElementById(tableId);
+	// TODO: replace by id call
 	var c = b.querySelector('.board-cell[data-column="' + x + '"][data-row="' + y + '"]');
 	c.setAttribute('data-token', token);
     }; 
-    
+
+    this.getTokenForX = function() {
+	return ccfiTokenRepresentationX;
+    };
+    this.getTokenForO = function() {
+	return ccfiTokenRepresentationO;
+    };
+    this.toggleToken = function(token) {
+	return token == ccfiTokenRepresentationX ? ccfiTokenRepresentationO : ccfiTokenRepresentationX;
+    };
     this.setFieldToX = function(x,y) {
 	setFieldImpl(x,y,ccfiTokenRepresentationX);
     };
