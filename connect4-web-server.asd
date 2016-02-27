@@ -12,6 +12,11 @@
 	       :hunchensocket
 	       :cl-svg)
   :components (
+	       (:module "src/logger"
+			:serial t
+			:components ((:file "packages")
+				     (:file "logger")
+				     ))
 	       (:module "src/web-server"
 			:serial t
 			:components ((:file "packages")
@@ -22,6 +27,3 @@
 				     (:file "buttons")
 				     ))
 	       ))
-
-
-

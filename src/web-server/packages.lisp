@@ -15,7 +15,7 @@
   )
 
 (defpackage :connect4-ccfi-websocket
-  (:use :cl :hunchensocket)
+  (:use :cl :hunchensocket :logger)
   )
 
 (defpackage :connect4-buttons

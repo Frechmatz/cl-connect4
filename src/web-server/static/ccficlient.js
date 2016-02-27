@@ -15,12 +15,23 @@ var CcfiClient = function() {
 
     function writeToScreen(message) {
 	var element = document.getElementById(consoleId);
-	element.value = element.value + '\n' + message;
+	element.value = (element.value.length > 0 ? (element.value + '\n') : '') + message;
     };
 
     function onOpen(evt) {
 	writeToScreen("Connected");
 	doSend("ccfi");
+	if (this.timerId != null) {
+	    window.clearInterval(this.timerId);
+	    this.timerId = null;
+	}
+	// Connection-Keep-Alive timer
+	this.timerId = window.setInterval(
+	    function() {
+		doSend('Ping');
+	    },
+	    30*1000
+	) 
     };
 
     function onClose(evt) {
@@ -41,6 +52,7 @@ var CcfiClient = function() {
     }
 
     this.init = function() {
+	this.timerId = null;
 	connect();
     };
 };
