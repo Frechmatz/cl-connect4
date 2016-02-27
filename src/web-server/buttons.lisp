@@ -17,7 +17,7 @@
   (let ((scene (cl-svg:make-svg-toplevel 'svg-1.1-toplevel :height 70 :width 70)))
     (make-group scene (:transform "translate(5,5)")
       (draw* (:circle :cx 29 :cy 29 :r 30 :stroke "red" :fill "transparent" :stroke-width "10"))
-      (draw* (:circle :cx 29 :cy 29 :r 15 :stroke "yellow" :fill "transparent" :stroke-width "5"))
+      (draw* (:circle :cx 29 :cy 29 :r 15 :stroke "red" :fill "transparent" :stroke-width "5"))
       )
     (let ((str (with-output-to-string (s nil) (cl-svg:stream-out s scene))))
       str)))

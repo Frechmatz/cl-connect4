@@ -1,4 +1,9 @@
 
+/*
+  Board management module
+  - Top/Left of board = 0/0, Second row/Second column = 1/1
+  - Field status = x | o | null
+*/
 var Board = function() {
     var tableId = "board-table";
     var ccfiTokenRepresentationEmpty = '_';
