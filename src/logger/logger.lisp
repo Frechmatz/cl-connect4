@@ -61,4 +61,4 @@
     (log-info myLogger "Hallo")
     ))
 
-(test-it)
+;; (test-it)

@@ -123,7 +123,7 @@
 			(:div :class "console-content"
 			      (:textarea :class "console-textarea" :id "console-textarea"))))
 	    (:div :class "footer" :id "footer"
-		  (:div :class "human-players-token-indicator")
+		  (:p :class "human-players-token-indicator" "Your Color")
 		  )
 	    )))))
 

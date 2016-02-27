@@ -142,7 +142,8 @@
       (.footer
        :background-color "blue")
       (".footer .human-players-token-indicator"
-       :height "20px" :width "20px" :margin-top "5px" :margin-left "5px")
+       ;; :height "20px" :width "20px" :margin-top "5px" :margin-left "5px"
+       )
       (".footer .human-players-token"
        :background-color "yellow"
        )

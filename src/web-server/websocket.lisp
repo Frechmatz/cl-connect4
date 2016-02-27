@@ -28,10 +28,10 @@ CCFI-Server as a websocket
   (loop for peer in (hunchensocket:clients cur-ccfi-resource)
         do (hunchensocket:send-text-message peer (apply #'format nil message args))))
 
-(defun answer (cur-ccfi-resource message &rest args)
+(defun answer (cur-ccfi-client message &rest args)
   (logger:log-info *logger* (format nil "Sending message: ~a" message))
   ;; doesn't work
-  ;;(hunchensocket:send-text-message cur-ccfi-resource (apply #'format nil message args))
+  (hunchensocket:send-text-message cur-ccfi-client (apply #'format nil message args))
   )
 
 (defmethod hunchensocket:client-connected ((cur-ccfi-resource ccfi-resource) ccfi-client)
@@ -41,12 +41,13 @@ CCFI-Server as a websocket
 
 (defmethod hunchensocket:client-disconnected ((cur-ccfi-resource ccfi-resource) ccfi-client)
   (logger:log-info *logger* "Client disconnected")
-  (broadcast cur-ccfi-resource "Disconnected from ccfi server" (name ccfi-client) (name cur-ccfi-resource)))
+  ;;(broadcast cur-ccfi-resource "Disconnected from ccfi server" (name ccfi-client) (name cur-ccfi-resource))
+  )
 
 (defmethod hunchensocket:text-message-received ((cur-ccfi-resource ccfi-resource) ccfi-client message)
   (logger:log-info *logger* (format nil "Text message received: ~a" message))
-  (broadcast cur-ccfi-resource "ccfiok" (name ccfi-client) message)
-  ;; (answer cur-ccfi-resource "ccfiokanswer" (name ccfi-client) message)
+  ;;(broadcast cur-ccfi-resource "ccfiok" (name ccfi-client) message)
+  (answer ccfi-client "ccfiokanswer" (name ccfi-client) message)
   )
 
 
