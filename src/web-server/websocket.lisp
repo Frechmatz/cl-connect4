@@ -47,7 +47,7 @@ CCFI-Server as a websocket
 (defmethod hunchensocket:text-message-received ((cur-ccfi-resource ccfi-resource) ccfi-client message)
   (logger:log-info *logger* (format nil "Text message received: ~a" message))
   ;;(broadcast cur-ccfi-resource "ccfiok" (name ccfi-client) message)
-  (answer ccfi-client "ccfiokanswer" (name ccfi-client) message)
+  (answer ccfi-client "websocketok" (name ccfi-client) message)
   )
 
 
