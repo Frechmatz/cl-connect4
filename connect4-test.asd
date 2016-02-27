@@ -15,10 +15,14 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "engine")))
+	       (:module "src/connect4/api"
+                        :serial t
+                        :components ((:file "packages")
+                                     (:file "constants")))
 	       (:module "src/ccfi"
                         :serial t
                         :components ((:file "packages")
-				     (:file "constants")
+				     (:file "token")
                                      (:file "decode-placement")))
 	       (:module "test"
                         :serial t

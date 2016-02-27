@@ -9,7 +9,7 @@
 	       (:module "src/ccfi"
 			:serial t
 			:components ((:file "packages")
-				     (:file "constants")
+				     (:file "token")
 				     (:file "decode-placement")
 				     ))
    ))

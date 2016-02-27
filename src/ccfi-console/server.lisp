@@ -2,25 +2,9 @@
 
 (in-package :connect4-ccfi-console)
 
-(defun ccfi-token-to-color (token)
-  (if (not token)
-      connect4-api:EMPTY
-      (if (equal token "x") connect4-api:BLACK connect4-api:WHITE)))
-
-(defun ccfi-placement-to-board (placement)
-  (let ((board nil))
-    (ccfi:decode-placement
-     placement
-     (lambda (dx dy)
-       (setf board (connect4-api:create-board dx dy)))
-     (lambda (x y token)
-       (connect4-api:nset-field
-	board x	(- (connect4-api:get-height board) y 1) (ccfi-token-to-color token))))
-    board))
-  
 (defun best-move (placement players-color)
-  (let ((board (ccfi-placement-to-board placement)))
-    (let ((result (connect4-api:minmax board (ccfi-token-to-color players-color) 6)))
+  (let ((board (ccfi:ccfi-placement-to-board placement)))
+    (let ((result (connect4-api:minmax board (ccfi:ccfi-token-to-color players-color) 6)))
       (if result
 	  (first result)
 	  nil))))
