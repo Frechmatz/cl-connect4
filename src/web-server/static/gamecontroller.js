@@ -30,6 +30,10 @@ var GameController = function() {
 	    board().setFieldToX(2,3);
 	    console.log(board().getCcfiPlacement());
 	    this.toggleHumanPlayersToken();
+	    var markers = [];
+	    markers.push(board().createCoordinate(2,2));
+	    markers.push(board().createCoordinate(3,3));
+	    board().setFieldMarker(markers);
 	}.bind(this);
     };
 

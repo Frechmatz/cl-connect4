@@ -57,6 +57,11 @@ var Board = function() {
 	return result;
     };
 
+    function setFieldMarkerImpl(cell, set) {
+	m = cell.querySelector('.board-cell-marker');
+	m.style.display = set ? 'block' : 'none';
+    };
+    
     // returns { width: n, height: m } n,m >= 0
     this.getSize = function() {
 	var b = document.getElementById(tableId);
@@ -89,8 +94,9 @@ var Board = function() {
     };
     
     this.clear = function() {
-	this.forEachCell( function(item) {
-	    item.setAttribute('data-token', '_');
+	this.forEachCell( function(cell) {
+	    cell.setAttribute('data-token', '_');
+	    setFieldMarkerImpl(cell, false);
 	});
     };
 
@@ -100,10 +106,13 @@ var Board = function() {
 	});
     };
 
-    function setFieldImpl(x,y,token) {
+    function getFieldCell(x,y) {
 	var b = document.getElementById(tableId);
 	// TODO: replace by id call
-	var c = b.querySelector('.board-cell[data-column="' + x + '"][data-row="' + y + '"]');
+	return b.querySelector('.board-cell[data-column="' + x + '"][data-row="' + y + '"]');
+    };
+    function setFieldToken(x,y,token) {
+	var c = getFieldCell(x,y);
 	c.setAttribute('data-token', token);
     }; 
 
@@ -117,13 +126,34 @@ var Board = function() {
 	return token == ccfiTokenRepresentationX ? ccfiTokenRepresentationO : ccfiTokenRepresentationX;
     };
     this.setFieldToX = function(x,y) {
-	setFieldImpl(x,y,ccfiTokenRepresentationX);
+	setFieldToken(x,y,ccfiTokenRepresentationX);
     };
     this.setFieldToO = function(x,y) {
-	setFieldImpl(x,y,ccfiTokenRepresentationO);
+	setFieldToken(x,y,ccfiTokenRepresentationO);
     };
     this.clearField = function(x,y) {
-	setFieldImpl(x,y,ccfiTokenRepresentationEmpty);
+	setFieldToken(x,y,ccfiTokenRepresentationEmpty);
     };
+    function isCoordinate(x,y,coordinateArray) {
+	for( var c = 0; c < coordinateArray.length; c++) {
+	    if( coordinateArray[c].x == x && coordinateArray[c].y == y) {
+		return true;
+	    }
+	}
+	return false;
+    };
+
+    this.createCoordinate = function(x,y) {
+	return {
+	    x: x.toString(),
+	    y: y.toString()
+	};
+    };
+   
+    this.setFieldMarker = function(coordinateArray) {
+	this.forEachCell( function(cell) {
+	    var doMark = isCoordinate(cell.getAttribute('data-column'), cell.getAttribute('data-row'), coordinateArray);
+	    setFieldMarkerImpl(cell, doMark);
+	})};
 }
 

@@ -170,6 +170,9 @@
        :border "1px solid black"
        :border-collapse "collapse"
        )
+      (".board-cell-marker"
+       :background-color "black")
+      
       (,(format nil ".board-cell[data-token=~ax~a]" #\" #\" )
 	:background-color "red")
       (,(format nil ".board-cell[data-token=~a_~a]" #\" #\" )

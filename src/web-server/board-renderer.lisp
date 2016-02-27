@@ -13,7 +13,7 @@ Render a board using a HTML table
 (defun render-cell (x y percent token)
   ;; If borders are enabled, the resulting cells are not exactly square
   ;; because the borders expand the content area
-  (let ((style (format nil "width:~$%; padding-bottom: ~$%;" percent percent)))
+  (let ((style (format nil "width:~$%; padding-bottom: ~$%; position: relative" percent percent)))
     (cl-who:with-html-output-to-string (s)
       (:td
        :class "board-cell"
@@ -22,6 +22,10 @@ Render a board using a HTML table
        :data-column x
        :data-row y
        :data-human-players-token "?"
+       (:div :class "board-cell-marker"
+	     ;; display to be set via JavaScript
+	     :style "position: absolute; top: 40%; left: 40%; width: 20%; height: 20%; display: none"
+	     )
       ))))
 
 (defun render-row (row-number width get-token-fn)
