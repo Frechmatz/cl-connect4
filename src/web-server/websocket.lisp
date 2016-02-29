@@ -6,14 +6,20 @@ CCFI-Server as a websocket
 
 (defparameter *logger* (make-instance 'logger:file-logger :name "websocket"))
 
+(defclass connect4-server (ccfi:default-server)
+  (
+   (websocket-client :initform "Olli" :accessor websocket-client :initarg :websocket-client)
+   ))
+
 
 (defclass ccfi-resource (hunchensocket:websocket-resource)
-  ((name :initarg :name :initform (error "Name this room!") :reader name))
+  ((name :initarg :name :initform (error "Name this resource") :reader name))
   (:default-initargs :client-class 'ccfi-client))
 
 (defclass ccfi-client (hunchensocket:websocket-client)
-  ((name :initarg :user-agent :reader name :initform (error "Name this ccfi-client!"))))
-
+  ((name :initarg :user-agent :reader name :initform (error "Name this ccfi-client!"))
+   (ccfi-server :initform nil :accessor ccfi-server)
+   ))
 
 (defvar *the-ccfi-resource*
    (make-instance 'ccfi-resource :name "/ccfi"))
@@ -30,13 +36,19 @@ CCFI-Server as a websocket
 
 (defun answer (cur-ccfi-client message &rest args)
   (logger:log-info *logger* (format nil "Sending message: ~a" message))
-  ;; doesn't work
   (hunchensocket:send-text-message cur-ccfi-client (apply #'format nil message args))
+  )
+
+;; TODO: Study, what this method definition means
+(defmethod ccfi::write-message ((the-server connect4-server) message)
+  (logger:log-info *logger* (format nil "websocket::ccfi::write-message called: ~a" message))
+  (answer (slot-value the-server 'websocket-client) message)
   )
 
 (defmethod hunchensocket:client-connected ((cur-ccfi-resource ccfi-resource) ccfi-client)
   (logger:log-info *logger* "Client connected")
-;;  (broadcast cur-ccfi-resource "Connected to ccfi server " (name ccfi-client) (name cur-ccfi-resource)))
+  (setf (slot-value ccfi-client 'ccfi-server) (make-instance 'connect4-server :websocket-client ccfi-client))
+  (ccfi:add-command (slot-value ccfi-client 'ccfi-server) "connected")
   )
 
 (defmethod hunchensocket:client-disconnected ((cur-ccfi-resource ccfi-resource) ccfi-client)
@@ -47,7 +59,9 @@ CCFI-Server as a websocket
 (defmethod hunchensocket:text-message-received ((cur-ccfi-resource ccfi-resource) ccfi-client message)
   (logger:log-info *logger* (format nil "Text message received: ~a" message))
   ;;(broadcast cur-ccfi-resource "ccfiok" (name ccfi-client) message)
-  (answer ccfi-client "websocketok" (name ccfi-client) message)
+  ;; (answer ccfi-client "websocketok" (name ccfi-client) message)
+  (logger:log-info *logger* (format nil "Calling ccfi-server add-command"))
+  (ccfi:add-command (slot-value ccfi-client 'ccfi-server) message)
   )
 
 

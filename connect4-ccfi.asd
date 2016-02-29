@@ -6,10 +6,16 @@
   :long-description "Implements the Common Connect Four Interface (CCFI)"
   :depends-on (:cl-ppcre :alexandria :connect4)
   :components (
+	       (:module "src/logger"
+			:serial t
+			:components ((:file "packages")
+				     (:file "logger")
+				     ))
 	       (:module "src/ccfi"
 			:serial t
 			:components ((:file "packages")
 				     (:file "token")
+				     (:file "server")
 				     (:file "decode-placement")
 				     ))
    ))

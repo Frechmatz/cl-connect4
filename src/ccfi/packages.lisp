@@ -8,5 +8,8 @@
   (:export :TOKEN-O)
   (:export :ccfi-placement-to-board)
   (:export :ccfi-token-to-color)
+  (:export :server)
+  (:export :default-server)
+  (:export :add-command)
   )
 
