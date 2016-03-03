@@ -115,6 +115,9 @@
       (".navbar .link-debug" 
        :background-image "url('/buttons/debug.svg')"
        )
+      (".navbar .link-play" 
+       :background-image "url('/buttons/debug.svg')"
+       )
       
       ;; Styling playground 
       (".body .playground" :background-color "violet" )

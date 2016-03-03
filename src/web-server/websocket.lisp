@@ -39,9 +39,8 @@ CCFI-Server as a websocket
   (hunchensocket:send-text-message cur-ccfi-client (apply #'format nil message args))
   )
 
-;; TODO: Study, what this method definition means
 (defmethod ccfi::write-message ((the-server connect4-server) message)
-  (logger:log-info *logger* (format nil "websocket::ccfi::write-message called: ~a" message))
+  (logger:log-info *logger* (format nil "websocket::ccfi::write-message: ~a" message))
   (answer (slot-value the-server 'websocket-client) message)
   )
 
@@ -58,14 +57,10 @@ CCFI-Server as a websocket
 
 (defmethod hunchensocket:text-message-received ((cur-ccfi-resource ccfi-resource) ccfi-client message)
   (logger:log-info *logger* (format nil "Text message received: ~a" message))
-  ;;(broadcast cur-ccfi-resource "ccfiok" (name ccfi-client) message)
-  ;; (answer ccfi-client "websocketok" (name ccfi-client) message)
-  (logger:log-info *logger* (format nil "Calling ccfi-server add-command"))
-  (ccfi:add-command (slot-value ccfi-client 'ccfi-server) message)
-  )
-
-
-
-
-
+  (if (equal message "ccfi")
+      (answer ccfi-client "ccfiok"))
+  (if (equal message "ping")
+      (answer ccfi-client "pong")
+      (ccfi:add-command (slot-value ccfi-client 'ccfi-server) message)
+  ))
 

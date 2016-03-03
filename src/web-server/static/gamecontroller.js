@@ -35,6 +35,14 @@ var GameController = function() {
 	    markers.push(board().createCoordinate(3,3));
 	    board().setFieldMarker(markers);
 	}.bind(this);
+
+	document.getElementById("link-play").onclick = function(event) {
+	    event.preventDefault();
+	    var placement = board().getCcfiPlacement();
+	    ccfiClient().sendCommand('position ' + placement + ' x');
+	    ccfiClient().sendCommand('go');
+	}.bind(this);
+	
     };
 
     this.toggleHumanPlayersToken = function() {

@@ -28,7 +28,7 @@ var CcfiClient = function() {
 	// Connection-Keep-Alive timer
 	this.timerId = window.setInterval(
 	    function() {
-		doSend('Ping');
+		doSend('ping', true);
 	    },
 	    30*1000
 	) 
@@ -39,20 +39,28 @@ var CcfiClient = function() {
     }
 
     function onMessage(evt) {
-	writeToScreen('< ' + evt.data);
+	if( evt.data != 'pong') {
+	    writeToScreen('< ' + evt.data);
+	}
     }
 
     function onError(evt) {
 	writeToScreen('ERROR: ' + evt.data);
     }
 
-    function doSend(message) {
-	writeToScreen("> " + message);
+    function doSend(message, silent) {
+	if(!silent) {
+	    writeToScreen("> " + message);
+	}
 	websocket.send(message);
     }
 
     this.init = function() {
 	this.timerId = null;
 	connect();
+    };
+
+    this.sendCommand = function(cmd) {
+	doSend(cmd);
     };
 };

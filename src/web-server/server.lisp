@@ -111,6 +111,7 @@
 	    (:div :class "body" 
 		  (:div :class "navbar"
 			(:a :class "link-new-game" :id "link-new-game" :title "New Game" :href "#" (:span "New game"))
+			(:a :class "link-play" :id "link-play" :title "Play" :href "#" (:span "Play"))
 			(:a :class "link-debug" :id "link-debug" :title "Debug" :href "#" (:span "Debug"))
 			)
 		  (:div :class "playground"
@@ -118,7 +119,9 @@
 			      (cl-who:str
 			       (funcall
 				#'connect4-board-renderer:render-ccfi-board
-				"xxx4/4ooo/7/7/2oooxx/7"))))
+				;; "xxx4/4ooo/7/7/2oooxx/7"
+				"xxo2ox/oxo4/1xo4/2x4/7/7"
+				))))
 		  (:div :class "console"
 			(:div :class "console-content"
 			      (:textarea :class "console-textarea" :id "console-textarea"))))
