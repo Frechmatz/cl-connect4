@@ -1,0 +1,208 @@
+.page-wrapper {
+    padding: 20px;
+}
+
+/* 
+Placement of main blocks 
+*/
+
+.header {
+    height: 20vh;
+    width: 100%;
+}
+.footer {
+    height: 10vh;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.body {
+    width: 100%;
+    margin-top: 20px;
+    /*
+    100%
+    - 2*WrapperPadding
+    - HeaderHeight
+    - FooterHeight
+    - FooterMargin
+    - BodyMargin
+    */
+    height: calc(100vh - 40px - 20vh - 10vh - 20px - 20px);
+}
+
+/*
+Layout of Body: Navbar, Playground, Console
+*/
+
+.body {
+    flex-flow: row;
+    display: flex;
+    display: -webkit-flex;
+}
+.body .navbar {
+    width: 60px;
+    margin-right: 20px;
+}
+.body .console {
+    width: 20em;
+    margin-left: 20px;
+}
+.body .playground {
+    flex: 1;
+    -webkit-flex: 1;
+}
+
+/*
+Inner playground
+*/
+.board .board-table {
+    width: 40%;
+}
+
+/*
+Inner CCFI console
+*/
+.console .console-content {
+    width: 100%;
+    height: 100%;
+}
+.console .console-textarea {
+    width: 100%;
+    height: 100%;
+}
+.page-wrapper {
+    background-color: yellow;
+}
+
+/*       
+Styling Background
+*/
+body {
+    background-color: linen;
+}
+
+/*
+Styling navbar
+*/
+.navbar {
+    background-color: blue;
+}
+.navbar span {
+    color: yellow;
+}
+.navbar a {
+    background-repeat: no-repeat;
+    display: block;
+    width: 50px;
+    height: 50px;
+    background-size: contain;
+    margin: 5px;
+}
+.navbar a span {
+    display: none;
+}
+.navbar .link-new-game {
+    stroke-width: 20;
+    background-image: url('/buttons/newgame.svg');
+}
+.navbar .link-debug {
+    background-image: url('/buttons/debug.svg');
+}
+.navbar .link-play {
+    background-image: url('/buttons/debug.svg');
+}
+
+/*
+Styling playground 
+*/
+.body .playground {
+    background-color: violet;
+}
+
+/*
+Styling: Header
+*/
+.header {
+    background-color: blue;
+    background-image: url(/static/made-with-lisp-ellipse.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: right;
+    position: relative;
+}
+.header h1 {
+    margin: 0;
+    margin-left: 5px;
+    color: yellow;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+}
+
+/*
+Styling: Footer
+*/
+.footer {
+    background-color: blue;
+}
+.footer .human-players-token-indicator {} .footer .human-players-token {
+    background-color: yellow;
+}
+.footer .human-players-token-indicator[data-human-players-token="x"] {
+    background-color: red;
+}
+.footer .human-players-token-indicator[data-human-players-token="o"] {
+    background-color: green;
+}
+
+/*
+Styling: Console
+*/
+.console-textarea {
+    background-color: black;
+    color: lime;
+}
+.body .console {
+    background-color: yellow;
+}
+
+/*
+Styling: Board
+*/
+.board-table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+.board-table th,
+.board-table td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+.board-cell-marker {
+    background-color: black;
+}
+.board-cell[data-token="x"] {
+    background-color: red;
+}
+.board-cell[data-token="_"] {
+    background-color: white;
+}
+.board-cell[data-token="o"] {
+    background-color: green;
+}
+/*
+hover cell styles must be declared after non-hover ones
+data-human-players-token will be set during gameplay
+the purpose of this token is to avoid css injection via javascript
+*/
+.board-cell[data-token="_"][data-human-players-token="x"]:hover {
+    background-color: red;
+    cursor: s-resize;
+}
+.board-cell[data-token="_"][data-human-players-token="o"]:hover {
+    background-color: green;
+    cursor: s-resize;
+}
+
+

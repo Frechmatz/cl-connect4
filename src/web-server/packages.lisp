@@ -4,11 +4,6 @@
   (:export :RENDER-CCFI-BOARD)
   )
 
-(defpackage :connect4-css
-  (:use :cl)
-  (:export :CSS)
-  )
-
 (defpackage :connect4-javascript
   (:use :cl)
   (:export :javascript)

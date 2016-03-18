@@ -8,7 +8,6 @@
 	       :alexandria
 	       :connect4-ccfi
 	       :cl-who
-	       :cl-css
 	       :hunchensocket
 	       :cl-svg)
   :components (
@@ -22,7 +21,6 @@
 			:components ((:file "packages")
 				     (:file "websocket")
 				     (:file "server")
-				     (:file "css")
 				     (:file "board-renderer")
 				     (:file "buttons")
 				     ))

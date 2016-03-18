@@ -26,9 +26,6 @@
 			 :port *port*)))
 	(format t "~%Hi there. The main server has been started.")
 	(format t "~%The server can be reached via http://localhost:~a" *port*)
-	(hunchentoot:define-easy-handler (connect4-css :uri "/connect4.css") ()
-	  (setf (hunchentoot:content-type*) "text/css")
-	  (connect4-css:css))
 	(hunchentoot:define-easy-handler (root :uri "/") ()
 	  (setf (hunchentoot:content-type*) "text/html")
 	  (start-page))
@@ -99,7 +96,7 @@
   (cl-who:with-html-output-to-string (s)
     (:html
      (:head (:title "Connect 4")
-	    (:link :rel "stylesheet" :href "connect4.css"))
+	    (:link :rel "stylesheet" :href "static/connect4.css"))
      (:body
       (:script :src "static/board.js")
       (:script :src "static/ccficlient.js")
