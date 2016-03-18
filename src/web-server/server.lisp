@@ -9,11 +9,11 @@
 (defvar *this-file* (load-time-value
                      (or #.*compile-file-pathname* *load-pathname*)))
 
-(defun get-static-dir ()
+(defun get-static-dir (directory-name)
   (let ((basepath
 	 (make-pathname :name nil :type nil :version nil :defaults *this-file*)))
     ;; (format t "Basepath is ~a~%" basepath)
-    (format nil "~astatic/" basepath) 
+    (format nil "~a~a/" basepath directory-name) 
     ))
 
 (defun start-main-server ()
@@ -35,18 +35,17 @@
 	(hunchentoot:define-easy-handler (buttons-newgame :uri "/buttons/newgame.svg") ()
 	  (setf (hunchentoot:content-type*) "image/svg+xml")
 	  (connect4-buttons:get-start-new-game-button))
-
-	(hunchentoot:define-easy-handler (root-path :uri "/root-path") ()
-	  (setf (hunchentoot:content-type*) "text/plain")
-	  (concatenate
-	   'string
-	   (format nil "This file: ~a~%" *this-file*)
-	   (format nil "Directory of this file: ~a~%" (make-pathname :name nil :type nil :version nil :defaults *this-file*))
-	   (format nil "Folder for static content, e.g. /static/splash.png: ~a~%" (get-static-dir))
-	   ))
 	(push (hunchentoot:create-folder-dispatcher-and-handler
 	       "/static/" ;; Must begin and end with slash
-	       (get-static-dir))
+	       (get-static-dir "static"))
+	      hunchentoot:*DISPATCH-TABLE*) 
+	(push (hunchentoot:create-folder-dispatcher-and-handler
+	       "/script/" ;; Must begin and end with slash
+	       (get-static-dir "script"))
+	      hunchentoot:*DISPATCH-TABLE*) 
+	(push (hunchentoot:create-folder-dispatcher-and-handler
+	       "/css/" ;; Must begin and end with slash
+	       (get-static-dir "css"))
 	      hunchentoot:*DISPATCH-TABLE*) 
 	nil
   )))
@@ -96,13 +95,13 @@
   (cl-who:with-html-output-to-string (s)
     (:html
      (:head (:title "Connect 4")
-	    (:link :rel "stylesheet" :href "static/connect4.css"))
+	    (:link :rel "stylesheet" :href "css/connect4.css"))
      (:body
-      (:script :src "static/board.js")
-      (:script :src "static/ccficlient.js")
-      (:script :src "static/gamecontroller.js")
-      (:script :src "static/footer.js")
-      (:script :src "static/onload.js")
+      (:script :src "script/board.js")
+      (:script :src "script/ccficlient.js")
+      (:script :src "script/gamecontroller.js")
+      (:script :src "script/footer.js")
+      (:script :src "script/onload.js")
       (:div :class "page-wrapper"
 	    (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
 	    (:div :class "body" 
