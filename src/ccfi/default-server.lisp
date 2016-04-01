@@ -7,6 +7,7 @@
   (
    (command-queue :initform '() :accessor command-queue)
    (quit-flag :initform nil :accessor quit-flag)
+   (busy-flag :initform nil :accessor busy-flag)
    ))
 
 
@@ -16,12 +17,28 @@
 (defmethod is-quitting ((server default-server))
   (slot-value server 'quit-flag))
 
+(defun is-busy (server)
+  (slot-value server 'busy-flag))
+
+(defun clear-busy (server)
+  (setf (slot-value server 'busy-flag) nil))
+
+(defun set-busy (server)
+  (setf (slot-value server 'busy-flag) t))
 
 (defun format-minmax-result (result)
   (format nil "~a" (first result)))
 
+(defun command-done (server)
+  (write-message server "# Executed a command")
+  )
 
 (defun invoke-command (server command)
+  (invoke-command-impl server command)
+  (command-done server))
+
+(defun invoke-command-impl (server command)
+  (set-busy server)
   (let ((board nil) (player nil))
     (let ((items (cl-ppcre:split " " command)))
       (if items
