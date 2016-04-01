@@ -1,0 +1,101 @@
+
+Connect 4 Server Interface 
+==========================
+
+This document specifies the interface of the Connect Four Server. The emphasis is
+on easy implementation for both clients and servers. The interface doesn't
+support advanced features such as pondering or a clock.
+
+Key points:
+
+- The communication between client and server is text based. The communication
+  is asynchronous.
+
+- Except of it's command queue the server is stateless.
+
+- Commands sent to the server are immediately scheduled for processing. There is
+  no special command such as GO that explicitly initiates processing.
+
+- The logic required on client side is kept on a minimum level.
+
+- The syntax of commands and responses is as simple as possible in order to
+  minimize parsing efforts.
+
+- A client can easily synchronize it's game play with the server.
+
+- All information that a client needs to handle a move played by the server is
+  passed back by in one response. There is no need of book keeping informational
+  messages sent by the server during traversal.
+
+
+General
+=======
+
+Commands passed to the server are processed in incoming order. Commands are immediately
+scheduled for processing. If the server is currently processing a command, the new
+command is added to the command queue. If the server has processed a command and it's
+command queue is empty, it sends a "ready" notification to the client.
+Example:
+> play ....
+> play ....
+< bestmove ....
+< bestmove ....
+< ready
+
+Messages that start with the hash character '#' can be sent any time to the client. Such
+input must not be interpreted. These kind of messages can for example be used by the
+server to pass back debug information.
+Example:
+> ping
+< # Processing ping command
+< pong
+
+
+Board and Token
+===============
+
+TODO: define
+
+
+Commands
+========
+
+* ping
+  This command can be sent any time to check if the server is still alive.
+  The server will immediately respond with "pong", even if it's currently processing
+  a command. The server will not send a "ready" notification.
+  Example:
+  > play ....
+  > ping
+  < pong
+  < bestmove ....
+  < ready
+  
+
+* quit
+  Quit processing the current command and purge the command queue.
+  Depending on the command the server is currently working on, this command may
+  take a while to process. A client must not send any other command
+  except "quit" before it has received the "ready" notification of the server.
+  While processing the quit command the server may send any other messages.
+  Example:
+  > play ....
+  > quit
+  < # Processing quit command
+  < info ....
+  < ready
+
+
+* play <board> <token> <depth> [--column <column>]
+  Let the server calculate a move.
+  <board> The board
+  <token> The token
+  --column Specifies the column that should be played by the server
+
+  Each play command is answered by the server with a "bestmove" response.
+  During calculation of the best move the server may send info messages
+  to the client.
+
+  ** bestmove <column> [--four <row>] [--score <score>]   
+  ** info --plies <number-of-plies>
+  

@@ -16,7 +16,7 @@
 			:components ((:file "packages")
 				     (:file "token")
 				     (:file "server-interface")
-				     (:file "server")
+				     (:file "default-server")
 				     (:file "decode-placement")
 				     ))
    ))
