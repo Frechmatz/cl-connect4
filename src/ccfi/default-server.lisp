@@ -5,7 +5,6 @@
 
 (defclass default-server (server)
   (
-   (difficulty-level :initarg :difficulty-level :initform 6 :accessor difficulty-level)
    (command-queue :initform '() :accessor command-queue)
    (quit-flag :initform nil :accessor quit-flag)
    ))
@@ -21,19 +20,26 @@
 (defun format-minmax-result (result)
   (format nil "~a" (first result)))
 
-(defun process-queue (server command-queue)
+
+(defun invoke-command (server command)
   (let ((board nil) (player nil))
-    (dolist (command command-queue)
-      (let ((items (cl-ppcre:split " " command)))
-	(if items
-	    (if (equal (first items) "position")
-		(progn
-		  (setf board (ccfi-placement-to-board (second items)))
-		  (setf player (ccfi-token-to-color (third items)))
-		  (write-message server
-				 (format nil "bestmove ~a"
-					 (format-minmax-result (connect4-api:minmax board player 6))))
-		  )))))))
+    (let ((items (cl-ppcre:split " " command)))
+      (if items
+	  (if (equal (first items) "position")
+	      (progn
+		(setf board (ccfi-placement-to-board (second items)))
+		(setf player (ccfi-token-to-color (third items)))
+		(write-message server
+			       (format nil "bestmove ~a"
+				       (format-minmax-result (connect4-api:minmax board player 6))))
+		))))))
+
+	       
+
+
+(defun process-queue (server command-queue)
+  (dolist (command command-queue)
+    (invoke-command server command)))
 
 (defun process-commands (server)
   (logger:log-info *logger* (format nil "process-commands"))

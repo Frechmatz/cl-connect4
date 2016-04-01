@@ -14,6 +14,7 @@
 	       (:module "src/ccfi"
 			:serial t
 			:components ((:file "packages")
+				     (:file "queue")
 				     (:file "token")
 				     (:file "server")
 				     (:file "default-server")
