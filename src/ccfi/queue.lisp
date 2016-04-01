@@ -9,6 +9,7 @@ Extremely inefficient bozo implementation of a queue
 
 (defgeneric put (queue item))
 (defgeneric next (queue))
+(defgeneric peek (queue))
 
 (defmethod put ((the-queue queue) item)
   (setf (slot-value the-queue 'q) (append (slot-value the-queue 'q) (list item) )))
@@ -18,3 +19,5 @@ Extremely inefficient bozo implementation of a queue
     (setf (slot-value the-queue 'q) (cdr (slot-value the-queue 'q)))
     i))
 
+(defmethod peek ((the-queue queue))
+  (car (slot-value the-queue 'q)))

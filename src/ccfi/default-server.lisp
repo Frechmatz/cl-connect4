@@ -5,9 +5,9 @@
 
 (defclass default-server (server)
   (
-   (command-queue :initform '() :accessor command-queue)
+   (command-queue :initform (make-instance 'queue) :accessor command-queue)
    (quit-flag :initform nil :accessor quit-flag)
-   (busy-flag :initform nil :accessor busy-flag)
+   (current-command :initform nil :accessor current-command)
    ))
 
 
@@ -17,28 +17,35 @@
 (defmethod is-quitting ((server default-server))
   (slot-value server 'quit-flag))
 
-(defun is-busy (server)
-  (slot-value server 'busy-flag))
+(defun is-current-command (server)
+  (slot-value server 'current-command))
 
-(defun clear-busy (server)
-  (setf (slot-value server 'busy-flag) nil))
-
-(defun set-busy (server)
-  (setf (slot-value server 'busy-flag) t))
+(defun set-current-command (server cmd)
+  (setf (slot-value server 'current-command) cmd))
 
 (defun format-minmax-result (result)
   (format nil "~a" (first result)))
 
-(defun command-done (server)
-  (write-message server "# Executed a command")
-  )
+(defun continue-processing (server)
+  (if (is-current-command server)
+      nil
+      (let ((cmd (next (slot-value server 'command-queue))))
+	(if cmd
+	    (invoke-command server cmd)
+	    (write-message server (format nil "ready"))
+	    ))))
 
+(defun push-command (server command)
+  (put (slot-value server 'command-queue) command))
+   
 (defun invoke-command (server command)
+  (write-message server (format nil "# invoke-command ~a" command))
+  (set-current-command server command)
   (invoke-command-impl server command)
-  (command-done server))
+  (set-current-command server nil)
+  (continue-processing server))
 
 (defun invoke-command-impl (server command)
-  (set-busy server)
   (let ((board nil) (player nil))
     (let ((items (cl-ppcre:split " " command)))
       (if items
@@ -51,30 +58,10 @@
 				       (format-minmax-result (connect4-api:minmax board player 6))))
 		))))))
 
-	       
-
-
-(defun process-queue (server command-queue)
-  (dolist (command command-queue)
-    (invoke-command server command)))
-
-(defun process-commands (server)
-  (logger:log-info *logger* (format nil "process-commands"))
-  (let ((q (reverse (slot-value server 'command-queue))))
-    (setf (slot-value server 'command-queue) '())
-    (process-queue server q)
-  ))
 
 (defmethod add-command ((server default-server) command)
   (logger:log-info *logger* (format nil "add-command: ~a" command))
-  (if (equal command "go")
-      (process-commands server)
-      (push command (slot-value server 'command-queue))
-      ))
-
-
-
-
-
+  (push-command server command)
+  (continue-processing server))
 
 
