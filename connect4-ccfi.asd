@@ -15,6 +15,7 @@
 			:serial t
 			:components ((:file "packages")
 				     (:file "token")
+				     (:file "server-interface")
 				     (:file "server")
 				     (:file "decode-placement")
 				     ))

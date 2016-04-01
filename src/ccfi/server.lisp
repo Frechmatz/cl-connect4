@@ -3,25 +3,20 @@
 
 (defparameter *logger* (make-instance 'logger:file-logger :name "ccfi-server"))
 
-(defclass server ()
-  (
-   (name :initarg :name :initform "OllisServer" :accessor name)
-   ))
-
-(defgeneric add-command (server command)
-  (:documentation "Add a command to the server"))
-
-(defgeneric write-message (server message)
-  )
-
-(defgeneric process-commands (server)
-  (:documentation "Process commands added to the server"))
-
 (defclass default-server (server)
   (
    (difficulty-level :initarg :difficulty-level :initform 6 :accessor difficulty-level)
    (command-queue :initform '() :accessor command-queue)
+   (quit-flag :initform nil :accessor quit-flag)
    ))
+
+
+(defmethod quit ((server default-server))
+  (setf (slot-value server 'quit-flag) t))
+
+(defmethod is-quitting ((server default-server))
+  (slot-value server 'quit-flag))
+
 
 (defun format-minmax-result (result)
   (format nil "~a" (first result)))
@@ -40,7 +35,7 @@
 					 (format-minmax-result (connect4-api:minmax board player 6))))
 		  )))))))
 
-(defmethod process-commands ((server default-server))
+(defun process-commands (server)
   (logger:log-info *logger* (format nil "process-commands"))
   (let ((q (reverse (slot-value server 'command-queue))))
     (setf (slot-value server 'command-queue) '())
@@ -53,5 +48,10 @@
       (process-commands server)
       (push command (slot-value server 'command-queue))
       ))
+
+
+
+
+
 
 
