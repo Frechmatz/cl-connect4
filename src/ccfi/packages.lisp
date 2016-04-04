@@ -10,6 +10,7 @@
   (:export :ccfi-token-to-color)
   (:export :server)
   (:export :default-server)
-  (:export :add-command)
+  (:export :put-command)
+  (:export :connected)
   )
 

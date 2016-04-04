@@ -19,8 +19,7 @@ var CcfiClient = function() {
     };
 
     function onOpen(evt) {
-	writeToScreen("Connected");
-	doSend("ccfi");
+	writeToScreen('Connected');
 	if (this.timerId != null) {
 	    window.clearInterval(this.timerId);
 	    this.timerId = null;
@@ -35,7 +34,7 @@ var CcfiClient = function() {
     };
 
     function onClose(evt) {
-	writeToScreen("DISCONNECTED");
+	writeToScreen('DISCONNECTED');
     }
 
     function onMessage(evt) {
@@ -50,7 +49,7 @@ var CcfiClient = function() {
 
     function doSend(message, silent) {
 	if(!silent) {
-	    writeToScreen("> " + message);
+	    writeToScreen('> ' + message);
 	}
 	websocket.send(message);
     }

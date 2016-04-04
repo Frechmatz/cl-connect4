@@ -47,8 +47,7 @@ CCFI-Server as a websocket
 (defmethod hunchensocket:client-connected ((cur-ccfi-resource ccfi-resource) ccfi-client)
   (logger:log-info *logger* "Client connected")
   (setf (slot-value ccfi-client 'ccfi-server) (make-instance 'connect4-server :websocket-client ccfi-client))
-  (ccfi:add-command (slot-value ccfi-client 'ccfi-server) "connected")
-  )
+  (ccfi:connected (slot-value ccfi-client 'ccfi-server)))
 
 (defmethod hunchensocket:client-disconnected ((cur-ccfi-resource ccfi-resource) ccfi-client)
   (logger:log-info *logger* "Client disconnected")
@@ -57,10 +56,5 @@ CCFI-Server as a websocket
 
 (defmethod hunchensocket:text-message-received ((cur-ccfi-resource ccfi-resource) ccfi-client message)
   (logger:log-info *logger* (format nil "Text message received: ~a" message))
-  (if (equal message "ccfi")
-      (answer ccfi-client "ccfiok"))
-  (if (equal message "ping")
-      (answer ccfi-client "pong")
-      (ccfi:add-command (slot-value ccfi-client 'ccfi-server) message)
-  ))
+  (ccfi:put-command (slot-value ccfi-client 'ccfi-server) message))
 

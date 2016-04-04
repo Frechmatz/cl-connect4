@@ -7,11 +7,10 @@
    (name :initarg :name :initform "OllisServer" :accessor name)
    ))
 
-(defgeneric add-command (server command)
-  (:documentation "Add a command to the server"))
-
+(defgeneric put-command (server command)
+  (:documentation "Add a command to the comamnd quue"))
 (defgeneric write-message (server message))
-(defgeneric quit (server))
-(defgeneric is-quitting (server))
+(defgeneric connected (server))
+(defgeneric disconnected (server))
 
 

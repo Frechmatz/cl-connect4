@@ -20,12 +20,12 @@ var GameController = function() {
 	
 	ccfiClient().init();
 
-	document.getElementById("link-new-game").onclick = function(event) {
+	document.getElementById('link-new-game').onclick = function(event) {
 	    event.preventDefault();
 	    board().clear();
 	}.bind(this);
 	
-	document.getElementById("link-debug").onclick = function(event) {
+	document.getElementById('link-debug').onclick = function(event) {
 	    event.preventDefault();
 	    board().setFieldToX(2,3);
 	    console.log(board().getCcfiPlacement());
@@ -36,11 +36,10 @@ var GameController = function() {
 	    board().setFieldMarker(markers);
 	}.bind(this);
 
-	document.getElementById("link-play").onclick = function(event) {
+	document.getElementById('link-play').onclick = function(event) {
 	    event.preventDefault();
 	    var placement = board().getCcfiPlacement();
 	    ccfiClient().sendCommand('position ' + placement + ' x');
-	    ccfiClient().sendCommand('go');
 	}.bind(this);
 	
     };
