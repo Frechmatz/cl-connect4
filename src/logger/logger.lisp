@@ -1,3 +1,7 @@
+#|
+A logger class
+TODO: Generalize code and create a system out of it
+|#
 
 (in-package :logger)
 

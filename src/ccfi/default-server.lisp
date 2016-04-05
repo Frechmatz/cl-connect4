@@ -52,7 +52,9 @@
 (defun invoke-command (server command)
   (write-debug-message server (format nil "invoking command: ~a" command))
   (set-current-command server command)
-  (write-message server (execute-command server command))
+  (let ((msg (execute-command server command)))
+    (write-debug-message server (format nil "returning result ~a for command: ~a" msg command))
+    (write-message server msg))
   (set-current-command server nil)
   (try-invoke-next-command server))
 
@@ -84,11 +86,11 @@
 (defun quit-handler (server)
   (quit server))
 
-(defun format-position-result (result)
+(defun format-play-result (result)
   (format nil "bestmove ~a" (first result)))
 
-(defun position-handler (server board token &key (max-depth "6"))
-  (format-position-result
+(defun play-handler (server board token &key (max-depth "6"))
+  (format-play-result
    (connect4-api:minmax
     (parse board #'ccfi-placement-to-board)
     (parse token #'ccfi-token-to-color)
@@ -96,15 +98,14 @@
 
 (defparameter *handler* 
   (list
-   :position #'position-handler
+   :play #'play-handler
    :quit  #'quit-handler
    ))
 
 
-
-
 ;;
 ;; Handler invoking stuff
+;; TODO: Put code into a dedicated package
 ;;
 
 
