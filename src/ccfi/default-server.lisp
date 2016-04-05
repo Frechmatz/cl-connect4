@@ -66,50 +66,6 @@
 
 
 ;;
-;; Handler stuff
-;;
-
-(defparameter *handler* '
-  ((quit . quit-handler)
-   (position . position-handler)))
-
-(defun as-keyword (sym)
-  (intern (string (string-upcase sym)) :keyword))
-
-(defun preprocess-parameter (parameter)
-  (if (and (>= (length parameter) 3) (string= parameter "--" :start1 0 :end1 2 :start2 0 :end2 2))
-      (as-keyword (subseq parameter 2))
-      parameter))
-
-(defun build-lambda-list (list)
-  (mapcar #'preprocess-parameter list))
-
-(defun invoke-command-handler (server name lambda-list)
-  (logger:log-debug *logger* (format nil "invoke-command-handler: ~a" name))
-  (handler-case
-      (let ((handler (cdr (assoc name *handler*))))
-	(if handler
-	    (apply handler server lambda-list)
-	    (as-error (format nil "Unknown command: ~a" name))))
-    (invalid-arguments (err)
-      (progn
-	(logger:log-error *logger* (format nil "invoke-command-handler failed: ~a" err))
-	(as-error (format nil "Command ~a called with invalid arguments" name))))
-    (error (err)
-      (progn
-	(logger:log-error *logger* (format nil "invoke-command-handler failed: ~a" err))
-	(as-error (format nil "Command ~a failed or called with insufficient arguments" name))))))
-
-
-(defun execute-command (server cmdline)
-  (logger:log-debug *logger* (format nil "execute-command: ~a" cmdline))
-  (let* ((tokens (build-lambda-list (cl-ppcre:split "\\s" cmdline)))
-	 (lambda-list (rest tokens))
-	 (cmd (intern (string-upcase (car tokens)))))
-    (invoke-command-handler server cmd lambda-list)))
-
-
-;;
 ;; Handlers
 ;;
 
@@ -137,4 +93,57 @@
     (parse board #'ccfi-placement-to-board)
     (parse token #'ccfi-token-to-color)
     (parse-integer max-depth))))
+
+(defparameter *handler* 
+  (list
+   :position #'position-handler
+   :quit  #'quit-handler
+   ))
+
+
+
+
+;;
+;; Handler invoking stuff
+;;
+
+
+(defun as-keyword (sym)
+  (intern (string (string-upcase sym)) :keyword))
+
+(defun get-handler (str)
+  (getf *handler* (as-keyword str)))
+
+(defun preprocess-parameter (parameter)
+  (if (and (>= (length parameter) 3) (string= parameter "--" :start1 0 :end1 2 :start2 0 :end2 2))
+      (as-keyword (subseq parameter 2))
+      parameter))
+
+(defun build-lambda-list (list)
+  (mapcar #'preprocess-parameter list))
+
+(defun invoke-command-handler (server name lambda-list)
+  (logger:log-debug *logger* (format nil "invoke-command-handler: ~a" name))
+  (handler-case
+      (let ((handler (get-handler name)))
+	(if handler
+	    (apply handler server lambda-list)
+	    (as-error (format nil "Unknown command: ~a" name))))
+    (invalid-arguments (err)
+      (progn
+	(logger:log-error *logger* (format nil "invoke-command-handler failed: ~a" err))
+	(as-error (format nil "Command ~a called with invalid arguments" name))))
+    (error (err)
+      (progn
+	(logger:log-error *logger* (format nil "invoke-command-handler failed: ~a" err))
+	(as-error (format nil "Command ~a failed or called with insufficient arguments" name))))))
+
+
+(defun execute-command (server cmdline)
+  (logger:log-debug *logger* (format nil "execute-command: ~a" cmdline))
+  (let* ((tokens (build-lambda-list (cl-ppcre:split "\\s" cmdline)))
+	 (lambda-list (rest tokens))
+	 (cmd (intern (string-upcase (car tokens)))))
+    (invoke-command-handler server cmd lambda-list)))
+
 
