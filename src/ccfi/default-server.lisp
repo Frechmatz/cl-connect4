@@ -87,14 +87,15 @@
   (quit server))
 
 (defun format-play-result (result)
+  (break)
   (format nil "bestmove ~a" (first result)))
 
-(defun play-handler (server board token &key (max-depth "6"))
+(defun play-handler (server board token depth &key column)
   (format-play-result
    (connect4-api:minmax
     (parse board #'ccfi-placement-to-board)
     (parse token #'ccfi-token-to-color)
-    (parse-integer max-depth))))
+    (parse-integer depth))))
 
 (defparameter *handler* 
   (list
