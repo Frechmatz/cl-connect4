@@ -167,7 +167,7 @@ If t returns a list consisting of such move otherwise return the moves given int
 ;;; color: The computers color
 ;;;
 ;;; create a clone of the board that for performance reasons will be manipulated during the traversal
-(defun minmax (the-board color max-depth &key (print-engine-configuration nil))
+(defun play (the-board color max-depth &key (print-engine-configuration nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
   (let ((board (clone-board the-board)) (result nil) (cur-line '())
 	(*column-weights* (calc-column-weights (get-width the-board)

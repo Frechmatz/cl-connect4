@@ -4,7 +4,7 @@
 
 (defun best-move (placement players-color)
   (let ((board (ccfi:ccfi-placement-to-board placement)))
-    (let ((result (connect4-api:minmax board (ccfi:ccfi-token-to-color players-color) 6)))
+    (let ((result (connect4-api:play board (ccfi:ccfi-token-to-color players-color) 6)))
       (if result
 	  (first result)
 	  nil))))

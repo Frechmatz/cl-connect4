@@ -96,6 +96,16 @@ Commands
   During calculation of the best move the server may send info messages
   to the client.
 
-  ** bestmove <column> [--four <row>] [--score <score>]   
+  ** bestmove column [--four column {/column}* ] [--score <score>]
+  *** A column value of NULL signals that no move was available
+  **** Examples:
+  ***** bestmove NULL
+  *** --four This parameter signals that the computer has won or will win after the given sequence of moves. The move sequence includes the current move.
+  **** Examples:
+  ***** bestmove 3 --four 3
+  ***** bestmove 3 --four 3/3 
+  ***** bestmove 3 --four 3/5
+  ***** bestmove 3 --four 3/3/1
+  *** --score <score>:  -1 >= <score> <= 1 The score as seen by the computer. A negative value indicates a situation where one may lose. 
   ** info --plies <number-of-plies>
   

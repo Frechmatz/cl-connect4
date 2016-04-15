@@ -9,7 +9,7 @@
   (:export :EMPTY)
   (:export :CLASSIC-WIDTH)
   (:export :CLASSIC-HEIGHT)
-  (:export :MINMAX)
+  (:export :PLAY)
   (:export :GENERATE-MOVES)
   (:export :*ENGINE-NOTIFICATION-REDUCED-SCORES*)
   (:export :DROP)

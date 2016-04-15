@@ -13,7 +13,9 @@
 	       (:module "src/connect4/engine"
 			:serial t
 			:components ((:file "packages")
-				     (:file "engine")))
+				     (:file "engine")
+				     (:file "play-result")
+				     ))
 	       (:module "src/connect4/api"
 			:serial t
 			:components ((:file "packages")

@@ -56,7 +56,7 @@
 		  )
 		))))
     ;; only works with nested let. Not sure, when expressions are evaluated
-    (let ((result (minmax (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
+    (let ((result (play (slot-value context 'board) (slot-value context 'players-color) (slot-value context 'difficulty-level))))
       (format-message *message-formatter* (format nil "Recommended move is column ~a with a score of ~a" (first result) (third result))))
     (setf (slot-value context 'state) GAME-STATE-CONTINUE))
   t)
@@ -89,7 +89,7 @@
   (setf (slot-value context 'state) GAME-STATE-CONTINUE)
   (let ((computers-color (toggle-color (slot-value context 'players-color)))
 	(counter-move nil) (counter-x nil) (counter-y nil) (counter-board nil))
-    (setf counter-move (minmax (slot-value context 'board) computers-color (slot-value context 'difficulty-level)))
+    (setf counter-move (play (slot-value context 'board) computers-color (slot-value context 'difficulty-level)))
     (if (not counter-move)
 	(progn
 	  (setf (slot-value context 'draws) (+ 1 (slot-value context 'draws)))
