@@ -1,5 +1,5 @@
 #|
-Extremely inefficient bozo implementation of a queue
+Extremely inefficient bozo implementation of a queue to be replaced ASAP
 |#
 
 (in-package :ccfi)

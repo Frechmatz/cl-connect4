@@ -16,6 +16,7 @@
 			:components ((:file "packages")
 				     (:file "queue")
 				     (:file "token")
+				     (:file "play-result-formatter")
 				     (:file "server")
 				     (:file "default-server")
 				     (:file "decode-placement")

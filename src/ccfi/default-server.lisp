@@ -1,4 +1,9 @@
 
+#|
+Implementation of the server interface
+|#
+
+
 (in-package :ccfi)
 
 (defparameter *logger* (make-instance 'logger:file-logger :name "ccfi-server"))
@@ -85,9 +90,6 @@
 
 (defun quit-handler (server)
   (quit server))
-
-(defun format-play-result (result)
-  (format nil "bestmove ~a" (first result)))
 
 (defun play-handler (server board token depth &key column)
   (format-play-result

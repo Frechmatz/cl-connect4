@@ -11,7 +11,8 @@
   (:export :PLAY-RESULT-SCORE)
   (:export :PLAY-RESULT-IS-FOUR-1)
   (:export :PLAY-RESULT-IS-FOUR-N)
-  
+  (:export :PLAY-RESULT-NO-MOVE-AVAILABLE)
+  (:export :PLAY-RESULT-PLAYERS-MOVE-SEQUENCE)
   )
 
 
