@@ -92,11 +92,13 @@ Implementation of the server interface
   (quit server))
 
 (defun play-handler (server board token depth &key column)
-  (format-play-result
-   (connect4-api:play
-    (parse board #'ccfi-placement-to-board)
-    (parse token #'ccfi-token-to-color)
-    (parse-integer depth))))
+  (let ((parsed-board (parse board #'ccfi-placement-to-board)))
+    (format-play-result
+     parsed-board
+     (connect4-api:play
+      parsed-board
+      (parse token #'ccfi-token-to-color)
+      (parse-integer depth)))))
 
 (defparameter *handler* 
   (list
@@ -126,7 +128,8 @@ Implementation of the server interface
   (mapcar #'preprocess-parameter list))
 
 (defun invoke-command-handler (server name lambda-list)
-  (logger:log-debug *logger* (format nil "invoke-command-handler: ~a" name))
+  ;; (declare (optimize (debug 3) (speed 0) (space 0)))
+  (logger:log-debug *logger* (format nil "invoke-command-handler: ~a ~a" name lambda-list))
   (handler-case
       (let ((handler (get-handler name)))
 	(if handler

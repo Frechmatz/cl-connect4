@@ -24,7 +24,6 @@ Accessor functions for the result of the play() function
 (defun play-result-move-sequence (result)
   (fourth result))
 
-;; not to be exported
 (defun play-result-players-color (result)
   (second (first (fourth result))))
 

@@ -40,7 +40,7 @@ CCFI-Server as a websocket
   )
 
 (defmethod ccfi::write-message ((the-server connect4-server) message)
-  (logger:log-info *logger* (format nil "websocket::ccfi::write-message: ~a" message))
+  ;;(logger:log-info *logger* (format nil "websocket::ccfi::write-message: ~a" message))
   (answer (slot-value the-server 'websocket-client) message)
   )
 

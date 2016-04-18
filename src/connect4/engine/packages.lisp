@@ -6,6 +6,7 @@
   (:export :PLAY)
   (:export :GENERATE-MOVES)
   (:export :*ENGINE-NOTIFICATION-REDUCED-SCORES*)
+  (:export :play-result-players-color)
   (:export :PLAY-RESULT-COLUMN)
   (:export :PLAY-RESULT-ROW)
   (:export :PLAY-RESULT-SCORE)

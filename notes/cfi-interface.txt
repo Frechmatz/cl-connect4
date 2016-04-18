@@ -96,7 +96,7 @@ Commands
   During calculation of the best move the server may send info messages
   to the client.
 
-  ** bestmove column [--four column {/column}* ] [--score <score>]
+  ** bestmove column [--four column {/column}* ] [--score <score>] [--line column;row {/column;row}*} ]
   *** A column value of NULL signals that no move was available
   **** Examples:
   ***** bestmove NULL
