@@ -17,7 +17,4 @@
 				     (:file "engine")
 				     (:file "play-result")
 				     ))
-	       (:module "src/connect4/api"
-			:serial t
-			:components ((:file "packages")))
    ))
