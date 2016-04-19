@@ -2,6 +2,9 @@
 Connect 4 Server Interface 
 ==========================
 
+Introduction
+============
+
 This document specifies the interface of the Connect Four Server. The emphasis is
 on easy implementation for both clients and servers. The interface doesn't
 support advanced features such as pondering or a clock.
@@ -16,16 +19,9 @@ Key points:
 - Commands sent to the server are immediately scheduled for processing. There is
   no special command such as GO that explicitly initiates processing.
 
-- The logic required on client side is kept on a minimum level.
-
-- The syntax of commands and responses is as simple as possible in order to
-  minimize parsing efforts.
-
-- A client can easily synchronize it's game play with the server.
-
 - All information that a client needs to handle a move played by the server is
-  passed back by in one response. There is no need of book keeping informational
-  messages sent by the server during traversal.
+  passed back in one response. There is no need of book keeping informational
+  messages sent by the server.
 
 
 General
@@ -35,7 +31,9 @@ Commands passed to the server are processed in incoming order. Commands are imme
 scheduled for processing. If the server is currently processing a command, the new
 command is added to the command queue. If the server has processed a command and it's
 command queue is empty, it sends a "ready" notification to the client.
+
 Example:
+
 > play ....
 > play ....
 < bestmove ....
@@ -43,16 +41,18 @@ Example:
 < ready
 
 Messages that start with the hash character '#' can be sent any time to the client. Such
-input must not be interpreted. These kind of messages can for example be used by the
+messages must not be interpreted. Such messages can for example be used by the
 server to pass back debug information.
+
 Example:
+
 > ping
 < # Processing ping command
 < pong
 
 
-Board and Token
-===============
+Coordinate system, Board and Token
+==================================
 
 TODO: define
 
@@ -60,52 +60,115 @@ TODO: define
 Commands
 ========
 
-* ping
-  This command can be sent any time to check if the server is still alive.
-  The server will immediately respond with "pong", even if it's currently processing
-  a command. The server will not send a "ready" notification.
-  Example:
-  > play ....
-  > ping
-  < pong
-  < bestmove ....
-  < ready
+ping
+----
+
+This command can be sent any time to check if the server is still alive.
+The server will immediately respond with "pong", even if it's currently processing
+a command.
+
+Syntax: ping
+
+Example:
+
+> play ...
+> ping
+< pong
+< bestmove ...
+< ready
   
 
-* quit
-  Quit processing the current command and purge the command queue.
-  Depending on the command the server is currently working on, this command may
-  take a while to process. A client must not send any other command
-  except "quit" before it has received the "ready" notification of the server.
-  While processing the quit command the server may send any other messages.
-  Example:
-  > play ....
-  > quit
-  < # Processing quit command
-  < info ....
-  < ready
+quit
+----
+
+Quit processing the current command and purge the command queue.
+Depending on the command the server is currently working on, this command may
+take a while to process. A client must not send any other command
+except "quit" before it has received the "ready" notification of the server.
+While processing the quit command the server may send informational messages.
+The server will answer any pending play command with a bestmove response.
+
+Syntax: quit
+
+Example:
+
+> play ...
+> play ...
+> quit
+< # Processing quit command
+< info ...
+< bestmove ...
+< bestmove ...
+< ready
 
 
-* play <board> <token> <depth> [--column <column>]
-  Let the server calculate a move.
-  <board> The board
-  <token> The token
-  --column Specifies the column that should be played by the server
+play
+----
 
-  Each play command is answered by the server with a "bestmove" response.
-  During calculation of the best move the server may send info messages
-  to the client.
+Let the server calculate a move. Each play command is answered by the server
+with a "bestmove" response. During calculation of the best move the server may
+send info messages to the client.
 
-  ** bestmove column [--four column {/column}* ] [--score <score>] [--line column;row {/column;row}*} ]
-  *** A column value of NULL signals that no move was available
-  **** Examples:
-  ***** bestmove NULL
-  *** --four This parameter signals that the computer has won or will win after the given sequence of moves. The move sequence includes the current move.
-  **** Examples:
-  ***** bestmove 3 --four 3
-  ***** bestmove 3 --four 3/3 
-  ***** bestmove 3 --four 3/5
-  ***** bestmove 3 --four 3/3/1
-  *** --score <score>:  -1 >= <score> <= 1 The score as seen by the computer. A negative value indicates a situation where one may lose. 
-  ** info --plies <number-of-plies>
-  
+Syntax: play <board> <token> <depth> [--column <column>]
+
+<board> The board
+
+<token> The "color" the computer should play one of "x" or "o"
+
+TODO: Generalize column option
+--column Specifies the column that should be played by the server. 
+
+
+Responses
+=========
+
+pong
+----
+
+The answer of a ping command
+
+bestmove
+--------
+
+For each play command a "bestmove" response is sent back to the client.
+
+Syntax: bestmove column [--score <score>] [--four column {/column}* [--line column;row {/column;row}*} ] ]
+
+column: NULL or the column that the computer has played. A column
+value of NULL signals that no move was available
+
+--score <score>:  -1 >= <score> <= 1 The score as seen by the computer. A negative value
+indicates a situation where the computer may lose. 
+
+--four This parameter signals that the computer has won or will win after the given sequence of moves.
+The move sequence includes the current move.
+
+--line In the case of a direct four the server provides the piece placement that
+establishes the line of connected pieces.
+
+Examples:
+
+> play 3 x
+< bestmove NULL
+< ready
+
+> play 3 x
+< bestmove 3 --four 3 --line 3;1/3;2/3;3/3;4
+< ready
+
+> play 3 x
+< bestmove 3 --four 3/3 
+< ready
+
+> play 3 x
+< bestmove 3 --four 3/5
+< ready
+
+> play 3 x
+< bestmove 3 --four 3/3/1
+< ready
+
+info
+----
+
+Informational status of the computers progress.

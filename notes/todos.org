@@ -29,11 +29,8 @@
 ** TODO Establish a move generator class
 *** Supports blacklisting of moves
 *** Supports that a move sequence can be given
-** TODO Get rid of connect4-api package
-*** Redundant exports of symbols already exported by other engine packages
-*** Developer should use packages such as engine, board, ... 
 ** TODO Establish a play-result class
-** TODO Move constants from api to engine
+
 
 * Connect4-Console
 ** TODO Add help method to command-table (maybe command-table concept needs some rework)
