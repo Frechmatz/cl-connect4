@@ -9,7 +9,7 @@
   (:export :javascript)
   )
 
-(defpackage :connect4-ccfi-websocket
+(defpackage :connect4-cfi-websocket
   (:use :cl :hunchensocket :logger)
   )
 

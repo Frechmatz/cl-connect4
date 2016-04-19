@@ -1,8 +1,8 @@
 #|
-CCFI-Server as a websocket
+CFI-Server as a websocket
 |#
 
-(in-package :connect4-ccfi-websocket)
+(in-package :connect4-cfi-websocket)
 
 (defparameter *logger* (make-instance 'logger:file-logger :name "websocket"))
 
