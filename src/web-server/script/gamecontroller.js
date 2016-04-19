@@ -10,15 +10,15 @@ var GameController = function() {
 	return document.connect4.footer;
     };
 
-    var ccfiClient = function() {
-	return document.connect4.ccfiClient;
+    var cfiClient = function() {
+	return document.connect4.cfiClient;
     };
     
     this.init = function() {
 	// The token of the human player
 	this.setHumanPlayersToken(board().getTokenForX());
 	
-	ccfiClient().init();
+	cfiClient().init();
 
 	document.getElementById('link-new-game').onclick = function(event) {
 	    event.preventDefault();
@@ -39,7 +39,7 @@ var GameController = function() {
 	document.getElementById('link-play').onclick = function(event) {
 	    event.preventDefault();
 	    var placement = board().getCcfiPlacement();
-	    ccfiClient().sendCommand('play ' + placement + ' x' + ' 6');
+	    cfiClient().sendCommand('play ' + placement + ' x' + ' 6');
 	}.bind(this);
 	
     };

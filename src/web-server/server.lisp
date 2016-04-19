@@ -98,7 +98,7 @@
 	    (:link :rel "stylesheet" :href "css/connect4.css"))
      (:body
       (:script :src "script/board.js")
-      (:script :src "script/ccficlient.js")
+      (:script :src "script/cficlient.js")
       (:script :src "script/gamecontroller.js")
       (:script :src "script/footer.js")
       (:script :src "script/onload.js")

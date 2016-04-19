@@ -6,7 +6,7 @@ Implementation of the server interface
 
 (in-package :cfi)
 
-(defparameter *logger* (make-instance 'logger:file-logger :name "ccfi-server"))
+(defparameter *logger* (make-instance 'logger:file-logger :name "cfi-server"))
 
 (defclass default-server (server)
   (

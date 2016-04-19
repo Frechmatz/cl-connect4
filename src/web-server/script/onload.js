@@ -3,7 +3,7 @@ document.addEventListener(
     "DOMContentLoaded",
     function loaded() {
 	document.connect4 = {
-	    ccfiClient: new CcfiClient(),
+	    cfiClient: new CfiClient(),
 	    board: new Board(),
 	    footer: new Footer(),
 	    controller: new GameController()

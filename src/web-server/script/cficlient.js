@@ -1,6 +1,6 @@
 
 
-var CcfiClient = function() {
+var CfiClient = function() {
     var websocket = null;
     var consoleId = 'console-textarea';
     var url = 'ws://localhost:8003/ccfi';

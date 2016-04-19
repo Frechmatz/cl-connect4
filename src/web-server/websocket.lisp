@@ -12,49 +12,49 @@ CFI-Server as a websocket
    ))
 
 
-(defclass ccfi-resource (hunchensocket:websocket-resource)
+(defclass cfi-resource (hunchensocket:websocket-resource)
   ((name :initarg :name :initform (error "Name this resource") :reader name))
-  (:default-initargs :client-class 'ccfi-client))
+  (:default-initargs :client-class 'cfi-client))
 
-(defclass ccfi-client (hunchensocket:websocket-client)
-  ((name :initarg :user-agent :reader name :initform (error "Name this ccfi-client!"))
-   (ccfi-server :initform nil :accessor ccfi-server)
+(defclass cfi-client (hunchensocket:websocket-client)
+  ((name :initarg :user-agent :reader name :initform (error "Name this cfi-client!"))
+   (cfi-server :initform nil :accessor cfi-server)
    ))
 
-(defvar *the-ccfi-resource*
-   (make-instance 'ccfi-resource :name "/ccfi"))
+(defvar *the-cfi-resource*
+   (make-instance 'cfi-resource :name "/ccfi"))
 
-(defun find-ccfi-resource (request)
-  *the-ccfi-resource*)
+(defun find-cfi-resource (request)
+  *the-cfi-resource*)
 
-(pushnew 'find-ccfi-resource hunchensocket:*websocket-dispatch-table*)
+(pushnew 'find-cfi-resource hunchensocket:*websocket-dispatch-table*)
 
-(defun broadcast (cur-ccfi-resource message &rest args)
+(defun broadcast (cur-cfi-resource message &rest args)
   (logger:log-info *logger* (format nil "Sending message: ~a" message))
-  (loop for peer in (hunchensocket:clients cur-ccfi-resource)
+  (loop for peer in (hunchensocket:clients cur-cfi-resource)
         do (hunchensocket:send-text-message peer (apply #'format nil message args))))
 
-(defun answer (cur-ccfi-client message &rest args)
+(defun answer (cur-cfi-client message &rest args)
   (logger:log-info *logger* (format nil "Sending message: ~a" message))
-  (hunchensocket:send-text-message cur-ccfi-client (apply #'format nil message args))
+  (hunchensocket:send-text-message cur-cfi-client (apply #'format nil message args))
   )
 
 (defmethod cfi::write-message ((the-server connect4-server) message)
-  ;;(logger:log-info *logger* (format nil "websocket::ccfi::write-message: ~a" message))
+  ;;(logger:log-info *logger* (format nil "websocket::cfi::write-message: ~a" message))
   (answer (slot-value the-server 'websocket-client) message)
   )
 
-(defmethod hunchensocket:client-connected ((cur-ccfi-resource ccfi-resource) ccfi-client)
+(defmethod hunchensocket:client-connected ((cur-cfi-resource cfi-resource) cfi-client)
   (logger:log-info *logger* "Client connected")
-  (setf (slot-value ccfi-client 'ccfi-server) (make-instance 'connect4-server :websocket-client ccfi-client))
-  (cfi:connected (slot-value ccfi-client 'ccfi-server)))
+  (setf (slot-value cfi-client 'cfi-server) (make-instance 'connect4-server :websocket-client cfi-client))
+  (cfi:connected (slot-value cfi-client 'cfi-server)))
 
-(defmethod hunchensocket:client-disconnected ((cur-ccfi-resource ccfi-resource) ccfi-client)
+(defmethod hunchensocket:client-disconnected ((cur-cfi-resource cfi-resource) cfi-client)
   (logger:log-info *logger* "Client disconnected")
-  ;;(broadcast cur-ccfi-resource "Disconnected from ccfi server" (name ccfi-client) (name cur-ccfi-resource))
+  ;;(broadcast cur-cfi-resource "Disconnected from cfi server" (name cfi-client) (name cur-cfi-resource))
   )
 
-(defmethod hunchensocket:text-message-received ((cur-ccfi-resource ccfi-resource) ccfi-client message)
+(defmethod hunchensocket:text-message-received ((cur-cfi-resource cfi-resource) cfi-client message)
   (logger:log-info *logger* (format nil "Text message received: ~a" message))
-  (cfi:put-command (slot-value ccfi-client 'ccfi-server) message))
+  (cfi:put-command (slot-value cfi-client 'cfi-server) message))
 
