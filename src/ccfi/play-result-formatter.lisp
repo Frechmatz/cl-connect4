@@ -19,7 +19,7 @@
 (defun get-line (board x y color)
   (mapcar
    (lambda (i)
-     (list (first i) (- (connect4-api:get-height board) (second i) 1)))
+     (list (first i) (- (board:get-height board) (second i) 1)))
    (board:get-connected-pieces
     (board:set-field
      board

@@ -7,8 +7,8 @@
 
 (defun ccfi-token-to-color (token)
   (if (not token)
-      connect4-api:EMPTY
-      (if (equal token "x") connect4-api:BLACK connect4-api:WHITE)))
+      board:EMPTY
+      (if (equal token "x") board:BLACK board:WHITE)))
 
 
 

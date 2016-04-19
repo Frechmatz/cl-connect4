@@ -1,55 +1,59 @@
 #+TITLE:Connect4 Todos
 
 * General
-** DONE Minmax should throw an exception when final board does not match with original one
 ** TODO Study analysis-boards
-** DONE After Unit-Testing set default value of *engine-configuration-depth-relative-score* to t
-** DONE After Unit-Testing set default value of *engine-configuration-peek-is-four* to t
-** DONE After Unit-Testing remove variable *engine-configuration-score-calculation-considers-three*
-** DONE Clean up the messy board-interface
-** DONE Establish packages for engine, board and console related stuff
+
 
 * Unit Tests
 ** TODO Remove redundancies from tests
-** DONE Tests should not depend on order of moves played by the Minmax
-** DONE Remove *engine-configuration-skip-randomizer* option
-** DONE Remove *engine-configuration-depth-relative-score* option
-** DONE Toggle default value of *engine-configuration-depth-relative-score* and adapt/extend tests
-** DONE Toggle default value of *engine-configuration-score-calculation-considers-three* and adapt/extend tests
-** DONE Test of peek-is-four()
 ** TODO Test of generate-moves()
-** DONE Make lisp-unit print a stacktrace or enter into the debugger on execution errors
-** DONE Run tests with abcl
-** DONE connect4-test.asd should not declare dependency on console related stuff
 
-** TODO Write tests for ccfi-server (server.lisp)
-** TODO asdf:load-system tests for server components
+
 * Board Score Evaluation
-** DONE Take into account 3 pieces in a row
-** DONE Prefer moves near the center of the board
 ** TODO Check calculation of column-weights for width 7 (weights should differ for each column)
 
+
+
 * Engine optimization
-** DONE Quit row evaluation when player has 4 pieces in a row for the current column
-** DONE Check if for current row any column results in a direct 4 and quit row. If not then deep traverse row.
 ** TODO Alpha/Beta-Pruning
 
+
+
 * Engine
+** Generally the code of the play function is messy and difficult to maintain
 ** TODO Establish a board traverser
 *** Holds current board and traversal path
 *** Hides board cloning/manipulation related logic
-*** Used by minmax function
-** TODO MATE-Konstante definieren (engine.lisp)
+*** Used by play function
+** TODO Define MATE constant
+** TODO Establish a move generator class
+*** Supports blacklisting of moves
+*** Supports that a move sequence can be given
+** TODO Get rid of connect4-api package
+*** Redundant exports of symbols already exported by other engine packages
+*** Developer should use packages such as engine, board, ... 
+** TODO Establish a play-result class
+** TODO Move constants from api to engine
+
 * Connect4-Console
-** Add help method to command-table
-** Merge help-text functions into one and use reduce function
-* CCFI-Server / CCFI-Core
-** TODO Move server code into core
-** TODO Error handling (invalid placement error)
-** TODO More robust parsing
-** TODO How to signal wins/loses
-** TODO Suppress NIL output
-** TODO How to signal that no move is available because all fields are occupied?
-** TODO GUI -> Server: Implement 'depth' parameter of go command 
-** TODO Engine -> GUI: Send 'info'
-** TODO nset-field(EMPTY) -> nclear-field() 
+** TODO Add help method to command-table (maybe command-table concept needs some rework)
+** TODO Merge help-text functions into one and use reduce function
+** TODO Formatting of score (do format in exponential form)
+
+
+* CFI-Server / CFI-Core
+** TODO Try to rework decode-placement function (code looks messy)
+** DONE Remove ccfi-console project (needs to be re-thought from scratch)
+** TODO Rename ccfi to cfi
+** TODO Replace queue implementation
+** TODO Start thread on incoming websocket messages
+** TODO Establish some kind of staging properties 
+*** Get rid of hard coded path for logging
+*** Get rid of path magic to determine static/ directory 
+** TODO Logger class should be more general or replaced
+
+
+* Web-Client
+** TODO Dispatching of server responses
+** TODO Throw a piece into a column
+** 

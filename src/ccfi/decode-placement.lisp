@@ -92,8 +92,8 @@ Token values are o x and nil. This function will not not be called with out-of-b
     (ccfi:decode-placement
      placement
      (lambda (dx dy)
-       (setf board (connect4-api:create-board dx dy)))
+       (setf board (board:create-board dx dy)))
      (lambda (x y token)
-       (connect4-api:nset-field
-	board x	(- (connect4-api:get-height board) y 1) (ccfi-token-to-color token))))
+       (board:nset-field
+	board x	(- (board:get-height board) y 1) (ccfi-token-to-color token))))
     board))

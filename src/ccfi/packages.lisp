@@ -1,7 +1,7 @@
 
 
 (defpackage :ccfi
-  (:use :cl :cl-ppcre :alexandria :connect4-api)
+  (:use :cl :cl-ppcre :alexandria :board :engine)
   (:export :decode-placement)
   (:export :invalid-placement-error)
   (:export :TOKEN-X)

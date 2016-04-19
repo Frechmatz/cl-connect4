@@ -95,7 +95,7 @@ Implementation of the server interface
   (let ((parsed-board (parse board #'ccfi-placement-to-board)))
     (format-play-result
      parsed-board
-     (connect4-api:play
+     (engine:play
       parsed-board
       (parse token #'ccfi-token-to-color)
       (parse-integer depth)))))

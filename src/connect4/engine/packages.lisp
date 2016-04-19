@@ -3,6 +3,8 @@
 (defpackage :engine
   (:use :cl)
   (:use :board)
+  (:export :classic-width)
+  (:export :classic-height)
   (:export :PLAY)
   (:export :GENERATE-MOVES)
   (:export :*ENGINE-NOTIFICATION-REDUCED-SCORES*)
