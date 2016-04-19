@@ -46,7 +46,7 @@
 				     (:file "board-09")
 				     (:file "board-10")
 				     ))
-	       (:module "test/ccfi"
+	       (:module "test/cfi"
                         :serial t
                         :components ((:file "decode-placement-tests")))
   ))

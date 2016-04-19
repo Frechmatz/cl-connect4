@@ -1,9 +1,9 @@
-(defsystem :connect4-ccfi
+(defsystem :connect4-cfi
   :serial t
   :version "1.0.0"
   :licence "Public Domain / 0-clause MIT"
-  :description "Implements the Common Connect Four Interface (CCFI)"
-  :long-description "Implements the Common Connect Four Interface (CCFI)"
+  :description "Implements the Connect Four Interface (CFI)"
+  :long-description "Implements the Connect Four Interface (CFI)"
   :depends-on (:cl-ppcre :alexandria :connect4)
   :components (
 	       (:module "src/logger"

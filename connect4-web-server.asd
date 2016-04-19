@@ -6,7 +6,7 @@
 	       :hunchentoot
 	       :cl-ppcre
 	       :alexandria
-	       :connect4-ccfi
+	       :connect4-cfi
 	       :cl-who
 	       :hunchensocket
 	       :cl-svg)
