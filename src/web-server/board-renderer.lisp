@@ -37,7 +37,7 @@ Render a board using a HTML table
 
 (defun render-ccfi-board (ccfi-placement)
   (let ((board nil) (width nil) (height nil))
-    (ccfi::decode-placement
+    (cfi::decode-placement
      ccfi-placement
      (lambda (dx dy)
        (setf width dx)

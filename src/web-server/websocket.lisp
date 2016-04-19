@@ -6,7 +6,7 @@ CCFI-Server as a websocket
 
 (defparameter *logger* (make-instance 'logger:file-logger :name "websocket"))
 
-(defclass connect4-server (ccfi:default-server)
+(defclass connect4-server (cfi:default-server)
   (
    (websocket-client :initform "Olli" :accessor websocket-client :initarg :websocket-client)
    ))
@@ -39,7 +39,7 @@ CCFI-Server as a websocket
   (hunchensocket:send-text-message cur-ccfi-client (apply #'format nil message args))
   )
 
-(defmethod ccfi::write-message ((the-server connect4-server) message)
+(defmethod cfi::write-message ((the-server connect4-server) message)
   ;;(logger:log-info *logger* (format nil "websocket::ccfi::write-message: ~a" message))
   (answer (slot-value the-server 'websocket-client) message)
   )
@@ -47,7 +47,7 @@ CCFI-Server as a websocket
 (defmethod hunchensocket:client-connected ((cur-ccfi-resource ccfi-resource) ccfi-client)
   (logger:log-info *logger* "Client connected")
   (setf (slot-value ccfi-client 'ccfi-server) (make-instance 'connect4-server :websocket-client ccfi-client))
-  (ccfi:connected (slot-value ccfi-client 'ccfi-server)))
+  (cfi:connected (slot-value ccfi-client 'ccfi-server)))
 
 (defmethod hunchensocket:client-disconnected ((cur-ccfi-resource ccfi-resource) ccfi-client)
   (logger:log-info *logger* "Client disconnected")
@@ -56,5 +56,5 @@ CCFI-Server as a websocket
 
 (defmethod hunchensocket:text-message-received ((cur-ccfi-resource ccfi-resource) ccfi-client message)
   (logger:log-info *logger* (format nil "Text message received: ~a" message))
-  (ccfi:put-command (slot-value ccfi-client 'ccfi-server) message))
+  (cfi:put-command (slot-value ccfi-client 'ccfi-server) message))
 

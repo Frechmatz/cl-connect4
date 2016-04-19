@@ -4,7 +4,7 @@ Implementation of the server interface
 |#
 
 
-(in-package :ccfi)
+(in-package :cfi)
 
 (defparameter *logger* (make-instance 'logger:file-logger :name "ccfi-server"))
 

@@ -11,7 +11,7 @@
 			:components ((:file "packages")
 				     (:file "logger")
 				     ))
-	       (:module "src/ccfi"
+	       (:module "src/cfi"
 			:serial t
 			:components ((:file "packages")
 				     (:file "queue")

@@ -17,7 +17,7 @@
 				     (:file "constants")
                                      (:file "engine")
 				     (:file "play-result")))
-	       (:module "src/ccfi"
+	       (:module "src/cfi"
                         :serial t
                         :components ((:file "packages")
 				     (:file "token")

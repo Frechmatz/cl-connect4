@@ -2,7 +2,7 @@
 Extremely inefficient bozo implementation of a queue to be replaced ASAP
 |#
 
-(in-package :ccfi)
+(in-package :cfi)
 
 (defclass queue ()
   ((q :initform '())))

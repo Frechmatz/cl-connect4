@@ -4,7 +4,7 @@ Interface of the server
 |#
 
 
-(in-package :ccfi)
+(in-package :cfi)
 
 (defclass server ()
   ((name :initarg :name :initform "OllisServer" :accessor name)))
