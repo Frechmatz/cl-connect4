@@ -97,6 +97,8 @@
      (:head (:title "Connect 4")
 	    (:link :rel "stylesheet" :href "css/connect4.css"))
      (:body
+      (:script :src "script/parser.js")
+      (:script :src "script/bestmove.js")
       (:script :src "script/board.js")
       (:script :src "script/cficlient.js")
       (:script :src "script/gamecontroller.js")

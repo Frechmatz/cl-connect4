@@ -39,7 +39,7 @@ var GameController = function() {
 	document.getElementById('link-play').onclick = function(event) {
 	    event.preventDefault();
 	    var placement = board().getCcfiPlacement();
-	    cfiClient().sendCommand('play ' + placement + ' x' + ' 6');
+	    cfiClient().sendCommand('play ' + placement + ' x' + ' 1' + ' --column 20' );
 	}.bind(this);
 	
     };
