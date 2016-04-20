@@ -98,8 +98,10 @@ Implementation of the server interface
      (engine:play
       parsed-board
       (parse token #'ccfi-token-to-color)
-      (parse-integer depth)))))
-
+      (parse-integer depth)
+      :start-column (if column (parse-integer column) nil)
+      ))))
+  
 (defparameter *handler* 
   (list
    :play #'play-handler

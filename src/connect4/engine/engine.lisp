@@ -59,14 +59,16 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
 	      (+ 0.25 (* 0.24 (aref *column-weights* x))) ; 0.25 .. 0.49
 	)))))
 
-(defun generate-moves (board)
+(defun generate-moves (board &key (column-filter nil))
   "Generate moves. Returns a list of (x y) coordinates of all possible moves"
-  (let ( (moves ()) (row nil))
-    (dotimes (x (get-width board))
-      (setf row (drop board x))
-      (if row (push (list x row) moves))
-      )
-    moves))
+  (remove-if-not
+   (lambda (i) (if (not column-filter) t (eql column-filter (first i)))) 
+   (let ( (moves ()) (row nil))
+     (dotimes (x (get-width board))
+       (setf row (drop board x))
+       (if row (push (list x row) moves))
+       )
+     moves)))
 
 ;;; Internal method for fast check if a move is available for given board
 (defun is-move-available (board)
@@ -167,16 +169,27 @@ If t returns a list consisting of such move otherwise return the moves given int
 ;;; color: The computers color
 ;;;
 ;;; create a clone of the board that for performance reasons will be manipulated during the traversal
-(defun play (the-board color max-depth &key (print-engine-configuration nil))
+(defun play (the-board color max-depth &key (print-engine-configuration nil) (start-column nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
-  (let ((board (clone-board the-board)) (result nil) (cur-line '())
-	(*column-weights* (calc-column-weights (get-width the-board)
-					       *engine-configuration-prefer-center*)))
+  (let (
+	(board (clone-board the-board))
+	(result nil)
+	(cur-line '())
+	(column-filter start-column)
+	(*column-weights*
+	 (calc-column-weights
+	  (get-width the-board)
+	  *engine-configuration-prefer-center*)))
     (if print-engine-configuration
 	(print-engine-configuration))
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
-	       (let ((generated-moves (generate-moves board))  (moves ()) (score nil) (is-four nil))
+	       (let (
+		     (generated-moves (generate-moves board :column-filter column-filter))
+		     (moves ())
+		     (score nil)
+		     (is-four nil))
+		 (setf column-filter nil)
 		 (setf generated-moves (peek-is-four generated-moves board color))
 		 (dolist (move generated-moves)
 		   (progn
