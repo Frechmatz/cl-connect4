@@ -2,7 +2,7 @@
 var needle = require('needle');
 var assert = require('assert');
 
-var url = 'http://localhost:8002/connect4.js';
+var url = 'http://localhost:8002/script/board.js';
 
 var board1 = [
     [ '_', '_', '_', '_' ],
@@ -22,14 +22,15 @@ describe('EncodePosition', function() {
 	needle.get(url, function(error, response) {
 	    if (!error && response.statusCode == 200) {
 		eval(response.body);
-		var b = encodePlacement(4, 3, function(x,y) {
+		var board = new Board();
+		var b = board.encodeToCcfiPlacement(4, 3, function(x,y) {
 		    var f = board1[y][x];
 		    return tokenToCcfi(f);
 		});
 		console.log('Board: ' + b);
 		assert.equal( b, "xxoo/2xo/4");
 	    } else {
-		assert.equal(1,0,'Scripts could not be loaded' );
+		assert.equal(1,0,'Script could not be loaded' );
 	    }
 	    done();
 	});

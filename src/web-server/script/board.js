@@ -25,7 +25,7 @@ var Board = function() {
       Get CCFI placement
       Passes SVG coordinates when calling getTokenFn
      */
-    function encodeToCcfiPlacement(dx, dy, getTokenFn) {
+    this.encodeToCcfiPlacement = function(dx, dy, getTokenFn) {
 	var scanRow = function (y, dx, getTokenFn) {
             var row = '';
             var nilCount = 0;
@@ -73,7 +73,7 @@ var Board = function() {
 
     // SVG coordinates
     // returns Ccfi representation of field: null, x, o
-    this.getField = function(x,y) {
+    this.getFieldToken = function(x,y) {
 	var b = document.getElementById(tableId);
 	var c = b.querySelector('.board-cell[data-column="' + x + '"][data-row="' + y + '"]');
 	var t = c.dataset.token;
@@ -82,7 +82,7 @@ var Board = function() {
 
     this.getCcfiPlacement = function() {
 	var s = this.getSize();
-	return encodeToCcfiPlacement(s.width, s.height, this.getField.bind(this));
+	return this.encodeToCcfiPlacement(s.width, s.height, this.getFieldToken.bind(this));
     };
 
     this.forEachCell = function(fn) {
@@ -91,6 +91,14 @@ var Board = function() {
 	for( var i = 0; i < c.length; i++) {
 	    fn(c.item(i));
 	}
+    };
+
+    this.getCellCoordinate = function(cell) {
+	var c = {
+	    x: parseInt(cell.dataset.column),
+	    y: parseInt(cell.dataset.row)
+	};
+	return c;
     };
     
     this.clear = function() {
@@ -111,7 +119,8 @@ var Board = function() {
 	// TODO: replace by id call
 	return b.querySelector('.board-cell[data-column="' + x + '"][data-row="' + y + '"]');
     };
-    function setFieldToken(x,y,token) {
+    this.setFieldToken = function(x,y,token) {
+	//TODO: Assertion against token
 	var c = getFieldCell(x,y);
 	c.setAttribute('data-token', token);
     }; 
@@ -134,23 +143,36 @@ var Board = function() {
     this.clearField = function(x,y) {
 	setFieldToken(x,y,ccfiTokenRepresentationEmpty);
     };
-    function isCoordinate(x,y,coordinateArray) {
-	for( var c = 0; c < coordinateArray.length; c++) {
-	    if( coordinateArray[c].x == x && coordinateArray[c].y == y) {
-		return true;
-	    }
+    this.isFieldSet = function(x,y) {
+	return this.getFieldToken(x,y) != null;
+    };
+    // Get row 
+    this.findRow = function(x) {
+	if( this.isFieldSet(x,0)) {
+	    return null;
 	}
-	return false;
+	var y = -1;
+	while (y+1 < this.getSize().height && !this.isFieldSet(x,y+1)) {
+	    y = y + 1;
+	}
+	return y;
+    };
+    function isCoordinate(x,y,coordinateArray) {
+	var found = _.find(coordinateArray, function(c) {
+	    return (c.x === x && c.y === y);
+	});
+	return found ? true : false;
     };
 
-    this.createCoordinate = function(x,y) {
-	return {
-	    x: x.toString(),
-	    y: y.toString()
-	};
-    };
-   
+    // coordinateArray = array of { x: ..., y: ... } 
     this.setFieldMarker = function(coordinateArray) {
+	coordinateArray = _.map(coordinateArray, function(c) {
+	    return {
+		x: c.x.toString(),
+		y: c.y.toString()
+	    };
+	});
+	// TODO: Implement _.findWhere() in order to get rid of isCoordinate() function
 	this.forEachCell( function(cell) {
 	    var doMark = isCoordinate(cell.getAttribute('data-column'), cell.getAttribute('data-row'), coordinateArray);
 	    setFieldMarkerImpl(cell, doMark);
