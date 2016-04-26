@@ -1,9 +1,6 @@
 
 
 var Async = function() {
-
-    
-
 };
 
 Async.prototype.waterfall = function(tasks, cb) {

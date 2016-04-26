@@ -1,5 +1,7 @@
 
-
+/*
+  Barebone implementation of some underscore functions
+*/
 
 var Underscore = function() {
 
@@ -11,16 +13,21 @@ var Underscore = function() {
 	}
     };
 
-    this.find = function(list, predicate) {
+    this.findIndex = function(list, predicate) {
 	for( var i = 0; list && i < list.length; i++) {
 	    if( i < list.length) {
 		var item = list[i];
 		if(predicate(item)) {
-		    return item;
+		    return i;
 		}
 	    }
 	}
 	return undefined;
+    };
+
+    this.find = function(list, predicate) {
+	var index = this.findIndex(list, predicate);
+	return index != -1 ? list[index] : undefined;
     };
 
 

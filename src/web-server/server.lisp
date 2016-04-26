@@ -103,6 +103,7 @@
       (:script :src "script/bestmove.js")
       (:script :src "script/board.js")
       (:script :src "script/consolelistener.js")
+      (:script :src "script/bestmovelistener.js")
       (:script :src "script/cficlient.js")
       (:script :src "script/gamecontroller.js")
       (:script :src "script/footer.js")

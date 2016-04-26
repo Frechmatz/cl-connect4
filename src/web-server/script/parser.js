@@ -1,17 +1,15 @@
 
 
-
-
-
 var Parser = function(paramStr) {
-    var params = paramStr ? paramsStr.split(/\s/) : [];
+    var paramStr = paramStr ? paramStr.trim() : '';
+    var params = paramStr.length ? paramStr.split(/\s/) : [];
 
     this.getNth = function(index) {
-	return index + 1 < params.length ? params[index] : null;
+	return index < params.length ? params[index] : null;
     };
 
     this.get = function(paramName) {
-	var index = params.indexOf(params);
+	var index = params.indexOf(paramName);
 	return index != -1 ? this.getNth(index + 1) : null;
     };
 

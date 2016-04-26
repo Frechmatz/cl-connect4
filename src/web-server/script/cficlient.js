@@ -3,7 +3,7 @@
 var CfiClient = function() {
     var websocket = null;
     var url = 'ws://localhost:8003/ccfi';
-    var listeners = [];
+    listeners = [];
 
     function getListener(id) {
 	return _.find(listeners, function(i) {
@@ -21,7 +21,9 @@ var CfiClient = function() {
     }
     
     function callListeners(fnName, evt) {
-	_.each(listeners, function(listener) {
+	// Create clone of array because during callbacks
+	// listeners may be added or removed
+	_.each(listeners.slice(0), function(listener) {
 	    var fn = listener.listener[fnName];
 	    if (fn) {
 		fn.apply(listener.listener, [evt]);
@@ -35,9 +37,18 @@ var CfiClient = function() {
 	    listener: listener
 	};
 	listeners.push(l);
-	return listener.id;
+	return l.id;
     };
-    
+
+    this.removeListener = function(listenerId) {
+	var index = _.findIndex(listeners, function(listener) {
+	    return listener.id == listenerId
+	});
+	if (index != -1) {
+	    listeners.splice(index,1);
+	};
+    };
+
     function connect() {
 	websocket = new WebSocket(url);
 	websocket.onopen = function(evt) { onOpen(evt) };

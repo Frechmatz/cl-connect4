@@ -4,17 +4,80 @@ var GameController = function() {
 
     this.cfiClient = new CfiClient();
     this.humanPlayersToken = null;
+    this.locked = false;
 };
 
 GameController.prototype.cellClickHandler = function(evt) {
+    if (this.locked) {
+	return;
+    }
     var c = board.getCellCoordinate(evt.currentTarget);
+    var y = board.findRow(c.x);
+    if (y == null) {
+	return;
+    }
+
+    var that = this;
     if( board.isFieldSet(c.x,c.y)) {
 	console.log('No way');
     } else {
-	var y = board.findRow(c.x);
-	if(y != null) {
-	    board.setFieldToken(c.x,y, this.humanPlayersToken);
-	}
+	this.locked = true;
+	async.waterfall(
+	    [
+		function(cb) {
+		    var handle = that.cfiClient.addListener( new BestMoveListener(function(b) {
+			that.cfiClient.removeListener(handle);
+			if(!b || b.getColumn() == null) {
+			    return cb(null, false);
+			}
+			board.setFieldToken(c.x,y, that.humanPlayersToken);
+			if (b.isFour1()) {
+			    board.setFieldMarker(b.getLine());
+			    alert('You have won');
+			    return cb(null, false);
+			} else {
+			    return cb(null, true);
+			}
+		    }));
+		    that.cfiClient.sendCommand(
+			'play ' +
+			    board.getCcfiPlacement() +
+			    ' ' + that.humanPlayersToken +
+			    ' 1' + ' --column ' + c.x);
+		},
+		function(doContinue, cb) {
+		    if(!doContinue) {
+			return cb(null, false);
+		    };
+		    var handle = that.cfiClient.addListener( new BestMoveListener(function(b) {
+			that.cfiClient.removeListener(handle);
+			if(!b || b.getColumn() == null) {
+			    return cb(null, false);
+			}
+			board.setFieldToken(
+			    b.getColumn(),
+			    board.findRow(b.getColumn()),
+			    board.toggleToken(that.humanPlayersToken));
+			if (b.isFour1()) {
+			    board.setFieldMarker(b.getLine());
+			    alert('Computer has won');
+			    return cb(null, false);
+			} else {
+			    return cb(null, true);
+			}
+		    }));
+		    that.cfiClient.sendCommand(
+			'play ' +
+			    board.getCcfiPlacement() +
+			    ' ' + board.toggleToken(that.humanPlayersToken) +
+			    ' 6');
+		}
+		
+	    ],
+	    function(err) {
+		console.log('Waterfall done');
+		that.locked = false;
+	    })
     };
 };
 
