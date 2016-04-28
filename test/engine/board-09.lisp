@@ -30,7 +30,7 @@
 	      "test-board-09-a" (create-board-09) board:WHITE 4
 	      :expected-final-columns '(0 1 2 3 4)
 	      ;; :print-final-scores t
-	      :is-mate-expected 0
+	      :is-mate-expected-for-player 0
 	      ))
 
 
@@ -39,5 +39,5 @@
 	     (run-minmax-test 
 	      "test-board-09-b" (create-board-09) board:WHITE 6
 	      :expected-final-columns '(1)
-	      :is-mate-expected 1
+	      :is-mate-expected-for-player 1
 	      ))

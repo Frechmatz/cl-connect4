@@ -22,7 +22,7 @@
 	      "test-board-06-a" (create-board-06) board:WHITE 1
 	      ;; compare full final scores without quitting row evaluation on a 4
 	      :expected-final-columns '(5)
-	      :is-mate-expected 1
+	      :is-mate-expected-for-player 1
 	      ))
 
 ;;; No winning or lose position
@@ -31,7 +31,7 @@
 	      "test-board-06-b" (create-board-06) board:BLACK 1
 	      :expected-final-columns '(0 1 2 3 4 5 6)
 	      ;; :print-final-scores t
-	      :is-mate-expected 0
+	      :is-mate-expected-for-player 0
 	      ))
 
 ;;; BLACK counters the threat
@@ -39,7 +39,7 @@
 	     (run-minmax-test 
 	      "test-board-06-c" (create-board-06) board:BLACK 2
 	      :expected-final-columns '(5)
-	      :is-mate-expected 0
+	      :is-mate-expected-for-player 0
 	      ))
 
 
@@ -48,5 +48,5 @@
 	     (run-minmax-test 
 	      "test-board-06-e" (create-board-06) board:WHITE 1
 	      :expected-final-columns '(5)
-	      :is-mate-expected 1
+	      :is-mate-expected-for-player 1
 	      ))

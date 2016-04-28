@@ -90,5 +90,28 @@
 		(format nil "play-result-players-move-sequence-1 failed"))
 	       ))
 
+(define-test play-result-is-four-n-1 ()
+	     (assert-false
+	      (engine::play-result-is-four-n
+	       `(1 1 1 ((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE ""))))
+	      (format nil "play-result-is-four-n-1 failed")))
 
 
+(define-test play-result-is-four-n-2 ()
+	     (assert-false
+	      (engine::play-result-is-four-n
+	       `(1 1 1 ((2 ,board:WHITE "") (3 ,board:BLACK "MATE") (4 ,board:WHITE ""))))
+	      (format nil "play-result-is-four-n-2 failed")))
+
+(define-test play-result-is-four-n-3 ()
+	     (assert-true
+	      (engine::play-result-is-four-n
+	       `(1 1 1 ((2 ,board:WHITE "MATE") (3 ,board:BLACK "") (4 ,board:WHITE ""))))
+	      (format nil "play-result-is-four-n-3 failed")))
+
+
+(define-test play-result-is-four-n-4 ()
+	     (assert-true
+	      (engine::play-result-is-four-n
+	       `(1 1 1 ((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE "MATE"))))
+	      (format nil "play-result-is-four-n-4 failed")))

@@ -46,7 +46,7 @@
 			  (expected-final-columns nil)
 			  (expected-final-move-score nil)
 			  (print-engine-configuration nil)
-			  (is-mate-expected nil) 
+			  (is-mate-expected-for-player nil) 
 			  (engine-configuration-prefer-center t))
   ;; (format t "Running minmax test ~a~%" name-of-test)
   (let ( (best-move nil)
@@ -70,17 +70,23 @@
 	(progn
 	  (assert-true
 	   (find-if (lambda (c) (equal c (play-result-column best-move))) expected-final-columns)
-	   (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%" name-of-test (play-result-column best-move) (play-result-score best-move) expected-final-columns))))
+	   (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%"
+		   name-of-test
+		   (play-result-column best-move)
+		   (play-result-score best-move)
+		   expected-final-columns))))
     (if expected-final-move-score
 	(assert-true
 	 ;; Regarding the comparison of floats, see also
 	 ;; http://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node74.html
 	 (= expected-final-move-score (play-result-score best-move))
-	 (format t "~a: Unexpected final score value: ~a Expected score value: ~a~%" name-of-test (play-result-score best-move) expected-final-move-score)))
-
-    (if (eq is-mate-expected 0)
+	 (format t "~a: Unexpected final score value: ~a Expected score value: ~a~%"
+		 name-of-test
+		 (play-result-score best-move)
+		 expected-final-move-score)))
+    (if (eq is-mate-expected-for-player 0)
 	(assert-true (not (play-result-is-four-n best-move)) (format nil "Must not be mate")))
-    (if (eq is-mate-expected 1)
+    (if (eq is-mate-expected-for-player 1)
 	(assert-true (play-result-is-four-n best-move) (format t "~a: Must be mate~%" name-of-test)))
     best-move))
 

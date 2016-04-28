@@ -177,5 +177,15 @@ var Board = function() {
 	    var doMark = isCoordinate(cell.getAttribute('data-column'), cell.getAttribute('data-row'), coordinateArray);
 	    setFieldMarkerImpl(cell, doMark);
 	})};
+
+    this.isMoveAvailable = function() {
+	var width = this.getSize().width;
+	for( var x = 0; x < width; x++) {
+	    if (!this.isFieldSet(x, 0)) {
+		return true;
+	    }
+	}
+	return false;
+    };
 }
 

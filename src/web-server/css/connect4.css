@@ -183,11 +183,11 @@ data-human-players-token will be set during gameplay
 the purpose of this token is to avoid css injection via javascript
 */
 .board-cell[data-token="_"][data-human-players-token="x"]:hover {
-  background-color: red;
+  background-color: #fe8484;
   cursor: s-resize; }
 
 .board-cell[data-token="_"][data-human-players-token="o"]:hover {
-  background-color: green;
+  background-color: palegreen;
   cursor: s-resize; }
 
 /*# sourceMappingURL=connect4.css.map */

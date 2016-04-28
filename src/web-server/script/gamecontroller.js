@@ -13,72 +13,86 @@ GameController.prototype.cellClickHandler = function(evt) {
     }
     var c = board.getCellCoordinate(evt.currentTarget);
     var y = board.findRow(c.x);
-    if (y == null) {
+    if (y == null || board.isFieldSet(c.x,y)) {
 	return;
     }
-
+    
     var that = this;
-    if( board.isFieldSet(c.x,c.y)) {
-	console.log('No way');
-    } else {
-	this.locked = true;
-	async.waterfall(
-	    [
-		function(cb) {
-		    var handle = that.cfiClient.addListener( new BestMoveListener(function(b) {
-			that.cfiClient.removeListener(handle);
-			if(!b || b.getColumn() == null) {
-			    return cb(null, false);
-			}
-			board.setFieldToken(c.x,y, that.humanPlayersToken);
-			if (b.isFour1()) {
-			    board.setFieldMarker(b.getLine());
-			    alert('You have won');
-			    return cb(null, false);
-			} else {
-			    return cb(null, true);
-			}
-		    }));
-		    that.cfiClient.sendCommand(
-			'play ' +
-			    board.getCcfiPlacement() +
-			    ' ' + that.humanPlayersToken +
-			    ' 1' + ' --column ' + c.x);
-		},
-		function(doContinue, cb) {
-		    if(!doContinue) {
+    this.locked = true;
+    // Lets go
+    async.waterfall(
+	[
+	    // Check if human player has four pieces in a row
+	    function(cb) {
+		var handle = that.cfiClient.addListener( new BestMoveListener(function(b) {
+		    that.cfiClient.removeListener(handle);
+		    if(!b || b.getColumn() == null) {
 			return cb(null, false);
+		    }
+		    board.setFieldToken(c.x,y, that.humanPlayersToken);
+		    var isFour = b.isFour1();
+		    if (isFour) {
+			board.setFieldMarker(b.getLine());
+			alert('You have won');
 		    };
-		    var handle = that.cfiClient.addListener( new BestMoveListener(function(b) {
-			that.cfiClient.removeListener(handle);
-			if(!b || b.getColumn() == null) {
-			    return cb(null, false);
-			}
-			board.setFieldToken(
-			    b.getColumn(),
-			    board.findRow(b.getColumn()),
-			    board.toggleToken(that.humanPlayersToken));
-			if (b.isFour1()) {
-			    board.setFieldMarker(b.getLine());
-			    alert('Computer has won');
-			    return cb(null, false);
-			} else {
-			    return cb(null, true);
-			}
-		    }));
-		    that.cfiClient.sendCommand(
-			'play ' +
-			    board.getCcfiPlacement() +
-			    ' ' + board.toggleToken(that.humanPlayersToken) +
-			    ' 6');
+		    return cb(null, isFour);
+		}));
+		that.cfiClient.sendCommand(
+		    ['play', board.getCcfiPlacement(), that.humanPlayersToken, '1', '--column', + c.x].join(' '));
+	    },
+	    // Check if draw (no move left board)
+	    function(finalGameStateReached, cb) {
+		if(!finalGameStateReached) {
+		    finalGameStateReached = !board.isMoveAvailable();
+		    if (finalGameStateReached) {
+			alert('Draw!');
+		    }
 		}
-		
-	    ],
-	    function(err) {
-		console.log('Waterfall done');
-		that.locked = false;
-	    })
-    };
+		cb(null, finalGameStateReached);
+	    },
+	    // Let computer play its move
+	    function(finalGameStateReached, cb) {
+		if(finalGameStateReached) {
+		    return cb(null, true);
+		};
+		var handle = that.cfiClient.addListener( new BestMoveListener(function(b) {
+		    that.cfiClient.removeListener(handle);
+		    if(!b || b.getColumn() == null) {
+			return cb(null, true);
+		    }
+		    board.setFieldToken(
+			b.getColumn(),
+			board.findRow(b.getColumn()),
+			board.toggleToken(that.humanPlayersToken));
+		    var isFour = b.isFour1();
+		    if (isFour) {
+			board.setFieldMarker(b.getLine());
+			alert('Computer has won');
+		    }
+		    return cb(null, isFour);
+		}));
+		that.cfiClient.sendCommand(
+		    ['play', board.getCcfiPlacement(), board.toggleToken(that.humanPlayersToken), '6'].join(' '));
+	    },
+	    // Check if draw (no move left board)
+	    function(finalGameStateReached, cb) {
+		if(!finalGameStateReached) {
+		    finalGameStateReached = !board.isMoveAvailable();
+		    if (finalGameStateReached) {
+			alert('Draw!');
+		    }
+		}
+		cb(null, finalGameStateReached);
+	    }
+	    
+	],
+	function(err, finalGameStateReached) {
+	    console.log('Waterfall done');
+	    if(finalGameStateReached) {
+		// Do something
+	    }
+	    that.locked = false;
+	});
 };
 
 GameController.prototype.init = function() {
@@ -104,7 +118,7 @@ GameController.prototype.init = function() {
     document.getElementById('link-play').onclick = function(event) {
 	event.preventDefault();
 	var placement = board.getCcfiPlacement();
-	this.cfiClient.sendCommand('play ' + placement + ' x' + ' 1' + ' --column 20' );
+	this.cfiClient.sendCommand('play ' + placement + ' x' + ' 1' + '' );
     }.bind(this);
 
     board.forEachCell( function(cell) {

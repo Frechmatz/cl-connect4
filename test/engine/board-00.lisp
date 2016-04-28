@@ -24,7 +24,7 @@
 	      "test-board-00-a" (create-board-00) board:WHITE 1
 	      ;; :print-final-scores t
 	      :expected-final-columns '(2)
-	      :is-mate-expected 1
+	      :is-mate-expected-for-player 1
 	      ))
 
 ;;; Test with traversal depth 6
@@ -34,7 +34,7 @@
 	      "test-board-00-c" (create-board-00) board:WHITE 6
 	      :expected-final-columns '(2) 
 	      ;; :print-final-scores t
-	      :is-mate-expected 1
+	      :is-mate-expected-for-player 1
 	      ))
 
 
