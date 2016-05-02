@@ -1,3 +1,10 @@
+
+$cell-color-o: green;
+$cell-color-x: red;
+ 
+$cell-color-o-highlight: palegreen;
+$cell-color-x-highlight: #fe8484; // https://upload.wikimedia.org/wikipedia/commons/f/fd/Color_icon_red.svg
+
 .page-wrapper {
     padding: 20px;
 }
@@ -179,17 +186,28 @@ Styling: Board
     border: 1px solid black;
     border-collapse: collapse;
 }
-.board-cell-marker {
+
+.board-cell-marker[data-value="ON"] {
     background-color: black;
+    /* display: block; */ /* see also board.js */
 }
+.board-cell-marker[data-value="x"] {
+    background-color: $cell-color-x-highlight;
+    /* display: block; */ /* see also board.js */
+}
+.board-cell-marker[data-value="o"] {
+    background-color: $cell-color-o-highlight;
+    /* display: block; */ /* see also board.js */
+}
+
 .board-cell[data-token="x"] {
-    background-color: red;
+    background-color: $cell-color-x;
 }
 .board-cell[data-token="_"] {
     background-color: white;
 }
 .board-cell[data-token="o"] {
-    background-color: green;
+    background-color: $cell-color-o;
 }
 /*
 hover cell styles must be declared after non-hover ones
@@ -197,11 +215,11 @@ data-human-players-token will be set during gameplay
 the purpose of this token is to avoid css injection via javascript
 */
 .board-cell[data-token="_"][data-human-players-token="x"]:hover {
-    background-color: #fe8484; // https://upload.wikimedia.org/wikipedia/commons/f/fd/Color_icon_red.svg
+    background-color: $cell-color-x-highlight;
     cursor: s-resize;
 }
 .board-cell[data-token="_"][data-human-players-token="o"]:hover {
-    background-color: palegreen;
+    background-color: $cell-color-o-highlight;
     cursor: s-resize;
 }
 

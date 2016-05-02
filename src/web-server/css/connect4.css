@@ -165,8 +165,20 @@ Styling: Board
   border: 1px solid black;
   border-collapse: collapse; }
 
-.board-cell-marker {
-  background-color: black; }
+.board-cell-marker[data-value="ON"] {
+  background-color: black;
+  /* display: block; */
+  /* see also board.js */ }
+
+.board-cell-marker[data-value="x"] {
+  background-color: #fe8484;
+  /* display: block; */
+  /* see also board.js */ }
+
+.board-cell-marker[data-value="o"] {
+  background-color: palegreen;
+  /* display: block; */
+  /* see also board.js */ }
 
 .board-cell[data-token="x"] {
   background-color: red; }

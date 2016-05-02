@@ -19,10 +19,11 @@ GameController.prototype.cellClickHandler = function(evt) {
     
     var that = this;
     this.locked = true;
+    board.clearFieldMarker();
     // Lets go
     async.waterfall(
 	[
-	    // Check if human player has four pieces in a row
+	    // Apply humans move
 	    function(cb) {
 		var handle = that.cfiClient.addListener( new BestMoveListener(function(b) {
 		    that.cfiClient.removeListener(handle);
@@ -38,9 +39,9 @@ GameController.prototype.cellClickHandler = function(evt) {
 		    return cb(null, isFour);
 		}));
 		that.cfiClient.sendCommand(
-		    ['play', board.getCcfiPlacement(), that.humanPlayersToken, '1', '--column', + c.x].join(' '));
+		    ['play', board.getCcfiPlacement(), that.humanPlayersToken, '1', '--column', c.x].join(' '));
 	    },
-	    // Check if draw (no move left board)
+	    // Check if still a move is available
 	    function(finalGameStateReached, cb) {
 		if(!finalGameStateReached) {
 		    finalGameStateReached = !board.isMoveAvailable();
@@ -63,7 +64,8 @@ GameController.prototype.cellClickHandler = function(evt) {
 		    board.setFieldToken(
 			b.getColumn(),
 			board.findRow(b.getColumn()),
-			board.toggleToken(that.humanPlayersToken));
+			board.toggleToken(that.humanPlayersToken),
+			{ marker: board.toggleToken(that.humanPlayersToken)});
 		    var isFour = b.isFour1();
 		    if (isFour) {
 			board.setFieldMarker(b.getLine());
@@ -74,7 +76,7 @@ GameController.prototype.cellClickHandler = function(evt) {
 		that.cfiClient.sendCommand(
 		    ['play', board.getCcfiPlacement(), board.toggleToken(that.humanPlayersToken), '6'].join(' '));
 	    },
-	    // Check if draw (no move left board)
+	    // Check if draw
 	    function(finalGameStateReached, cb) {
 		if(!finalGameStateReached) {
 		    finalGameStateReached = !board.isMoveAvailable();

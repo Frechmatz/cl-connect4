@@ -2,7 +2,6 @@
 
 var CfiClient = function() {
     var websocket = null;
-    var url = 'ws://localhost:8003/ccfi';
     listeners = [];
 
     function getListener(id) {
@@ -50,6 +49,10 @@ var CfiClient = function() {
     };
 
     function connect() {
+	//var url = 'ws://localhost:8003/ccfi';
+	var location = window.location;
+	console.log(location);
+	var url = 'ws://' + location.hostname + ':8003/ccfi'; 
 	websocket = new WebSocket(url);
 	websocket.onopen = function(evt) { onOpen(evt) };
 	websocket.onclose = function(evt) { onClose(evt) };

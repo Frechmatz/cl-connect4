@@ -57,9 +57,17 @@ var Board = function() {
 	return result;
     };
 
-    function setFieldMarkerImpl(cell, set) {
+    function setFieldMarkerImpl(cell, value) {
 	m = cell.querySelector('.board-cell-marker');
-	m.style.display = set ? 'block' : 'none';
+	m.setAttribute('data-value', value ? value : 'OFF');
+	// TODO: Setting display style via CSS does not work
+	// Display property gets overwritten by parent,
+	// whose display property is 'none'
+	m.style.display = value ? 'block' : 'none';
+    };
+    function isFieldMarkedImpl(cell) {
+	m = cell.querySelector('.board-cell-marker');
+	return m.dataset.value !== 'OFF';
     };
     
     // returns { width: n, height: m } n,m >= 0
@@ -104,7 +112,7 @@ var Board = function() {
     this.clear = function() {
 	this.forEachCell( function(cell) {
 	    cell.setAttribute('data-token', '_');
-	    setFieldMarkerImpl(cell, false);
+	    setFieldMarkerImpl(cell, null);
 	});
     };
 
@@ -119,10 +127,14 @@ var Board = function() {
 	// TODO: replace by id call
 	return b.querySelector('.board-cell[data-column="' + x + '"][data-row="' + y + '"]');
     };
-    this.setFieldToken = function(x,y,token) {
-	//TODO: Assertion against token
+    this.setFieldToken = function(x,y,token, options) {
 	var c = getFieldCell(x,y);
-	c.setAttribute('data-token', token);
+	if(c) {
+	    c.setAttribute('data-token', token);
+	    if(options && options.marker) {
+		setFieldMarkerImpl(c, options.marker);
+	    }
+	}
     }; 
 
     this.getTokenForX = function() {
@@ -157,27 +169,28 @@ var Board = function() {
 	}
 	return y;
     };
-    function isCoordinate(x,y,coordinateArray) {
-	var found = _.find(coordinateArray, function(c) {
-	    return (c.x === x && c.y === y);
-	});
-	return found ? true : false;
-    };
 
     // coordinateArray = array of { x: ..., y: ... } 
-    this.setFieldMarker = function(coordinateArray) {
+    this.setFieldMarker = function(coordinateArray, overrideMarker) {
 	coordinateArray = _.map(coordinateArray, function(c) {
 	    return {
 		x: c.x.toString(),
 		y: c.y.toString()
 	    };
 	});
-	// TODO: Implement _.findWhere() in order to get rid of isCoordinate() function
-	this.forEachCell( function(cell) {
-	    var doMark = isCoordinate(cell.getAttribute('data-column'), cell.getAttribute('data-row'), coordinateArray);
-	    setFieldMarkerImpl(cell, doMark);
-	})};
+	_.each(coordinateArray, function(c) {
+	    var c = getFieldCell(c.x, c.y);
+	    if (c && (overrideMarker || !isFieldMarkedImpl(c))) {
+		setFieldMarkerImpl(c, 'ON');
+	    }
+	}.bind(this));
+    };
 
+    this.clearFieldMarker = function() {
+	this.forEachCell( function(cell) {
+	    setFieldMarkerImpl(cell, null);
+	})};
+    
     this.isMoveAvailable = function() {
 	var width = this.getSize().width;
 	for( var x = 0; x < width; x++) {
