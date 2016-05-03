@@ -113,7 +113,7 @@
 	    (:div :class "body" 
 		  (:div :class "navbar"
 			(:a :class "link-new-game" :id "link-new-game" :title "New Game" :href "#" (:span "New game"))
-			(:a :class "link-play" :id "link-play" :title "Play" :href "#" (:span "Play"))
+			(:a :class "link-toggle-color" :id "link-toggle-color" :title "Toggle color" :href "#" (:span "Toggle color"))
 			(:a :class "link-debug" :id "link-debug" :title "Debug" :href "#" (:span "Debug"))
 			)
 		  (:div :class "playground"
@@ -128,7 +128,8 @@
 			(:div :class "console-content"
 			      (:textarea :class "console-textarea" :id "console-textarea"))))
 	    (:div :class "footer" :id "footer"
-		  (:p :class "human-players-token-indicator" "Your Color")
+		  (:div :class "human-players-token-indicator" (:p "Your Color"))
+		  (:a :class "final-state-click-to-continue" :href "#" (:p "Click to continue"))
 		  )
 	    )))))
 

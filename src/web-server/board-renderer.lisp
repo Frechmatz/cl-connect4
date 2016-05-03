@@ -23,8 +23,9 @@ Render a board using a HTML table
        :data-row y
        :data-human-players-token "?"
        (:div :class "board-cell-marker"
-	     ;; display to be set via JavaScript
-	     :style "position: absolute; top: 40%; left: 40%; width: 20%; height: 20%; display: none"
+	     ;; display property to be set via CSS
+	     :style "position: absolute; top: 40%; left: 40%; width: 20%; height: 20%;"
+	     :data-value "OFF"
 	     )
       ))))
 

@@ -36,7 +36,7 @@
 * Connect4-Console
 ** TODO Add help method to command-table (maybe command-table concept needs some rework)
 ** TODO Merge help-text functions into one and use reduce function
-** TODO Formatting of score (do format in exponential form)
+** TODO Formatting of score (do not format in exponential form)
 
 
 * CFI-Server / CFI-Core
@@ -47,9 +47,22 @@
 *** Get rid of hard coded path for logging
 *** Get rid of magic to determine static/ directory 
 ** TODO Generalize or replace Logger class
+** TODO Pass back score to client
 
 
 * Web-Client
-** TODO Dispatching of server responses
-** TODO Throw a piece into a column
-** 
+** DONE Dispatching of server responses
+** DONE Throw a piece into a column
+** TODO Final state processing
+** TODO Resize field
+** TODO Test with Firefox
+*** MacOs
+*** Windows
+** TODO Test with IE10
+** TODO Test with Edge
+** TODO Support of mobile devices
+** TODO Toolbar Buttons
+*** Toggle color
+** TODO Activity indicator
+** TODO Indicator of humans color
+** TODO Adapt rendered board size to available space

@@ -60,10 +60,6 @@ var Board = function() {
     function setFieldMarkerImpl(cell, value) {
 	m = cell.querySelector('.board-cell-marker');
 	m.setAttribute('data-value', value ? value : 'OFF');
-	// TODO: Setting display style via CSS does not work
-	// Display property gets overwritten by parent,
-	// whose display property is 'none'
-	m.style.display = value ? 'block' : 'none';
     };
     function isFieldMarkedImpl(cell) {
 	m = cell.querySelector('.board-cell-marker');

@@ -3,7 +3,8 @@ $cell-color-o: green;
 $cell-color-x: red;
  
 $cell-color-o-highlight: palegreen;
-$cell-color-x-highlight: #fe8484; // https://upload.wikimedia.org/wikipedia/commons/f/fd/Color_icon_red.svg
+// https://upload.wikimedia.org/wikipedia/commons/f/fd/Color_icon_red.svg
+$cell-color-x-highlight: #fe8484;
 
 .page-wrapper {
     padding: 20px;
@@ -13,12 +14,14 @@ $cell-color-x-highlight: #fe8484; // https://upload.wikimedia.org/wikipedia/comm
 Placement of main blocks 
 */
 
+$footer-height: 10vh;
+
 .header {
     height: 20vh;
     width: 100%;
 }
 .footer {
-    height: 10vh;
+    height: $footer-height;
     margin-top: 20px;
     width: 100%;
 }
@@ -34,7 +37,7 @@ Placement of main blocks
     - FooterMargin
     - BodyMargin
     */
-    height: calc(100vh - 40px - 20vh - 10vh - 20px - 20px);
+    height: calc(100vh - 40px - 20vh - #{$footer-height} - 20px - 20px);
 }
 
 /*
@@ -112,10 +115,10 @@ Styling navbar
     stroke-width: 20;
     background-image: url('/buttons/newgame.svg');
 }
-.navbar .link-debug {
+.navbar .link-toggle-color {
     background-image: url('/buttons/debug.svg');
 }
-.navbar .link-play {
+.navbar .link-debug {
     background-image: url('/buttons/debug.svg');
 }
 
@@ -152,16 +155,54 @@ Styling: Footer
 */
 .footer {
     background-color: blue;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
 }
-.footer .human-players-token-indicator {} .footer .human-players-token {
-    background-color: yellow;
+
+.footer .human-players-token-indicator {
+    display: block;
+    padding-left: 6px;
+    padding-right: 6px;
+    //width: calc( #{$footer-height} - 10px);
+    height: calc( #{$footer-height} - 10px);
+    margin-left: 5px;
 }
+
+/*
+.footer .human-players-token-indicator p {
+    text-align: center;
+}
+*/
+
 .footer .human-players-token-indicator[data-human-players-token="x"] {
-    background-color: red;
+    background-color: $cell-color-x;
 }
 .footer .human-players-token-indicator[data-human-players-token="o"] {
-    background-color: green;
+    background-color: $cell-color-o;
 }
+
+.footer .final-state-click-to-continue {
+    padding-left: 6px;
+    padding-right: 6px;
+    height: calc( #{$footer-height} - 10px);
+    margin-left: 5px;
+    background-color: white;
+}
+.footer .final-state-click-to-continue[data-value="OFF"] {
+    display: none;
+}
+.footer .final-state-click-to-continue[data-value="HUMAN_HAS_WON"] {
+    display: block;
+}
+.footer .final-state-click-to-continue[data-value="COMPUTER_HAS_WON"] {
+    display: block;
+}
+.footer .final-state-click-to-continue[data-value="DRAW"] {
+    display: block;
+}
+
+
 
 /*
 Styling: Console
@@ -189,15 +230,19 @@ Styling: Board
 
 .board-cell-marker[data-value="ON"] {
     background-color: black;
-    /* display: block; */ /* see also board.js */
+    display: block;
+}
+.board-cell-marker[data-value="OFF"] {
+    background-color: black;
+    display: none;
 }
 .board-cell-marker[data-value="x"] {
     background-color: $cell-color-x-highlight;
-    /* display: block; */ /* see also board.js */
+    display: block;
 }
 .board-cell-marker[data-value="o"] {
     background-color: $cell-color-o-highlight;
-    /* display: block; */ /* see also board.js */
+    display: block;
 }
 
 .board-cell[data-token="x"] {

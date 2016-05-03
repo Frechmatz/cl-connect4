@@ -1,14 +1,71 @@
 
 
 var GameController = function() {
-
     this.cfiClient = new CfiClient();
     this.humanPlayersToken = null;
     this.locked = false;
+    this.processingFinalState = false;
 };
 
+GameController.prototype.init = function() {
+    this.cfiClient.addListener(new ConsoleListener( ['ping', 'pong']));
+    this.cfiClient.init();
+    this.setHumanPlayersToken(board.getTokenForX());
+    footer.hideFinalGameStateIndicator();
+    
+    footer.setFinalStateContinueHandler( function() {
+	this.processingFinalState = false;
+	footer.hideFinalGameStateIndicator();
+	board.clear();
+    }.bind(this));
+
+    this.isBlockButton = function() {
+    	return this.locked || this.processingFinalState;
+    };
+
+    document.getElementById('link-new-game').onclick = function(event) {
+	event.preventDefault();
+	if (!this.isBlockButton()) {
+	    board.clear();
+	    footer.hideFinalGameStateIndicator();
+	}
+    }.bind(this);
+    
+    document.getElementById('link-toggle-color').onclick = function(event) {
+	event.preventDefault();
+	if( !this.isBlockButton()) {
+	    this.toggleHumanPlayersToken();
+	}
+    }.bind(this);
+
+    document.getElementById('link-debug').onclick = function(event) {
+	event.preventDefault();
+	if (!this.isBlockButton()) {
+	    var placement = board.getCcfiPlacement();
+	    this.cfiClient.sendCommand('play ' + placement + ' x' + ' 1' + '' );
+	}
+    }.bind(this);
+
+    board.forEachCell( function(cell) {
+	cell.onclick = this.cellClickHandler.bind(this);
+    }.bind(this));
+};
+
+GameController.prototype.toggleHumanPlayersToken = function() {
+    this.setHumanPlayersToken(board.toggleToken(this.humanPlayersToken));
+};
+
+GameController.prototype.setHumanPlayersToken = function(token) {
+    this.humanPlayersToken = token;
+    board.setHumanPlayersToken(this.humanPlayersToken);
+    footer.setHumanPlayersToken(this.humanPlayersToken);
+};
+
+/*
+  Player has clicked into a cell.
+*/
 GameController.prototype.cellClickHandler = function(evt) {
-    if (this.locked) {
+    if (this.locked || this.processingFinalState) {
 	return;
     }
     var c = board.getCellCoordinate(evt.currentTarget);
@@ -20,7 +77,6 @@ GameController.prototype.cellClickHandler = function(evt) {
     var that = this;
     this.locked = true;
     board.clearFieldMarker();
-    // Lets go
     async.waterfall(
 	[
 	    // Apply humans move
@@ -34,7 +90,7 @@ GameController.prototype.cellClickHandler = function(evt) {
 		    var isFour = b.isFour1();
 		    if (isFour) {
 			board.setFieldMarker(b.getLine());
-			alert('You have won');
+			footer.indicateHumanHasWon();
 		    };
 		    return cb(null, isFour);
 		}));
@@ -46,7 +102,7 @@ GameController.prototype.cellClickHandler = function(evt) {
 		if(!finalGameStateReached) {
 		    finalGameStateReached = !board.isMoveAvailable();
 		    if (finalGameStateReached) {
-			alert('Draw!');
+			footer.indicateDraw();
 		    }
 		}
 		cb(null, finalGameStateReached);
@@ -69,7 +125,7 @@ GameController.prototype.cellClickHandler = function(evt) {
 		    var isFour = b.isFour1();
 		    if (isFour) {
 			board.setFieldMarker(b.getLine());
-			alert('Computer has won');
+			footer.indicateComputerHasWon();
 		    }
 		    return cb(null, isFour);
 		}));
@@ -81,62 +137,16 @@ GameController.prototype.cellClickHandler = function(evt) {
 		if(!finalGameStateReached) {
 		    finalGameStateReached = !board.isMoveAvailable();
 		    if (finalGameStateReached) {
-			alert('Draw!');
+			footer.indicateDraw();
 		    }
 		}
 		cb(null, finalGameStateReached);
 	    }
-	    
 	],
 	function(err, finalGameStateReached) {
-	    console.log('Waterfall done');
 	    if(finalGameStateReached) {
-		// Do something
+		that.processingFinalState = true;
 	    }
 	    that.locked = false;
 	});
-};
-
-GameController.prototype.init = function() {
-    this.cfiClient.addListener(new ConsoleListener( ['ping', 'pong']));
-
-    // The token of the human player
-    this.setHumanPlayersToken(board.getTokenForX());
-    
-    this.cfiClient.init();
-
-    document.getElementById('link-new-game').onclick = function(event) {
-	event.preventDefault();
-	board.clear();
-    }.bind(this);
-    
-    document.getElementById('link-debug').onclick = function(event) {
-	event.preventDefault();
-	console.log(board.getCcfiPlacement());
-	this.toggleHumanPlayersToken();
-	board.setFieldMarker([ { x:2, y:2 }, { x:3, y:3 } ]);
-    }.bind(this);
-
-    document.getElementById('link-play').onclick = function(event) {
-	event.preventDefault();
-	var placement = board.getCcfiPlacement();
-	this.cfiClient.sendCommand('play ' + placement + ' x' + ' 1' + '' );
-    }.bind(this);
-
-    board.forEachCell( function(cell) {
-	cell.onclick = this.cellClickHandler.bind(this);
-    }.bind(this));
-};
-
-
-
-GameController.prototype.toggleHumanPlayersToken = function() {
-    this.setHumanPlayersToken(board.toggleToken(this.humanPlayersToken));
-};
-
-GameController.prototype.setHumanPlayersToken = function(token) {
-    this.humanPlayersToken = token;
-    // Let :hover CSS rules match
-    board.setHumanPlayersToken(this.humanPlayersToken);
-    footer.setHumanPlayersToken(this.humanPlayersToken);
 };
