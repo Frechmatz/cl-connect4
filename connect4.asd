@@ -10,6 +10,10 @@
 			:serial t
 			:components ((:file "packages")
                                      (:file "board")))
+	       (:module "src/connect4/score"
+			:serial t
+			:components ((:file "packages")
+                                     (:file "reduce")))
 	       (:module "src/connect4/engine"
 			:serial t
 			:components ((:file "packages")

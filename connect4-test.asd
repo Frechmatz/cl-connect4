@@ -11,6 +11,10 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "board")))
+	       (:module "src/connect4/score"
+                        :serial t
+                        :components ((:file "packages")
+                                     (:file "reduce")))
 	       (:module "src/connect4/engine"
                         :serial t
                         :components ((:file "packages")
@@ -26,13 +30,15 @@
 	       (:module "test"
                         :serial t
                         :components ((:file "packages")))
+	       (:module "test/score"
+			:serial t
+			:components ((:file "reduce-scores")))
 	       (:module "test/engine"
                         :serial t
                         :components ((:file "testutil")
                                      (:file "detect-four")
                                      (:file "board-score")
                                      (:file "column-weights")
-                                     (:file "reduce-scores")
                                      (:file "peek-is-four")
 				     (:file "no-move-available")
 				     (:file "move-available")

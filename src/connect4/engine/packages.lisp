@@ -3,6 +3,7 @@
 (defpackage :engine
   (:use :cl)
   (:use :board)
+  (:use :score)
   (:export :classic-width)
   (:export :classic-height)
   (:export :PLAY)
