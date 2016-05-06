@@ -69,8 +69,7 @@
 			   moves
 			   nil
 			   (lambda (m) (third m))
-			   (lambda (m) 1.0)
-			   :skip-prefer-center t))
+			   (lambda (m) 1.0)))
 	       (assert-equal 2 (first move) (format t "test-reduce-scores-1: Wrong column chosen: ~a~%" (first move)))
 	       ))
 
@@ -85,7 +84,7 @@
 			   t
 			   (lambda (m) (third m))
 			   (lambda (m) 1.0)
-			   :skip-randomizer t :skip-prefer-center t))
+			   :skip-randomizer t))
 	       (assert-equal 0 (first move) (format t "test-reduce-scores-2: Wrong column chosen: ~a~%" (first move)))
 	       ))
 
@@ -99,8 +98,7 @@
 			   moves
 			   nil
 			   (lambda (m) (third m))
-			   (lambda (m) 1.0)
-			   :skip-prefer-center t))
+			   (lambda (m) 1.0)))
 	       (assert-equal 2 (first move) (format t "test-reduce-scores-3: Wrong column chosen: ~a~%" (first move)))
 	       ))
 
@@ -114,8 +112,7 @@
 			   moves
 			   t
 			   (lambda (m) (third m))
-			   (lambda (m) 1.0)
-			   :skip-prefer-center t))
+			   (lambda (m) 1.0)))
 	       (assert-equal 1 (first move) (format t "test-reduce-scores-4: Wrong column chosen: ~a~%" (first move)))
 	       ))
 
@@ -130,7 +127,7 @@
 			   nil
 			   (lambda (m) (third m))
 			   (lambda (m) 1.0)
-			   :skip-randomizer t :skip-prefer-center t))
+			   :skip-randomizer t))
 	       (assert-equal 0 (first move) (format t "test-reduce-scores-5: Wrong column chosen: ~a~%" (first move)))
 	       ))
 
@@ -145,7 +142,7 @@
 			   t
 			   (lambda (m) (third m))
 			   (lambda (m) 1.0)
-			   :skip-randomizer t :skip-prefer-center t))
+			   :skip-randomizer t))
 	       (assert-equal 0 (first move) (format t "test-reduce-scores-6: Wrong column chosen: ~a~%" (first move)))
 	       ))
 
@@ -161,7 +158,7 @@
 			   t
 			   (lambda (m) (third m))
 			   (lambda (m) 1.0)
-			   :skip-randomizer t :skip-prefer-center t))
+			   :skip-randomizer t))
 	       (assert-equal nil move (format t "test-reduce-scores-7: Failed~%"))
 	       ))
 

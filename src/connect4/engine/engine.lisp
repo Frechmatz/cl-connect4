@@ -21,21 +21,16 @@
   nil)
   "Handler that is called each time after a minimizing/maximizing of a row of scores took place")
 
-(defvar *engine-configuration-prefer-center* t
-  "Prefer moves that are near to the horizontal center of the board.")
-
 (defun toggle-color (color)
   (if (eq color WHITE) BLACK WHITE))
 
-(defun calc-column-weights (board-width prefer-center)
+(defun calc-column-weights (board-width)
   "Calculate a weight for each column. The nearer to the center the higher the weight"
   (let ((weights (make-array board-width)))
     (dotimes (x board-width)
-      (if (not prefer-center)
-	  (setf (aref weights x) 1.0)
-	  ;; 1 / (1 + Distance from center)
-	  (setf (aref weights x) (/ 1.0 (+ 1 (abs (- (/ board-width 2) x)))))
-	  ))
+      ;; 1 / (1 + Distance from center)
+      (setf (aref weights x) (/ 1.0 (+ 1 (abs (- (/ board-width 2) x)))))
+      )
     weights))
 
 (defun board-score (board x y)
@@ -112,9 +107,7 @@ If t returns a list consisting of such move otherwise return the moves given int
 	(cur-line '())
 	(column-filter start-column)
 	(*column-weights*
-	 (calc-column-weights
-	  (get-width the-board)
-	  *engine-configuration-prefer-center*)))
+	 (calc-column-weights (get-width the-board))))
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let (
@@ -151,6 +144,7 @@ If t returns a list consisting of such move otherwise return the moves given int
 				(lambda (m) (third m))
 				;; Weight getter
 				(lambda (m) (aref *column-weights* (first m)))
+				;;(lambda (m) 1.0)
 				:skip-randomizer (if (equal cur-depth 1) nil t))))
 		   (funcall *engine-notification-reduced-scores* board color is-opponent cur-depth result moves)
 		   result)

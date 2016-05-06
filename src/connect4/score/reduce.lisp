@@ -51,7 +51,7 @@ Maximize: #'> Minimize: #'<"
 	   moves)))))
 
 
-(defun reduce-scores (moves is-opponent get-score-fn get-weight-fn &key (skip-randomizer nil) (skip-prefer-center nil))
+(defun reduce-scores (moves is-opponent get-score-fn get-weight-fn &key (skip-randomizer nil))
   "Reduce list of possible moves.
   moves: list of moves
   get-score-fn: function that returns the score of a move
@@ -63,8 +63,7 @@ Maximize: #'> Minimize: #'<"
       nil
       (progn 
 	(let ((resulting-moves (get-reduced-scores moves is-opponent get-score-fn)))
-	  (if (not skip-prefer-center)
-	      (setf resulting-moves (get-max-weighted-moves resulting-moves get-weight-fn)))
+	  (setf resulting-moves (get-max-weighted-moves resulting-moves get-weight-fn))
 	  (if (not skip-randomizer)
 	      (get-random-entry resulting-moves)
 	      (first resulting-moves))
