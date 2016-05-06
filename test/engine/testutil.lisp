@@ -45,7 +45,6 @@
 			  (expected-final-scores nil)
 			  (expected-final-columns nil)
 			  (expected-final-move-score nil)
-			  (print-engine-configuration nil)
 			  (is-mate-expected-for-player nil) 
 			  (engine-configuration-prefer-center t))
   ;; (format t "Running minmax test ~a~%" name-of-test)
@@ -65,7 +64,7 @@
 			      expected-final-scores)
 			     (format t "~a: Final scores do not match. Expected:~%~a~%Resulting:~%~a~%"
 				     name-of-test expected-final-scores all-scores))))))
-    (setf best-move (engine:play board color depth :print-engine-configuration print-engine-configuration))
+    (setf best-move (engine:play board color depth))
     (if expected-final-columns
 	(progn
 	  (assert-true

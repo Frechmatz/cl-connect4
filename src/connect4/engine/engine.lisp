@@ -24,11 +24,6 @@
 (defvar *column-weights* nil
   "This array defines the weight of each column of the current board. 0 > weight <= 1.0")
 
-(defun print-engine-configuration ()
-  (format t "Engine configuration:~%")
-  (format t ">>> *engine-configuration-prefer-center*: ~a~%" *engine-configuration-prefer-center*)
-  (format t ">>> Column weights: ~a~%" *column-weights*))
-
 (defun toggle-color (color)
   (if (eq color WHITE) BLACK WHITE))
 
@@ -169,7 +164,7 @@ If t returns a list consisting of such move otherwise return the moves given int
 ;;; color: The computers color
 ;;;
 ;;; create a clone of the board that for performance reasons will be manipulated during the traversal
-(defun play (the-board color max-depth &key (print-engine-configuration nil) (start-column nil))
+(defun play (the-board color max-depth &key (start-column nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
   (let (
 	(board (clone-board the-board))
@@ -180,8 +175,6 @@ If t returns a list consisting of such move otherwise return the moves given int
 	 (calc-column-weights
 	  (get-width the-board)
 	  *engine-configuration-prefer-center*)))
-    (if print-engine-configuration
-	(print-engine-configuration))
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let (
