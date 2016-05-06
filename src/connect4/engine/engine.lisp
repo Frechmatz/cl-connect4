@@ -12,6 +12,9 @@
 (define-condition internal-error (error)
   ((text :initarg :text :reader text)))
 
+(defvar *column-weights* nil
+  "This array defines the weight of each column of the current board. 0 > weight <= 1.0")
+
 (defvar *engine-notification-reduced-scores*
   (lambda (board color is-opponent depth reduced-score all-scores)
   (declare (ignore board color is-opponent depth reduced-score all-scores))
@@ -141,7 +144,14 @@ If t returns a list consisting of such move otherwise return the moves given int
 		     (setf cur-line (cdr cur-line))
 		     )
 		   )
-		 (let ((result (score:reduce-scores moves is-opponent :skip-randomizer (if (equal cur-depth 1) nil t))))
+		 (let ((result (score:reduce-scores
+				moves
+				is-opponent
+				;; Score getter
+				(lambda (m) (third m))
+				;; Weight getter
+				(lambda (m) (aref *column-weights* (first m)))
+				:skip-randomizer (if (equal cur-depth 1) nil t))))
 		   (funcall *engine-notification-reduced-scores* board color is-opponent cur-depth result moves)
 		   result)
 		 )))
