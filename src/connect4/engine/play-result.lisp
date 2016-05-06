@@ -49,4 +49,3 @@ Accessor functions for the result of the play() function
      (lambda (item) (equal (third item) "MATE"))
      (play-result-filter-move-sequence-by-token result token))))
 
-

@@ -1,4 +1,9 @@
 
+/*
+  Client for communication with the Connect4 server.
+  Provides very basic support of listeners.
+  TODO: Behind the scene reconnects 
+ */
 
 var CfiClient = function() {
     var websocket = null;
@@ -93,7 +98,6 @@ var CfiClient = function() {
     }
 
     this.init = function() {
-	// this.timerId = null;
 	connect();
     };
 

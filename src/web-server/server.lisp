@@ -105,6 +105,7 @@
       (:script :src "script/consolelistener.js")
       (:script :src "script/bestmovelistener.js")
       (:script :src "script/cficlient.js")
+      (:script :src "script/layoutcontroller.js")
       (:script :src "script/gamecontroller.js")
       (:script :src "script/footer.js")
       (:script :src "script/onload.js")
@@ -117,7 +118,7 @@
 			(:a :class "link-debug" :id "link-debug" :title "Debug" :href "#" (:span "Debug"))
 			)
 		  (:div :class "playground"
-			(:div :class "board"
+			(:div :class "board" :id "board"
 			      (cl-who:str
 			       (funcall
 				#'connect4-board-renderer:render-ccfi-board

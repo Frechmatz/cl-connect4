@@ -1,9 +1,13 @@
 
+/*
+  Controller of the footer.
+ */
 
 var Footer = function() {
 
     var footerId = "footer";
-
+    var clickHereMsg = 'Click here to start a new game.';
+    
     this.setHumanPlayersToken = function(token) {
 	var f = document.getElementById(footerId);
 	var c = f.querySelector('.human-players-token-indicator');
@@ -19,13 +23,13 @@ var Footer = function() {
     };
 
     this.indicateComputerHasWon = function() {
-	indicateFinalStateImpl('COMPUTER_HAS_WON', 'The computer has won. Click here to start a new game.');
+	indicateFinalStateImpl('COMPUTER_HAS_WON', 'The computer has won. ' + clickHereMsg);
     };
     this.indicateHumanHasWon = function() {
-	indicateFinalStateImpl('HUMAN_HAS_WON', 'You have won. Click here to start a new game.');
+	indicateFinalStateImpl('HUMAN_HAS_WON', 'You have won. ' + clickHereMsg);
     };
     this.indicateDraw = function() {
-	indicateFinalStateImpl('DRAW', 'Draw. Click here to start a new game.');
+	indicateFinalStateImpl('DRAW', 'Draw. ' + clickHereMsg);
     };
     this.hideFinalGameStateIndicator = function() {
 	indicateFinalStateImpl(null, '');

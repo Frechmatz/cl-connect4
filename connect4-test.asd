@@ -48,7 +48,10 @@
 				     ))
 	       (:module "test/cfi"
                         :serial t
-                        :components ((:file "decode-placement-tests")))
+                        :components ((:file "decode-placement-tests")
+				     (:file "play-result-formatter")
+				     )
+			)
   ))
 
 

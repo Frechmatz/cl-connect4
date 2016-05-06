@@ -41,8 +41,9 @@ GameController.prototype.init = function() {
     document.getElementById('link-debug').onclick = function(event) {
 	event.preventDefault();
 	if (!this.isBlockButton()) {
-	    var placement = board.getCcfiPlacement();
-	    this.cfiClient.sendCommand('play ' + placement + ' x' + ' 1' + '' );
+	    //var placement = board.getCcfiPlacement();
+	    //this.cfiClient.sendCommand('play ' + placement + ' x' + ' 1' + '' );
+	    this.cfiClient.sendCommand('play oxxxoox/o1oxx2/x1xoo2/2ooo2/2xxo2/3xx2 o 6');
 	}
     }.bind(this);
 

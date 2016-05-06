@@ -1,5 +1,8 @@
 
-
+/*
+  CfiClient listener that logs incoming and outgoing messages 
+  into the console textarea. 
+*/
 
 var ConsoleListener = function( filterArr ) {
 

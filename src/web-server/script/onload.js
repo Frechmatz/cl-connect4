@@ -5,6 +5,7 @@ board = null;
 footer = null;
 cfiClient =null;
 controller = null;
+layoutController = null;
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -14,6 +15,7 @@ document.addEventListener(
 	board = new Board(),
 	footer = new Footer(),
 	cfiClient = new CfiClient();
+	layoutController = new LayoutController();
 	controller = new GameController();
 	controller.init();
     },

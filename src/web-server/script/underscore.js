@@ -38,6 +38,4 @@ var Underscore = function() {
 	});
 	return map;
     };
-
-    //findWhere --> see board::setFieldMarker
 };

@@ -23,7 +23,6 @@ var Board = function() {
     
     /*
       Get CCFI placement
-      Passes SVG coordinates when calling getTokenFn
      */
     this.encodeToCcfiPlacement = function(dx, dy, getTokenFn) {
 	var scanRow = function (y, dx, getTokenFn) {
@@ -75,7 +74,6 @@ var Board = function() {
 	};
     }
 
-    // SVG coordinates
     // returns Ccfi representation of field: null, x, o
     this.getFieldToken = function(x,y) {
 	var b = document.getElementById(tableId);
