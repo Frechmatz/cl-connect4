@@ -51,7 +51,7 @@
 		      "....."
 		      ))
 	      board:WHITE 2
-	      ;;:print-final-scores t
+	      :print-final-scores t
 	      ;;:print-all-scores t
 	      :expected-final-columns '(2 3)
 	      :engine-configuration-prefer-center t

@@ -31,23 +31,26 @@
       ;; 1 / (1 + Distance from center)
       (setf (aref weights x) (/ 1.0 (+ 1 (abs (- (/ board-width 2) x)))))
       )
+    ;;(format t "Column weights: ~a" weights)
     weights))
 
 (defun board-score (board x y)
   "Evaluate the score of the board. x y: The current move. 
 Returns a value 0 >= value <= 1, where 1 signals a winning position"
-  (if (not *column-weights*)
-      (error 'internal-error :text "board-score: column-weights not set"))
   (if (>= x (get-width board))
       (error 'internal-error :text "board-score: x out of range"))
   (let ((l (length (get-connected-pieces board x y))))
     (if (>= l 4)
 	1.0
-	(progn
-	  (if (>= l 3)
-	      (+ 0.5 (* 0.49 (aref *column-weights* x))) ; 0.50 .. 0.99
-	      (+ 0.25 (* 0.24 (aref *column-weights* x))) ; 0.25 .. 0.49
-	)))))
+	;; Plain:
+	;; 0.0
+	;; For more aggressive play take into account the length of the row.
+	;; Note: Preference of moves near the center of the board
+	;; is handled by the reduce algorithm. It doesn't make
+	;; sense here due to the score propagation of the minmax algorithm
+	(let ((distance (- 4 l)))
+	  (/ 1 (+ 1 distance)))
+	)))
 
 (defun generate-moves (board &key (column-filter nil))
   "Generate moves. Returns a list of (x y) coordinates of all possible moves"
@@ -144,7 +147,6 @@ If t returns a list consisting of such move otherwise return the moves given int
 				(lambda (m) (third m))
 				;; Weight getter
 				(lambda (m) (aref *column-weights* (first m)))
-				;;(lambda (m) 1.0)
 				:skip-randomizer (if (equal cur-depth 1) nil t))))
 		   (funcall *engine-notification-reduced-scores* board color is-opponent cur-depth result moves)
 		   result)

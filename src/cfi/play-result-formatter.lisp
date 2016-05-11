@@ -12,7 +12,11 @@
   (if (engine:play-result-is-four-n result)
       (format nil "--four ~a"
 	      (reduce
-	       (lambda (a b) (concatenate 'string (write-to-string a) "/" (write-to-string b)))
+	       (lambda (a b) (concatenate
+			      'string
+			      (format nil "~a" a)
+			      "/"
+			      (format nil "~a" b)))
 	       (engine:play-result-players-move-sequence result)))
       ""))
 
@@ -34,7 +38,11 @@
 	      (reduce
 	       (lambda (a b) (concatenate 'string a "/" b))
 	       (mapcar
-		(lambda (i) (concatenate 'string (write-to-string (first i)) ";" (write-to-string (second i))))
+		(lambda (i) (concatenate
+			     'string
+			     (format nil "~a" (first i))
+			     ";"
+			     (format nil "~a" (second i))))
 		(get-line
 		 board
 		 (engine:play-result-column result)

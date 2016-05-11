@@ -17,7 +17,7 @@
 		      "bwbwb"
 		      ))
 	      board:WHITE 6)))
-	       (format t "Result: ~a" r)
+	       ;;(format t "Result: ~a" r)
 	       (assert-true r (format nil "Result not set"))
 	       (assert-true (eql 4 (length r))  (format nil "Result length does not match"))
 	       (assert-true (not (first r)) (format nil "First not nil"))

@@ -12,7 +12,6 @@
 		(format nil "cfi-play-result-formatter-four-1 failed"))
 	       ))
 
-
 (define-test cfi-play-result-formatter-four-n-1 ()
 	     (let ((r
 		    (cfi::play-result-formatter-four
@@ -22,3 +21,4 @@
 		(string= r "--four 5/5/5")
 		(format nil "cfi-play-result-formatter-four-n-1 failed"))
 	       ))
+
