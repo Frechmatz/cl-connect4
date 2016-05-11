@@ -19,18 +19,12 @@ Key points:
 - Commands sent to the server are immediately scheduled for processing. There is
   no special command such as GO that explicitly initiates processing.
 
-- All information that a client needs to handle a move played by the server is
-  passed back in one response. There is no need of book keeping informational
-  messages sent by the server.
-
-
 General
 =======
 
 Commands passed to the server are processed in incoming order. Commands are immediately
 scheduled for processing. If the server is currently processing a command, the new
-command is added to the command queue. If the server has processed a command and it's
-command queue is empty, it sends a "ready" notification to the client.
+command is added to the command queue.
 
 Example:
 
@@ -38,10 +32,9 @@ Example:
 > play ....
 < bestmove ....
 < bestmove ....
-< ready
 
 Messages that start with the hash character '#' can be sent any time to the client. Such
-messages must not be interpreted. Such messages can for example be used by the
+messages must not be interpreted. They can for example be used by the
 server to pass back debug information.
 
 Example:
@@ -51,7 +44,7 @@ Example:
 < pong
 
 
-Coordinate system, Board and Token
+Coordinate System, Board and Token
 ==================================
 
 TODO: define
@@ -75,32 +68,6 @@ Example:
 > ping
 < pong
 < bestmove ...
-< ready
-  
-
-quit
-----
-
-Quit processing the current command and purge the command queue.
-Depending on the command the server is currently working on, this command may
-take a while to process. A client must not send any other command
-except "quit" before it has received the "ready" notification of the server.
-While processing the quit command the server may send informational messages.
-The server will answer any pending play command with a bestmove response.
-
-Syntax: quit
-
-Example:
-
-> play ...
-> play ...
-> quit
-< # Processing quit command
-< info ...
-< bestmove ...
-< bestmove ...
-< ready
-
 
 play
 ----
@@ -150,23 +117,18 @@ Examples:
 
 > play 3 x
 < bestmove NULL
-< ready
 
 > play 3 x
 < bestmove 3 --four 3 --line 3;1/3;2/3;3/3;4
-< ready
 
 > play 3 x
 < bestmove 3 --four 3/3 
-< ready
 
 > play 3 x
 < bestmove 3 --four 3/5
-< ready
 
 > play 3 x
 < bestmove 3 --four 3/3/1
-< ready
 
 info
 ----

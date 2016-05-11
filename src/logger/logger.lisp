@@ -68,10 +68,3 @@ TODO: Generalize code and create a system out of it
 (defmethod log-debug ( (logger file-logger) str)
   (write-to-file (slot-value logger 'filename) (format-message logger "DEBUG" str)))
 
-
-(defun test-it ()
-  (let ((myLogger (make-instance 'file-logger)))
-    (log-info myLogger "Hallo")
-    ))
-
-;; (test-it)

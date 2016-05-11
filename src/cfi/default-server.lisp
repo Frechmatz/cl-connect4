@@ -18,7 +18,7 @@ Implementation of the server interface
    ))
 
 (defmethod connected ((server default-server))
-  (write-message server (format nil "ready")))
+  (write-message server (format nil "# ready")))
 
 (defmethod disconnected ((server default-server))
   (setf (slot-value server 'disconnected-flag) t))
@@ -51,7 +51,6 @@ Implementation of the server interface
       (let ((cmd (next (slot-value server 'command-queue))))
 	(if cmd
 	    (invoke-command server cmd)
-	    (write-message server (format nil "ready"))
 	    ))))
    
 (defun invoke-command (server command)
@@ -113,7 +112,6 @@ Implementation of the server interface
 ;; Handler invoking stuff
 ;; TODO: Put code into a dedicated package
 ;;
-
 
 (defun as-keyword (sym)
   (intern (string (string-upcase sym)) :keyword))

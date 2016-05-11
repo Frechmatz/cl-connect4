@@ -82,14 +82,12 @@
 
 (defun start ()
   (start-main-server)
-  (start-websocket-server)
-  )
+  (start-websocket-server))
 
   
 (defun stop ()
   (stop-main-server)
-  (stop-websocket-server)
-  )
+  (stop-websocket-server))
 
 (defun start-page ()
   (cl-who:with-html-output-to-string (s)
@@ -123,7 +121,8 @@
 			       (funcall
 				#'connect4-board-renderer:render-ccfi-board
 				;; "xxx4/4ooo/7/7/2oooxx/7"
-				"xxo2ox/oxo4/1xo4/2x4/7/7"
+				;;"xxo2ox/oxo4/1xo4/2x4/7/7"
+				"7/7/7/7/7/7"
 				))))
 		  (:div :class "console"
 			(:div :class "console-content"
