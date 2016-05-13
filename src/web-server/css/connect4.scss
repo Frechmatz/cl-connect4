@@ -62,11 +62,16 @@ Layout of Body: Navbar, Playground, Console
     -webkit-flex: 1;
 }
 
+.playground .board {
+    height: 100%;
+}
 /*
 Inner playground
 */
 .board .board-table {
-    width: 50%;
+    /* Board will be resized via JavaScript */
+    width: 100%; 
+    height: 100%;
 }
 
 /*

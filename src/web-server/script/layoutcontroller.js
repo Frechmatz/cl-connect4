@@ -1,7 +1,9 @@
 
 /*
-  This controller is a failed attempt to fix the 
-  unresponsive sizing of the board table :(
+  LayoutController
+  - Sets the size of the playfield table according to the actual size of its parent
+    (don't know how to this via Css)
+  - Registers a global resize handler
 */
 
 var LayoutController = function() {
@@ -16,9 +18,9 @@ var LayoutController = function() {
 	var dy = b.clientHeight;
 	var tableDimension = (dx > dy ? dy : dx).toString() + "px";
 	//console.log('Computed dimension: ' + tableDimension);
-	//var t = document.getElementById(boardTableId);
-	//t.style.width = tableDimension;
-	//t.style.height = tableDimension;
+	var t = document.getElementById(boardTableId);
+	t.style.width = tableDimension;
+	t.style.height = tableDimension;
 
     };
     
@@ -32,5 +34,8 @@ var LayoutController = function() {
 	    layoutBoard();
 	}, 500);
     };
-    
+
+    this.doLayout = function() {
+	layoutBoard();
+    };
 };

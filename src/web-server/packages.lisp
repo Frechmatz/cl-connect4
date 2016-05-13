@@ -4,6 +4,11 @@
   (:export :RENDER-CCFI-BOARD)
   )
 
+(defpackage :connect4-board-renderer-experimental
+  (:use :cl)
+  (:export :RENDER-CCFI-BOARD)
+  )
+
 (defpackage :connect4-javascript
   (:use :cl)
   (:export :javascript)

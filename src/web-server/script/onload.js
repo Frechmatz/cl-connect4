@@ -16,6 +16,7 @@ document.addEventListener(
 	footer = new Footer(),
 	cfiClient = new CfiClient();
 	layoutController = new LayoutController();
+	layoutController.doLayout();
 	controller = new GameController();
 	controller.init();
     },

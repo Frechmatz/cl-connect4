@@ -22,6 +22,7 @@
 				     (:file "websocket")
 				     (:file "server")
 				     (:file "board-renderer")
+				     (:file "board-renderer-experimental")
 				     (:file "buttons")
 				     ))
 	       ))
