@@ -16,9 +16,17 @@ GameController.prototype.init = function() {
     footer.setFinalStateContinueHandler( function() {
 	this.processingFinalState = false;
 	footer.hideFinalGameStateIndicator();
+	gameConsole.clear();
 	board.clear();
     }.bind(this));
 
+    footer.setToggleColorHandler( function() {
+	console.log('Toggle color');
+	if( !this.isBlockButton()) {
+	    this.toggleHumanPlayersToken();
+	}
+    }.bind(this));
+    
     this.isBlockButton = function() {
     	return this.locked || this.processingFinalState;
     };
@@ -28,16 +36,20 @@ GameController.prototype.init = function() {
 	if (!this.isBlockButton()) {
 	    board.clear();
 	    footer.hideFinalGameStateIndicator();
+	    gameConsole.clear();
 	}
     }.bind(this);
-    
+
+    /*
     document.getElementById('link-toggle-color').onclick = function(event) {
 	event.preventDefault();
 	if( !this.isBlockButton()) {
 	    this.toggleHumanPlayersToken();
 	}
     }.bind(this);
+    */
 
+    /*
     document.getElementById('link-debug').onclick = function(event) {
 	event.preventDefault();
 	if (!this.isBlockButton()) {
@@ -46,6 +58,7 @@ GameController.prototype.init = function() {
 	    this.cfiClient.sendCommand('play oxxxoox/o1oxx2/x1xoo2/2ooo2/2xxo2/3xx2 o 6');
 	}
     }.bind(this);
+    */
 
     board.forEachCell( function(cell) {
 	cell.onclick = this.cellClickHandler.bind(this);

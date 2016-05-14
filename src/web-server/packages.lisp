@@ -22,6 +22,7 @@
   (:use :cl :cl-svg)
   (:export :get-debug-button)
   (:export :get-start-new-game-button)
+  (:export :get-toggle-color-button)
   )
 
 (defpackage :connect4-web-server

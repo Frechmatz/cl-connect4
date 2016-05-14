@@ -35,6 +35,9 @@
 	(hunchentoot:define-easy-handler (buttons-newgame :uri "/buttons/newgame.svg") ()
 	  (setf (hunchentoot:content-type*) "image/svg+xml")
 	  (connect4-buttons:get-start-new-game-button))
+	(hunchentoot:define-easy-handler (buttons-togglecolor :uri "/buttons/togglecolor.svg") ()
+	  (setf (hunchentoot:content-type*) "image/svg+xml")
+	  (connect4-buttons:get-toggle-color-button))
 	(push (hunchentoot:create-folder-dispatcher-and-handler
 	       "/static/" ;; Must begin and end with slash
 	       (get-static-dir "static"))
@@ -100,6 +103,7 @@
       (:script :src "script/parser.js")
       (:script :src "script/bestmove.js")
       (:script :src "script/board.js")
+      (:script :src "script/gameconsole.js")
       (:script :src "script/consolelistener.js")
       (:script :src "script/bestmovelistener.js")
       (:script :src "script/cficlient.js")
@@ -112,8 +116,8 @@
 	    (:div :class "body" 
 		  (:div :class "navbar"
 			(:a :class "link-new-game" :id "link-new-game" :title "New Game" :href "#" (:span "New game"))
-			(:a :class "link-toggle-color" :id "link-toggle-color" :title "Toggle color" :href "#" (:span "Toggle color"))
-			(:a :class "link-debug" :id "link-debug" :title "Debug" :href "#" (:span "Debug"))
+			;; (:a :class "link-toggle-color" :id "link-toggle-color" :title "Toggle color" :href "#" (:span "Toggle color"))
+			;; (:a :class "link-debug" :id "link-debug" :title "Debug" :href "#" (:span "Debug"))
 			)
 		  (:div :class "playground"
 			(:div :class "board" :id "board"
@@ -128,7 +132,7 @@
 			(:div :class "console-content"
 			      (:textarea :class "console-textarea" :id "console-textarea"))))
 	    (:div :class "footer" :id "footer"
-		  (:div :class "human-players-token-indicator" (:p "Your Color"))
+		  (:a :class "human-players-token-indicator" :href "#" :title "Toggle Color" (:p "Your Color"))
 		  (:a :class "final-state-click-to-continue" :href "#" (:p "Click to continue"))
 		  )
 	    )))))

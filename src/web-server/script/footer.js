@@ -43,4 +43,12 @@ var Footer = function() {
 	}.bind(this);
 
     };
+    this.setToggleColorHandler = function(handler) {
+	var f = document.getElementById(footerId);
+	var c = f.querySelector('.human-players-token-indicator');
+	c.onclick = function(event) {
+	    event.preventDefault();
+	    handler();
+	}.bind(this);
+    };
 };

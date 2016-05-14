@@ -6,7 +6,6 @@
 
 var ConsoleListener = function( filterArr ) {
 
-    this.consoleId = 'console-textarea';
     this.filters = filterArr ? filterArr : [];
 
     this.filterMessage = function(message) {
@@ -20,15 +19,9 @@ var ConsoleListener = function( filterArr ) {
 	return filter;
     };
     
-    this.writeToScreen = function(message) {
-	var element = document.getElementById(this.consoleId);
-	element.value = (element.value.length > 0 ? (element.value + '\n') : '') + message;
-	element.scrollTop = element.scrollHeight;
-    };
-
     this.writeMessage = function(message, incoming) {
 	if( !this.filterMessage(message)) {
-	    this.writeToScreen( (incoming ? '< ' : '> ') + message);
+	    gameConsole.write( (incoming ? '< ' : '> ') + message);
 	}
     };
 
