@@ -8,7 +8,7 @@ Implementation of the server interface
 
 (defclass default-server (server)
   (
-   (command-queue :initform (make-instance 'queue) :accessor command-queue)
+   (command-queue :initform (queues:make-queue :simple-queue) :accessor command-queue)
    (quit-flag :initform nil :accessor quit-flag)
    (debug-flag :initform nil :accessor debug-flag)
    (current-command :initform nil :accessor current-command)
@@ -46,10 +46,12 @@ Implementation of the server interface
 (defun try-invoke-next-command (server)
   (if (is-current-command server)
       nil
-      (let ((cmd (next (slot-value server 'command-queue))))
-	(if cmd
-	    (invoke-command server cmd)
-	    ))))
+      (progn
+	(let ((cmd (queues:qpop (slot-value server 'command-queue))))
+	  (if cmd
+	      (invoke-command server cmd)
+	      )))))
+
    
 (defun invoke-command (server command)
   (write-debug-message server (format nil "invoking command: ~a" command))
@@ -65,7 +67,7 @@ Implementation of the server interface
   (if (equal command "ping")
       (write-message server "pong")
       (progn
-	(put (slot-value server 'command-queue) command)
+	(queues:qpush (slot-value server 'command-queue) command)
 	(try-invoke-next-command server))))
 
 
