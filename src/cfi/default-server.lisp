@@ -6,8 +6,6 @@ Implementation of the server interface
 
 (in-package :cfi)
 
-(defparameter *logger* (make-instance 'logger:file-logger :name "cfi-server"))
-
 (defclass default-server (server)
   (
    (command-queue :initform (make-instance 'queue) :accessor command-queue)
@@ -63,7 +61,7 @@ Implementation of the server interface
   (try-invoke-next-command server))
 
 (defmethod put-command ((server default-server) command)
-  (logger:log-info *logger* (format nil "put-command: ~a" command))
+  (logger:log-message :info (format nil "put-command: ~a" command))
   (if (equal command "ping")
       (write-message server "pong")
       (progn
@@ -84,7 +82,7 @@ Implementation of the server interface
       (funcall parser s)
     (error (err)
       (progn
-	(logger:log-error *logger* (format nil "parse failed: ~a" err))
+	(logger:log-message :error (format nil "parse failed: ~a" err))
 	(error 'invalid-arguments :text (format nil "~a" s))))))
 
 (defun quit-handler (server)
@@ -129,7 +127,7 @@ Implementation of the server interface
 
 (defun invoke-command-handler (server name lambda-list)
   ;; (declare (optimize (debug 3) (speed 0) (space 0)))
-  (logger:log-debug *logger* (format nil "invoke-command-handler: ~a ~a" name lambda-list))
+  (logger:log-message :debug (format nil "invoke-command-handler: ~a ~a" name lambda-list))
   (handler-case
       (let ((handler (get-handler name)))
 	(if handler
@@ -137,16 +135,16 @@ Implementation of the server interface
 	    (as-error (format nil "Unknown command: ~a" name))))
     (invalid-arguments (err)
       (progn
-	(logger:log-error *logger* (format nil "invoke-command-handler failed: ~a" err))
+	(logger:log-message :error (format nil "invoke-command-handler failed: ~a" err))
 	(as-error (format nil "Command ~a called with invalid arguments" name))))
     (error (err)
       (progn
-	(logger:log-error *logger* (format nil "invoke-command-handler failed: ~a" err))
+	(logger:log-message :error (format nil "invoke-command-handler failed: ~a" err))
 	(as-error (format nil "Command ~a failed or called with insufficient arguments" name))))))
 
 
 (defun execute-command (server cmdline)
-  (logger:log-debug *logger* (format nil "execute-command: ~a" cmdline))
+  (logger:log-message :debug (format nil "execute-command: ~a" cmdline))
   (let* ((tokens (build-lambda-list (cl-ppcre:split "\\s" cmdline)))
 	 (lambda-list (rest tokens))
 	 (cmd (intern (string-upcase (car tokens)))))

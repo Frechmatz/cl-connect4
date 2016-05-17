@@ -16,6 +16,23 @@
     (format nil "~a~a/" basepath directory-name) 
     ))
 
+;; Add log appender pointing to log-file inside my log firectory
+(handler-case
+    (progn
+      (ensure-directories-exist "/Users/olli/var/log")
+      (logger:add-appender (lambda (message)
+			     (let ((stream
+				    (open "/Users/olli/var/log/log.txt"
+					  :direction :output
+					  :if-exists :append
+					  :if-does-not-exist :create)))
+			       (write-line message stream)
+			       (close stream)))))
+    (file-error ()))
+
+    
+
+
 (defun start-main-server ()
   (if *server*
       (format t "~%Main server already running~%")
