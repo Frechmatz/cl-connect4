@@ -15,6 +15,10 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "reduce")))
+	       (:module "src/connect4/movegenerator"
+                        :serial t
+                        :components ((:file "packages")
+                                     (:file "movegenerator")))
 	       (:module "src/connect4/playresult"
                         :serial t
                         :components ((:file "packages")
@@ -38,6 +42,10 @@
 	       (:module "test/playresult"
 			:serial t
 			:components ((:file "playresult")))
+	       (:module "test/movegenerator"
+			:serial t
+			:components (
+				     (:file "move-available")))
 	       (:module "test/engine"
                         :serial t
                         :components ((:file "testutil")
@@ -45,8 +53,7 @@
                                      (:file "board-score")
                                      (:file "column-weights")
                                      (:file "peek-is-four")
-				     (:file "no-move-available")
-				     (:file "move-available")
+				     (:file "full-board")
                                      (:file "board-00")
                                      (:file "board-01")
                                      (:file "board-02")

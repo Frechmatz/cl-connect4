@@ -19,7 +19,7 @@
 
 (defun check-if-move-is-available (context)
   "Helper function to detect a final state"
-  (let ((moves (generate-moves (slot-value context 'board))))
+  (let ((moves (movegenerator:generate-moves (slot-value context 'board))))
     (if (or (not moves) (= 0 (length moves)))
 	(progn
 	  (setf (slot-value context 'draws) (+ 1 (slot-value context 'draws)))

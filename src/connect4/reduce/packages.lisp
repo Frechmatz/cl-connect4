@@ -1,7 +1,5 @@
 
 (defpackage :reduce
   (:use :cl)
-  (:export :reduce-scores)
-  (:export :*column-weights*)
-  )
+  (:export :reduce-scores))
 

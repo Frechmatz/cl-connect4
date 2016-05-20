@@ -1,10 +1,8 @@
-
 ;;
-;; 
+;; Reduce scores calculated by play() 
 ;; 
 
 (in-package :reduce)
-
 
 ;;; Initialize 'seed' of random number generator.
 (setf *random-state* (make-random-state t))
@@ -59,7 +57,7 @@ Maximize: #'> Minimize: #'<"
   distinguish between same scored moves.
   skip-randomizer: nil -> If multiple moves are available choose a random one. t -> choose first one
   returns move with minimum or maximum score"
-  (if (not moves) ;; reduce doesn't like empty lists
+  (if (not moves)
       nil
       (progn 
 	(let ((resulting-moves (get-reduced-scores moves is-opponent get-score-fn)))
@@ -68,8 +66,4 @@ Maximize: #'> Minimize: #'<"
 	      (get-random-entry resulting-moves)
 	      (first resulting-moves))
 	  ))))
-
-
-
-
 

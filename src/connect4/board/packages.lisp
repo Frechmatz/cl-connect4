@@ -2,9 +2,9 @@
 
 (defpackage :board
   (:use :cl)
-  (:export :BLACK)
-  (:export :WHITE)
-  (:export :EMPTY)
+  (:export :black)
+  (:export :white)
+  (:export :empty)
   (:export :create-board)
   (:export :clone-board)
   (:export :get-height)

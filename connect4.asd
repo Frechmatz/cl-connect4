@@ -14,6 +14,10 @@
 			:serial t
 			:components ((:file "packages")
                                      (:file "reduce")))
+	       (:module "src/connect4/movegenerator"
+			:serial t
+			:components ((:file "packages")
+                                     (:file "movegenerator")))
 	       (:module "src/connect4/playresult"
 			:serial t
 			:components ((:file "packages")

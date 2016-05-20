@@ -52,26 +52,6 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
 	  (/ 1 (+ 1 distance)))
 	)))
 
-(defun generate-moves (board &key (column-filter nil))
-  "Generate moves. Returns a list of (x y) coordinates of all possible moves"
-  (remove-if-not
-   (lambda (i) (if (not column-filter) t (eql column-filter (first i)))) 
-   (let ( (moves ()) (row nil))
-     (dotimes (x (get-width board))
-       (setf row (drop board x))
-       (if row (push (list x row) moves))
-       )
-     moves)))
-
-;;; Internal method for fast check if a move is available for given board
-(defun is-move-available (board)
-  (let (( move-left nil))
-    (dotimes (x (get-width board))
-      (if (not (field-set-p board x 0)) (setf move-left t))
-      )
-  move-left))
-
-
 (defun peek-is-four (moves board color)
   "Check all moves if an immediate four is present. 
 If t returns a list consisting of such move otherwise return the moves given into function"
@@ -114,7 +94,7 @@ If t returns a list consisting of such move otherwise return the moves given int
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let (
-		     (generated-moves (generate-moves board :column-filter column-filter))
+		     (generated-moves (movegenerator:generate-moves board :column-filter column-filter))
 		     (moves ())
 		     (score nil)
 		     (is-four nil))
@@ -129,7 +109,7 @@ If t returns a list consisting of such move otherwise return the moves given int
 		     (setf score (/ score (expt 10 (- cur-depth 1))))
 		     (push (list (first move) color (if is-four "MATE" nil)) cur-line)
 		     ;; final state or no more moves availabe or max depth reached
-		     (if (or is-four (not (is-move-available board)) (equal cur-depth max-depth))
+		     (if (or is-four (not (movegenerator:is-move-available board)) (equal cur-depth max-depth))
 			 (progn
 			   (push (list (first move) (second move) score (copy-list cur-line)) moves)
 			   )
