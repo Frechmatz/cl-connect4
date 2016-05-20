@@ -8,7 +8,7 @@
 		   (resulting-moves nil)
 		   )
 	       (setf resulting-moves
-		     (score::get-reduced-scores
+		     (reduce::get-reduced-scores
 		      moves
 		      nil
 		      (lambda (m) (third m))
@@ -37,7 +37,7 @@
 		   (moves '((0 0 0.0) (1 0 1.0) (2 0 1.0) (3 0 0.0)))
 		   (resulting-moves nil)
 		   )
-	       (setf resulting-moves (score::get-reduced-scores
+	       (setf resulting-moves (reduce::get-reduced-scores
 				      moves
 				      t
 				      (lambda (m) (third m))))
@@ -65,7 +65,7 @@
 		   (moves '((0 0 0.0) (1 0 0.0) (2 0 0.0003) (3 0 0.0)))
 		   (move nil)
 		   )
-	       (setf move (score:reduce-scores
+	       (setf move (reduce:reduce-scores
 			   moves
 			   nil
 			   (lambda (m) (third m))
@@ -79,7 +79,7 @@
 		   (moves '((0 0 0.0) (1 0 0.0) (2 0 0.0003) (3 0 0.0)))
 		   (move nil)
 		   )
-	       (setf move (score:reduce-scores
+	       (setf move (reduce:reduce-scores
 			   moves
 			   t
 			   (lambda (m) (third m))
@@ -94,7 +94,7 @@
 		   (moves '((0 0 -5.0) (1 0 -4.0) (2 0 -1.0) (3 0 -4.0)))
 		   (move nil)
 		   )
-	       (setf move (score:reduce-scores
+	       (setf move (reduce:reduce-scores
 			   moves
 			   nil
 			   (lambda (m) (third m))
@@ -108,7 +108,7 @@
 		   (moves '((0 0 1.0) (1 0 -5.0) (2 0 -4.0) (3 0 0.0)))
 		   (move nil)
 		   )
-	       (setf move (score:reduce-scores
+	       (setf move (reduce:reduce-scores
 			   moves
 			   t
 			   (lambda (m) (third m))
@@ -122,7 +122,7 @@
 		   (moves '((0 0 0.00) (1 0 0.0) (2 0 0.000) (3 0 0.0000)))
 		   (move nil)
 		   )
-	       (setf move (score:reduce-scores
+	       (setf move (reduce:reduce-scores
 			   moves
 			   nil
 			   (lambda (m) (third m))
@@ -137,7 +137,7 @@
 		   (moves '((0 0 0.00) (1 0 0.0) (2 0 0.000) (3 0 0.0000)))
 		   (move nil)
 		   )
-	       (setf move (score:reduce-scores
+	       (setf move (reduce:reduce-scores
 			   moves
 			   t
 			   (lambda (m) (third m))
@@ -153,7 +153,7 @@
 		   (moves '())
 		   (move nil)
 		   )
-	       (setf move (score:reduce-scores
+	       (setf move (reduce:reduce-scores
 			   moves
 			   t
 			   (lambda (m) (third m))

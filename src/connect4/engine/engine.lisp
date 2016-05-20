@@ -140,7 +140,7 @@ If t returns a list consisting of such move otherwise return the moves given int
 		     (setf cur-line (cdr cur-line))
 		     )
 		   )
-		 (let ((result (score:reduce-scores
+		 (let ((result (reduce:reduce-scores
 				moves
 				is-opponent
 				;; Score getter

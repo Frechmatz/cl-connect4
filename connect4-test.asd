@@ -11,7 +11,7 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "board")))
-	       (:module "src/connect4/score"
+	       (:module "src/connect4/reduce"
                         :serial t
                         :components ((:file "packages")
                                      (:file "reduce")))
@@ -32,7 +32,7 @@
 	       (:module "test"
                         :serial t
                         :components ((:file "packages")))
-	       (:module "test/score"
+	       (:module "test/reduce"
 			:serial t
 			:components ((:file "reduce-scores")))
 	       (:module "test/playresult"

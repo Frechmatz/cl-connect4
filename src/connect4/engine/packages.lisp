@@ -3,7 +3,7 @@
 (defpackage :engine
   (:use :cl)
   (:use :board)
-  (:use :score)
+  (:use :reduce)
   (:export :play)
   (:export :generate-moves)
   )

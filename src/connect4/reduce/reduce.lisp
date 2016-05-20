@@ -3,7 +3,7 @@
 ;; 
 ;; 
 
-(in-package :score)
+(in-package :reduce)
 
 
 ;;; Initialize 'seed' of random number generator.
