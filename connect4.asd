@@ -14,10 +14,13 @@
 			:serial t
 			:components ((:file "packages")
                                      (:file "reduce")))
+	       (:module "src/connect4/playresult"
+			:serial t
+			:components ((:file "packages")
+                                     (:file "playresult")))
 	       (:module "src/connect4/engine"
 			:serial t
 			:components ((:file "packages")
 				     (:file "engine")
-				     (:file "play-result")
 				     ))
    ))

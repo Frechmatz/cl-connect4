@@ -1,10 +1,10 @@
 
 #|
-Accessor functions for the result of the play() function
+Accessor functions for the result returned by engine:play
 |#
 
 
-(in-package :engine)
+(in-package :playresult)
 
 (defun play-result-column (result)
   (first result))
@@ -24,13 +24,11 @@ Accessor functions for the result of the play() function
 (defun play-result-players-color (result)
   (second (first (fourth result))))
 
-;; not to be exported
 (defun play-result-filter-move-sequence-by-token (result token)
   (remove-if-not
    (lambda (item) (eql (second item) token))
    (play-result-move-sequence result)))
 
-;; public
 (defun play-result-players-move-sequence (result)
   (if (not (play-result-no-move-available result))
       (mapcar

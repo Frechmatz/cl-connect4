@@ -24,7 +24,7 @@
 	       (assert-true (not (second r)) (format nil "Second not nil"))
 	       (assert-true (not (third r)) (format nil "Third not nil"))
 	       (assert-true (not (fourth r)) (format nil "Fourth not nil"))
-	       (assert-true (engine:play-result-no-move-available r) (format nil "play-result-no-move-available has failed"))
+	       (assert-true (playresult:play-result-no-move-available r) (format nil "play-result-no-move-available has failed"))
 	       ))
 
 
@@ -32,12 +32,12 @@
 	     (assert-true
 	      (eql
 	       board:WHITE
-	       (engine::play-result-players-color `(1 1 1 ((2 ,board:WHITE "")))))
+	       (playresult::play-result-players-color `(1 1 1 ((2 ,board:WHITE "")))))
 	      (format nil "play-result-players-color-1 failed")))
 
 (define-test play-result-filter-move-sequence-by-token-1 ()
 	     (let ((r
-		    (engine::play-result-filter-move-sequence-by-token
+		    (playresult::play-result-filter-move-sequence-by-token
 		     `(1 1 1 ((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE "")))
 		     board:BLACK)))
 	       (assert-true
@@ -53,7 +53,7 @@
 
 (define-test play-result-filter-move-sequence-by-token-2 ()
 	     (let ((r
-		    (engine::play-result-filter-move-sequence-by-token
+		    (playresult::play-result-filter-move-sequence-by-token
 		     `(1 1 1 ((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE "")))
 		     board:WHITE)))
 	       (assert-true
@@ -77,7 +77,7 @@
 
 (define-test play-result-players-move-sequence-1 ()
 	     (let ((r
-		    (engine::play-result-players-move-sequence
+		    (playresult::play-result-players-move-sequence
 		     `(1 1 1 ((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE ""))))))
 	       (assert-true
 		(eql 2 (length r))
@@ -92,26 +92,26 @@
 
 (define-test play-result-is-four-n-1 ()
 	     (assert-false
-	      (engine::play-result-is-four-n
+	      (playresult::play-result-is-four-n
 	       `(1 1 1 ((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE ""))))
 	      (format nil "play-result-is-four-n-1 failed")))
 
 
 (define-test play-result-is-four-n-2 ()
 	     (assert-false
-	      (engine::play-result-is-four-n
+	      (playresult::play-result-is-four-n
 	       `(1 1 1 ((2 ,board:WHITE "") (3 ,board:BLACK "MATE") (4 ,board:WHITE ""))))
 	      (format nil "play-result-is-four-n-2 failed")))
 
 (define-test play-result-is-four-n-3 ()
 	     (assert-true
-	      (engine::play-result-is-four-n
+	      (playresult::play-result-is-four-n
 	       `(1 1 1 ((2 ,board:WHITE "MATE") (3 ,board:BLACK "") (4 ,board:WHITE ""))))
 	      (format nil "play-result-is-four-n-3 failed")))
 
 
 (define-test play-result-is-four-n-4 ()
 	     (assert-true
-	      (engine::play-result-is-four-n
+	      (playresult::play-result-is-four-n
 	       `(1 1 1 ((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE "MATE"))))
 	      (format nil "play-result-is-four-n-4 failed")))

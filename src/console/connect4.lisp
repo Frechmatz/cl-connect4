@@ -194,14 +194,6 @@
 	    
 	    (push
 	     (create-command
-	      "hint"
-	      "hint"
-	      "hint: Show next move the computer would do"
-	      '()
-	      #'game-command-hint) table)
-	    
-	    (push
-	     (create-command
 	      "toggle-color"
 	      "toggle-color"
 	      "toggle-color: Toggle the players color"

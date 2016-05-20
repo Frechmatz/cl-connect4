@@ -15,11 +15,14 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "reduce")))
+	       (:module "src/connect4/playresult"
+                        :serial t
+                        :components ((:file "packages")
+                                     (:file "playresult")))
 	       (:module "src/connect4/engine"
                         :serial t
                         :components ((:file "packages")
-                                     (:file "engine")
-				     (:file "play-result")))
+                                     (:file "engine")))
 	       (:module "src/cfi"
                         :serial t
                         :components ((:file "packages")
@@ -32,6 +35,9 @@
 	       (:module "test/score"
 			:serial t
 			:components ((:file "reduce-scores")))
+	       (:module "test/playresult"
+			:serial t
+			:components ((:file "playresult")))
 	       (:module "test/engine"
                         :serial t
                         :components ((:file "testutil")
@@ -41,7 +47,6 @@
                                      (:file "peek-is-four")
 				     (:file "no-move-available")
 				     (:file "move-available")
-				     (:file "play-result")
                                      (:file "board-00")
                                      (:file "board-01")
                                      (:file "board-02")

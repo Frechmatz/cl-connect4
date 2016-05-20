@@ -48,7 +48,7 @@
 			  (is-mate-expected-for-player nil))
   ;; (format t "Running minmax test ~a~%" name-of-test)
   (let ( (best-move nil)
-	 (engine:*engine-notification-reduced-scores*
+	 (engine::*engine-notification-reduced-scores*
 	  (lambda (board color is-opponent depth reduced-score all-scores)
 	    (declare (ignore board))
 	    (if (or (and print-final-scores (equal depth 1)) print-all-scores)
@@ -66,10 +66,10 @@
     (if expected-final-columns
 	(progn
 	  (assert-true
-	   (find-if (lambda (c) (equal c (play-result-column best-move))) expected-final-columns)
+	   (find-if (lambda (c) (equal c (playresult:play-result-column best-move))) expected-final-columns)
 	   (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%"
 		   name-of-test
-		   (play-result-column best-move)
+		   (playresult:play-result-column best-move)
 		   (play-result-score best-move)
 		   expected-final-columns))))
     (if expected-final-move-score
@@ -82,9 +82,9 @@
 		 (play-result-score best-move)
 		 expected-final-move-score)))
     (if (eq is-mate-expected-for-player 0)
-	(assert-true (not (play-result-is-four-n best-move)) (format nil "Must not be mate")))
+	(assert-true (not (playresult:play-result-is-four-n best-move)) (format nil "Must not be mate")))
     (if (eq is-mate-expected-for-player 1)
-	(assert-true (play-result-is-four-n best-move) (format t "~a: Must be mate~%" name-of-test)))
+	(assert-true (playresult:play-result-is-four-n best-move) (format t "~a: Must be mate~%" name-of-test)))
     best-move))
 
 
