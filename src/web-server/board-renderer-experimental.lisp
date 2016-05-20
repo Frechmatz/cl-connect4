@@ -1,15 +1,13 @@
 #|
-Experimental board renderer
-- does not use a table
+Experimental board renderer using divs to layout the play field
 |#
 
 (in-package :connect4-board-renderer-experimental)
 
 (defun to-percent (d)
   ;; precision of two digits
-  (/ (floor (/ 10000 d)) 100)
-  ;;10
-  )
+  ;; add 1 to d in order to allocate some space for the borders
+  (/ (floor (/ 10000 (+ 1 d))) 100))
 
 (defun cell-size (board-width board-height)
   (list 
@@ -17,9 +15,7 @@ Experimental board renderer
    (to-percent board-height)))
 
 (defun render-cell (x y cell-size token)
-  ;; If borders are enabled, the resulting cells are not exactly square
-  ;; because the borders expand the content area
-  (let ((style (format nil "float: left; width:~$%; height: ~$%; position: relative" (first cell-size) (second cell-size))))
+  (let ((style (format nil "float: left; width:~$%; height: ~$%; position: relative; border: 1px solid black;" (first cell-size) (second cell-size))))
     (cl-who:with-html-output-to-string (s)
       (:div
        :class "board-cell"
@@ -32,8 +28,7 @@ Experimental board renderer
 	     ;; display property to be set via CSS
 	     :style "position: absolute; top: 40%; left: 40%; width: 20%; height: 20%;"
 	     :data-value "OFF"
-	     )
-      ))))
+	     )))))
 
 (defun render-row (row-number width height get-token-fn)
   (let ((cell-size (cell-size width height)))
@@ -65,5 +60,3 @@ Experimental board renderer
 			(if (equal field "o") "o" "x")
 			))))))))))
 
-  
-;;(render-ccfi-board "xxx/ooo")

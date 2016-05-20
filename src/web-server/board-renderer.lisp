@@ -1,5 +1,8 @@
 #|
-Render a board using a HTML table
+Board renderer using a table to layout the game field
+Problems with this approach:
+- Firefox: Cell borders won't be drawn
+- Possibly the wrong approach at all 
 |#
 
 (in-package :connect4-board-renderer)
@@ -8,11 +11,7 @@ Render a board using a HTML table
   ;; precision of two digits
   (/ (floor (/ 10000 dx)) 100))
 
-;;(width-in-percent 7)
-
 (defun render-cell (x y percent token)
-  ;; If borders are enabled, the resulting cells are not exactly square
-  ;; because the borders expand the content area
   (let ((style (format nil "width:~$%; padding-bottom: ~$%; position: relative" percent percent)))
     (cl-who:with-html-output-to-string (s)
       (:td
@@ -26,8 +25,7 @@ Render a board using a HTML table
 	     ;; display property to be set via CSS
 	     :style "position: absolute; top: 40%; left: 40%; width: 20%; height: 20%;"
 	     :data-value "OFF"
-	     )
-      ))))
+	     )))))
 
 (defun render-row (row-number width get-token-fn)
   (let ((percent (width-in-percent width)))
@@ -60,4 +58,3 @@ Render a board using a HTML table
 			))))))))))
 
   
-;;(render-ccfi-board "xxx/ooo")

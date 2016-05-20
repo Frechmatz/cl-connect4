@@ -140,7 +140,7 @@
 			(:div :class "board" :id "board"
 			      (cl-who:str
 			       (funcall
-				#'connect4-board-renderer:render-ccfi-board
+				#'connect4-board-renderer-experimental:render-ccfi-board
 				;; "xxx4/4ooo/7/7/2oooxx/7"
 				;;"xxo2ox/oxo4/1xo4/2x4/7/7"
 				"7/7/7/7/7/7"
