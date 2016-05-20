@@ -30,7 +30,6 @@
 *** Supports blacklisting of moves
 *** Supports that a move sequence can be given
 ** TODO Establish a play-result class
-** TODO Remove *engine-configuration-prefer-center*
 
 
 * Connect4-Console
@@ -43,26 +42,16 @@
 ** TODO Try to rework decode-placement function (code looks messy)
 ** TODO Replace queue implementation
 ** TODO Start thread on incoming websocket messages
-** TODO Establish some kind of staging properties 
-*** Get rid of hard coded path for logging
-*** Get rid of magic to determine static/ directory 
-** TODO Generalize or replace Logger class
+** TODO Get rid of magic to determine static/ directory 
 ** TODO Pass back score to client
 
 
 * Web-Client
-** DONE Dispatching of server responses
-** DONE Throw a piece into a column
-** TODO Final state processing
-** TODO Resize field
-** TODO Test with Firefox
+
 *** MacOs
 *** Windows
 ** TODO Test with IE10
-** TODO Test with Edge
 ** TODO Support of mobile devices
-** TODO Toolbar Buttons
 *** Toggle color
 ** TODO Activity indicator
-** TODO Indicator of humans color
-** TODO Adapt rendered board size to available space
+

@@ -18,7 +18,6 @@
 	       (:module "src/connect4/engine"
                         :serial t
                         :components ((:file "packages")
-				     (:file "constants")
                                      (:file "engine")
 				     (:file "play-result")))
 	       (:module "src/cfi"

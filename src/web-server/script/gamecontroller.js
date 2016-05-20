@@ -83,8 +83,8 @@ GameController.prototype.cellClickHandler = function(evt) {
 	return;
     }
     var c = board.getCellCoordinate(evt.currentTarget);
-    var y = board.findRow(c.x);
-    if (y == null || board.isFieldSet(c.x,y)) {
+    var targetRow = board.findRow(c.x);
+    if (targetRow == null || board.isFieldSet(c.x,c.y)) {
 	return;
     }
     
@@ -100,7 +100,7 @@ GameController.prototype.cellClickHandler = function(evt) {
 		    if(!b || b.getColumn() == null) {
 			return cb(null, false);
 		    }
-		    board.setFieldToken(c.x,y, that.humanPlayersToken);
+		    board.setFieldToken(c.x, targetRow, that.humanPlayersToken);
 		    var isFour = b.isFour1();
 		    if (isFour) {
 			board.setFieldMarker(b.getLine());

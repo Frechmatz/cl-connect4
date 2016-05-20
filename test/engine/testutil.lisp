@@ -45,11 +45,9 @@
 			  (expected-final-scores nil)
 			  (expected-final-columns nil)
 			  (expected-final-move-score nil)
-			  (is-mate-expected-for-player nil) 
-			  (engine-configuration-prefer-center t))
+			  (is-mate-expected-for-player nil))
   ;; (format t "Running minmax test ~a~%" name-of-test)
   (let ( (best-move nil)
-	(engine::*engine-configuration-prefer-center* engine-configuration-prefer-center)
 	 (engine:*engine-notification-reduced-scores*
 	  (lambda (board color is-opponent depth reduced-score all-scores)
 	    (declare (ignore board))

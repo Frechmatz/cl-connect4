@@ -4,8 +4,6 @@
   (:use :cl)
   (:use :board)
   (:use :score)
-  (:export :classic-width)
-  (:export :classic-height)
   (:export :PLAY)
   (:export :GENERATE-MOVES)
   (:export :*ENGINE-NOTIFICATION-REDUCED-SCORES*)

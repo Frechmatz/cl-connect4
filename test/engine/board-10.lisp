@@ -21,7 +21,6 @@
 	      ;; :print-final-scores t
 	      :expected-final-columns '(0 1 2 3 4)
 	      ;;:expected-final-scores '((0 3 0.0) (1 3 0.0) (2 3 0.0) (3 3 0.0) (4 3 0.0))
-	      :engine-configuration-prefer-center nil
 	      ))
 
 ;;; Basic test of prefering the center of the board (1 half-move)
@@ -37,7 +36,6 @@
 	      board:WHITE 1
 	      ;;:print-final-scores t
 	      :expected-final-columns '(2 3)
-	      :engine-configuration-prefer-center t
 	      ))
 
 ;;; Basic test prefering the center of the board (2 half-moves)
@@ -54,7 +52,6 @@
 	      :print-final-scores t
 	      ;;:print-all-scores t
 	      :expected-final-columns '(2 3)
-	      :engine-configuration-prefer-center t
 	      ))
 
 ;;;

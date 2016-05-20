@@ -18,7 +18,7 @@
       ;; Draws a "X" into a 60*60 grid, starting from 0,0 
       (draw* (
 	      :polygon
-	      :stroke "red"
+	      :stroke "violet"
 	      :fill "transparent"
 	      :stroke-width "10"
 	      :points "9 0 29 19 49 0 59 9 39 29 59 49 49 59 29 39 9 59 0 49 19 29 0 9")))
