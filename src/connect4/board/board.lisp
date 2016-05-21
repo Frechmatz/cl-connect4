@@ -1,6 +1,5 @@
-
 ;;;; 
-;;;; Board stuff
+;;;; Board implementation
 ;;;; 
 
 (in-package :board)
@@ -9,9 +8,6 @@
 (defconstant WHITE 'W)
 (defconstant EMPTY '_)
 (defconstant BORDER 'X)
-(if (not (symbolp :olli))
-(defconstant OLLI '"Olli")
-)
 
 (defun get-width (board)
   "Get width of a board (1..x)"

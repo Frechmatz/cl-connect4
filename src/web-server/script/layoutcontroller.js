@@ -14,14 +14,37 @@ var LayoutController = function() {
 
     var layoutBoard = function() {
 	var b = document.getElementById(boardId);
-	var dx = b.clientWidth;
-	var dy = b.clientHeight;
-	var tableDimension = (dx > dy ? dy : dx).toString() + "px";
-	//console.log('Computed dimension: ' + tableDimension);
+	var clientDx = b.clientWidth;
+	var clientDy = b.clientHeight;
 	var t = document.getElementById(boardTableId);
-	t.style.width = tableDimension;
-	t.style.height = tableDimension;
-
+	t.style.width = clientDx + 'px';
+	t.style.height = clientDy + 'px';
+	var bs = board.getSize();
+	var cellSize = null;
+	var isClientPortrait = clientDx < clientDy;
+	var isBoardPortrait = bs.height > bs.width;
+	if (isClientPortrait && isBoardPortrait) {
+	    
+	} else if (!isClientPortrait && isBoardPortrait) {
+	    
+	} else if(isClientPortrait && !isBoardPortrait) {
+	    
+	} else if(!isClientPortrait && !isBoardPortrait) {
+	    
+	} else {
+	    //throw Error('Something fishery is going on here');
+	} 
+	// var cellSize = Math.min(clientDx, clientDy) / Math.max(bs.width, bs.height) + "px";
+	// console.log(
+	//     'clientDx: ' + clientDx +
+	// 	' clientDy: ' + clientDy +
+	// 	' boardDx: ' + bs.width +
+	// 	' boardDy: ' + bs.height +
+	// 	' cellSize: ' + cellSize);
+	// board.forEachCell( function(cell) {
+	//     cell.style.width = cellSize;
+	//     cell.style.height = cellSize;
+	// });
     };
     
     window.onresize = function(event) {

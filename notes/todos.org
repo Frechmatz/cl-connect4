@@ -1,57 +1,35 @@
 #+TITLE:Connect4 Todos
 
-* General
-** TODO Study analysis-boards
-
-
 * Unit Tests
-** TODO Remove redundancies from tests
-** TODO Test of generate-moves()
+** TODO Test move generator
 
-
-* Board Score Evaluation
-** TODO Check calculation of column-weights for width 7 (weights should differ for each column)
-
-
-
-* Engine optimization
-** TODO Alpha/Beta-Pruning
-
-
-
-* Engine
-** Generally the code of the play function is messy and difficult to maintain
-** TODO Establish a board traverser
-*** Holds current board and traversal path
-*** Hides board cloning/manipulation related logic
-*** Used by play function
-** TODO Define MATE constant
-** TODO Establish a move generator class
-*** Supports blacklisting of moves
-*** Supports that a move sequence can be given
-** TODO Establish a play-result class
-
+* Engine / Play-Function
+** Alpha/Beta-Pruning
+** TODO Check calculation of column-weights for width 7 (weights should differ for each column but they do not)
 
 * Connect4-Console
 ** TODO Add help method to command-table (maybe command-table concept needs some rework)
 ** TODO Merge help-text functions into one and use reduce function
-** TODO Formatting of score (do not format in exponential form)
-
+** TODO Formatting of score value
 
 * CFI-Server / CFI-Core
 ** TODO Try to rework decode-placement function (code looks messy)
-** TODO Replace queue implementation
-** TODO Start thread on incoming websocket messages
-** TODO Get rid of magic to determine static/ directory 
+** TODO Multithreading / Support of quit command
 ** TODO Pass back score to client
 
 
-* Web-Client
+* Web-Server
+** TODO Rethink Lisp-magic to determine static/ directory 
 
-*** MacOs
-*** Windows
-** TODO Test with IE10
-** TODO Support of mobile devices
-*** Toggle color
-** TODO Activity indicator
+* Web-Client
+** TODO Support of IE10
+** TODO Minimal layout for mobile devices
+** TODO Better handling of final game state
+
+* Documentation
+** TODO Complete CFI Spec (Placement)
+
+* Cleanup
+** Delete CCFI Fork
+** Delete branches
 

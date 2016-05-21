@@ -1,8 +1,6 @@
-
 #|
 Accessor functions for the result returned by engine:play
 |#
-
 
 (in-package :playresult)
 

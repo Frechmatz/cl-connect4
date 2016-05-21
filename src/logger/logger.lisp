@@ -1,6 +1,5 @@
 #|
-A simple logger package
-TODO: Set global log level 
+A simple logger
 |#
 
 (in-package :logger)
@@ -21,6 +20,7 @@ TODO: Set global log level
     (dolist (appender *appender*)
       (funcall appender formatted-message))))
 
+;; appender(message)
 (defun add-appender (appender)
   (push appender *appender*))
 
