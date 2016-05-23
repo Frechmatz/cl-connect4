@@ -13,38 +13,28 @@ var LayoutController = function() {
     var resizeTimerHandle = null;
 
     var layoutBoard = function() {
-	var b = document.getElementById(boardId);
-	var clientDx = b.clientWidth;
-	var clientDy = b.clientHeight;
-	var t = document.getElementById(boardTableId);
-	t.style.width = clientDx + 'px';
-	t.style.height = clientDy + 'px';
+	var clientArea = document.getElementById(boardId);
+	var clientDx = clientArea.clientWidth;
+	var clientDy = clientArea.clientHeight;
+	var boardArea = document.getElementById(boardTableId);
+	boardArea.style.width = clientDx + 'px';
+	boardArea.style.height = clientDy + 'px';
 	var bs = board.getSize();
-	var cellSize = null;
-	var isClientPortrait = clientDx < clientDy;
-	var isBoardPortrait = bs.height > bs.width;
-	if (isClientPortrait && isBoardPortrait) {
-	    
-	} else if (!isClientPortrait && isBoardPortrait) {
-	    
-	} else if(isClientPortrait && !isBoardPortrait) {
-	    
-	} else if(!isClientPortrait && !isBoardPortrait) {
-	    
-	} else {
-	    //throw Error('Something fishery is going on here');
-	} 
-	// var cellSize = Math.min(clientDx, clientDy) / Math.max(bs.width, bs.height) + "px";
-	// console.log(
-	//     'clientDx: ' + clientDx +
-	// 	' clientDy: ' + clientDy +
-	// 	' boardDx: ' + bs.width +
-	// 	' boardDy: ' + bs.height +
-	// 	' cellSize: ' + cellSize);
-	// board.forEachCell( function(cell) {
-	//     cell.style.width = cellSize;
-	//     cell.style.height = cellSize;
-	// });
+	var borderSpace = Math.max(bs.width, bs.height) * 2;
+	var cellSizeX = (clientDx - borderSpace) / (0 + bs.width);
+	var cellSizeY = (clientDy - borderSpace) / (0 + bs.height);
+	var cellSize = Math.min(cellSizeX, cellSizeY);
+	var msg =
+	     'clientDx: ' + clientDx +
+	    ' clientDy: ' + clientDy +
+	    ' boardDx: ' + bs.width +
+	    ' boardDy: ' + bs.height +
+	    ' cellSize: ' + cellSize
+	console.log(msg);
+	board.forEachCell( function(cell) {
+	     cell.style.width = cellSize;
+	     cell.style.height = cellSize;
+	});
     };
     
     window.onresize = function(event) {
