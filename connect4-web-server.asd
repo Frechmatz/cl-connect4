@@ -9,6 +9,7 @@
 	       :connect4-cfi
 	       :cl-who
 	       :hunchensocket
+	       :defrest
 	       :cl-svg)
   :components (
 	       (:module "src/logger"

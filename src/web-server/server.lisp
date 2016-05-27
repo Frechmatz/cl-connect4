@@ -44,8 +44,9 @@
 	(format t "~%Hi there. The main server has been started.")
 	(format t "~%The server can be reached via http://localhost:~a" *port*)
 	(hunchentoot:define-easy-handler (root :uri "/") ()
+	  (logger:log-message :info (format nil "query parameters: ~a" (hunchentoot:query-string*)))
 	  (setf (hunchentoot:content-type*) "text/html")
-	  (start-page))
+	  (start-page ))
 	(hunchentoot:define-easy-handler (buttons-debug :uri "/buttons/debug.svg") ()
 	  (setf (hunchentoot:content-type*) "image/svg+xml")
 	  (connect4-buttons:get-debug-button))
@@ -66,7 +67,11 @@
 	(push (hunchentoot:create-folder-dispatcher-and-handler
 	       "/css/" ;; Must begin and end with slash
 	       (get-static-dir "css"))
-	      hunchentoot:*DISPATCH-TABLE*) 
+	      hunchentoot:*DISPATCH-TABLE*)
+	(push (defrest:create-rest-table-dispatcher) hunchentoot:*dispatch-table*)
+	(defrest:defrest "/length/{dx:[0-9]+}/{dy:[0-9]+}" :GET (dx dy)
+	  (setf (hunchentoot:content-type*) "text/html")
+	  (start-page :dx dx :dy dy))
 	nil
   )))
 
@@ -109,7 +114,8 @@
   (stop-main-server)
   (stop-websocket-server))
 
-(defun start-page ()
+(defun start-page (&key (dx nil) (dy nil))
+  (logger:log-message :info (format nil "start-page called with dx=~a, dy=~a" dx dy))
   (cl-who:with-html-output-to-string (s)
     (:html
      (:head (:title "Connect 4")
