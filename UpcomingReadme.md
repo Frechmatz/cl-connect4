@@ -12,7 +12,7 @@ connect4-cfi
 connect4-web-server
 ```
 
-Dependencies (all loadable via quicklisp):
+Dependencies (all installable via quicklisp):
 
 ```bash
 cl-ppcre
@@ -23,7 +23,7 @@ hunchentoot
 hunchensocket
 cl-svg
 ```
-There are no dependencies to third-party JavaScript and CSS libraries. 
+There are no dependencies to third-party JavaScript and CSS libraries, such as jquery or bootstrap.
 
 ## Run the Console-Client
 
@@ -31,6 +31,10 @@ There are no dependencies to third-party JavaScript and CSS libraries.
 sbcl
 * (asdf:load-system "connect4-console")
 * (connect4-console:lets-play-colorful)
+```
+This starts the client using ANSI escape sequences for coloring the output. For monochrome output use
+```bash
+* (connect4-console:lets-play)
 ```
 
 ### Screenshots
@@ -49,9 +53,10 @@ You can now enter the following Url into your browser to start a game:
 ```bash
 http://localhost:8002
 ```
-To stop the server enter the following command into the Repl:
+To stop the server enter 
 ```bash
 * (connect4-web-server:stop)
 ```
+into the Repl.
 
 
