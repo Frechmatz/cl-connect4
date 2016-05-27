@@ -44,11 +44,50 @@ Example:
 < pong
 
 
-Coordinate System, Board and Token
-==================================
+Token, Coordinate System, Placement
+===================================
 
-TODO: define
+Definition of tokens and board placement is based on the CCFI specification
+as defined here: https://github.com/adamsc/common-connect-four-interface
 
+Token
+-----
+
+The two pieces of the game are represented by the tokens 'x' and 'o'. It's
+up to client implementations to assign any color to them.
+
+Coordinate system
+-----------------
+
+- The bottom left corner of the board has the coordinate (x=0, y=0)
+- The upper left corner has the coordinate (x=0, y=height-1)
+- The bottom right corner has the coordinate (x=width-1, y=0)
+- The upper right corner has the coordinate (x=width-1, y=height-1)
+
+Piece placement
+---------------
+
+- The placement consists of a string containing the rows of the board.
+- Rows are separated by the '/' (slash) character.
+- Each row specifies the piece placement from left to right.
+- An occupied field is represented by it's token.
+- Empty fields are represented by a number that indicates the count of
+  successive empty columns.
+
+Example:
+
+Empty board consisting of 6 rows and 7 columns. 
+The placement string is: 7/7/7/7/7/7
+
+Example:
+
+The board:
+_ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ x
+o _ _ x x x _ o
+o o _ o x o _ x
+
+The placement string is: oo1oxo1x/o2xxx1o/7x/8
 
 Commands
 ========
@@ -78,12 +117,16 @@ send info messages to the client.
 
 Syntax: play <board> <token> <depth> [--column <column>]
 
-<board> The board
+<board> The piece placement of the board
 
-<token> The "color" the computer should play one of "x" or "o"
+<token> The token the computer shall play
 
-TODO: Generalize column option
---column Specifies the column that should be played by the server. 
+<depth> Number of half-moves the computer shall play. The value must
+be greater than zero.
+
+--column <column> Specifies the column that shall be played by the server. The main
+purpose of this parameter is to allow a client to easily evaluate a move that has been
+chosen by a player.
 
 
 Responses
@@ -107,8 +150,8 @@ value of NULL signals that no move was available
 --score <score>:  -1 >= <score> <= 1 The score as seen by the computer. A negative value
 indicates a situation where the computer may lose. 
 
---four This parameter signals that the computer has won or will win after the given sequence of moves.
-The move sequence includes the current move.
+--four This parameter signals that the computer has won or will win after the given
+sequence of moves. The move sequence includes the current move.
 
 --line In the case of a direct four the server provides the piece placement that
 establishes the line of connected pieces.
