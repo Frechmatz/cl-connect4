@@ -20,6 +20,11 @@
 	       (playresult:play-result-players-move-sequence result)))
       ""))
 
+(defun play-result-formatter-score (result)
+  (if (not (playresult:play-result-no-move-available result))
+      (format nil "--score ~$" (playresult:play-result-score result))
+      ""))
+
 (defun get-line (board x y color)
   (mapcar
    (lambda (i)
@@ -52,8 +57,9 @@
 
 
 (defun format-play-result (board result)
-  (format nil "bestmove ~a ~a ~a"
+  (format nil "bestmove ~a ~a ~a ~a"
 	  (play-result-formatter-move result)
+	  (play-result-formatter-score result)
 	  (play-result-formatter-four result)
 	  (play-result-formatter-line board result)
 	  ))

@@ -16,7 +16,7 @@ Implementation of the server interface
    ))
 
 (defmethod connected ((server default-server))
-  (write-message server (format nil "# ready")))
+  (write-message server (format nil "ready")))
 
 (defmethod disconnected ((server default-server))
   (setf (slot-value server 'disconnected-flag) t))
