@@ -32,7 +32,7 @@ sbcl
 * (asdf:load-system "connect4-console")
 * (connect4-console:lets-play-colorful)
 ```
-This starts the client using ANSI escape sequences for coloring the output. For monochrome output use
+For monochrome output, not using ANSI escape sequences:
 ```bash
 * (connect4-console:lets-play)
 ```
