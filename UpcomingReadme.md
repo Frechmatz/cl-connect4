@@ -1,24 +1,30 @@
 # Connect4
-#### A Common Lisp implementation of the Connect Four game with customizable board size and difficulty level.
+#### A Common Lisp implementation of the Connect Four game. Play against the computer via the console client or your Web-Browser.
 
-### Installation (via quicklisp)
+### Installation
 
-Download the project
-
-```bash
-cd ~/src/lisp
-git clone https://github.com/Frechmatz/connect4.git
-```
-
-add connect4 and connect4-console to the asdf system path.
+Clone the project and add the following systems to your asdf-system-lookup path:
 
 ```bash
-cd ~/quicklisp/local-projects
-ln -s ~/src/lisp/connect4 connect4
-ln -s ~/src/lisp/connect4 connect4-console
+connect4
+connect4-console
+connect4-cfi
+connect4-web-server
 ```
 
-Run the program (using sbcl)
+Used libraries (all loadable via quicklisp):
+
+```bash
+cl-ppcre
+alexandria
+queues
+cl-who
+hunchentoot
+hunchensocket
+cl-svg
+```
+
+### Run the console client
 
 ```bash
 sbcl
@@ -26,7 +32,7 @@ sbcl
 * (connect4-console:lets-play-colorful)
 ```
 
-### Screenshots
+## Screenshots
 
 ![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc/gameplay.jpg)
 
