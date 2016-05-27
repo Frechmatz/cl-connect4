@@ -59,4 +59,6 @@ To stop the server enter
 ```
 into the Repl.
 
+### Screenshots
 
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc/client1.jpg)
