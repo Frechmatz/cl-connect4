@@ -68,10 +68,10 @@
 	       "/css/" ;; Must begin and end with slash
 	       (get-static-dir "css"))
 	      hunchentoot:*DISPATCH-TABLE*)
-	(push (defrest:create-rest-table-dispatcher) hunchentoot:*dispatch-table*)
-	(defrest:defrest "/length/{dx:[0-9]+}/{dy:[0-9]+}" :GET (dx dy)
-	  (setf (hunchentoot:content-type*) "text/html")
-	  (start-page :dx dx :dy dy))
+	;; (push (defrest:create-rest-table-dispatcher) hunchentoot:*dispatch-table*)
+	;; (defrest:defrest "/length/{dx:[0-9]+}/{dy:[0-9]+}" :GET (dx dy)
+	;;   (setf (hunchentoot:content-type*) "text/html")
+	;;   (start-page :dx dx :dy dy))
 	nil
   )))
 
