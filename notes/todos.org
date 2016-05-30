@@ -9,8 +9,6 @@
    (weights should differ for each column but they do not)
 
 * Connect4-Console
-** TODO Add help method to command-table (maybe command-table concept needs some rework)
-** TODO Merge help-text functions into one and use reduce function
 ** TODO Formatting of score value ("-0.0")
 
 * CFI-Server / CFI-Core

@@ -38,31 +38,27 @@
    :exec-fn (lambda (context &rest the-rest) (apply target-fn context the-rest))
    ))
 
-(defun create-help-text (command &key (short nil))
-  (if short
-      (slot-value command 'short-info)
-      (slot-value command 'info)
-  ))
-  
+(defun get-help-text (command &key (short nil))
+  (if short (slot-value command 'short-info) (slot-value command 'info)))
+
+(defun get-help-texts (command-table &key (short nil))
+  (map 'list (lambda (cmd) (get-help-text cmd :short short)) command-table))
+
 (defun print-help-text (command-table)
   "Prints an overview of the commands that can by entered into the game repl"
-  (format t "Commands:~%help~%")
-  (dolist (cmd command-table)
-    (format t "~a~%" (create-help-text cmd :short nil)))
-  (format t "~%")
-  )
+  (format t "Commands:~%~a~%"
+	  (reduce (lambda (cmd1 cmd2) (format nil "~a~%~a" cmd1 cmd2))
+		  (get-help-texts command-table :short nil))))
 
 (defun print-help-text-short (command-table)
   "Prints an short overview of the commands that can by entered into the game repl"
-  (format t "Commands: help")
-  (labels ((inner (command-table first)
-	     (format t (if first "~a" ", ~a")
-		     (create-help-text (first command-table) :short 1))
-	     (if (> (length command-table) 1)
-		 (inner (cdr command-table) nil))))
-    (inner command-table nil))
-  (format t "~%")
-  )
+  (format t "Commands: ~a~%"
+	  (reduce (lambda (cmd1 cmd2) (format nil "~a, ~a" cmd1 cmd2))
+		  (get-help-texts command-table :short t))))
+
+(defun game-command-print-help-text (context command-table)
+  (print-help-text command-table)
+  t)
 
 (defun read-cmd ()
   "Read a command from the console. Returns list of strings."
@@ -76,24 +72,22 @@
 	(progn
 	  (format-context context)
 	  (print-help-text-short command-table))
-	(if (equal cmd "help")
-	    (print-help-text command-table)
-	    (let ((opcode (find-if (lambda (c) (equal cmd (slot-value c 'name))) command-table)))
-	      (if opcode
-		  (let ((parsed-args
-			  (handler-case
-			      (funcall (slot-value opcode 'parse-args-fn) context (cdr command-string))
-			    (invalid-arguments (err) err)
-			    )))
-		    (if (listp parsed-args)
-			(setf result (apply (slot-value opcode 'exec-fn) context parsed-args))
-			;; print parsing error
-			(format-message *message-formatter* (slot-value parsed-args 'text))
-			))
-		  (format t "Command not found: ~a~%" cmd)
-		  )
-	      )))
-	result))
+	(let ((opcode (find-if (lambda (c) (equal cmd (slot-value c 'name))) command-table)))
+	  (if opcode
+	      (let ((parsed-args
+		     (handler-case
+			 (funcall (slot-value opcode 'parse-args-fn) context (cdr command-string))
+		       (invalid-arguments (err) err)
+		       )))
+		(if (listp parsed-args)
+		    (setf result (apply (slot-value opcode 'exec-fn) context parsed-args))
+		    ;; print parsing error
+		    (format-message *message-formatter* (slot-value parsed-args 'text))
+		    ))
+	      (format t "Command not found: ~a~%" cmd)
+	      )
+	  ))
+    result))
   
 
 (defun cmd-loop (context command-table)
@@ -116,8 +110,8 @@
 				       (push
 					(create-command
 					 "quit"
-					 "quit: Quit game"
 					 "quit"
+					 "quit: quit game"
 					 '()
 					 #'game-command-quit) table)
 				       (push
@@ -128,6 +122,15 @@
 					 '()
 					 (lambda (context) (game-command-restart context) nil) ; quit loop by returning nil
 					 ) table)
+				       (push
+					(create-command
+					 "help"
+					 "help"
+					 "help"
+					 '()
+					 (lambda (context) (game-command-print-help-text context table))
+					 ) table)
+				       
 				       ;; Prevent recursive entering into final state processing
 				       (setf (slot-value context 'state) GAME-STATE-PROCESSING-FINAL)
 				       table))
@@ -160,53 +163,17 @@
 	  )
 	 (command-table
 	  (let ((table ()))
-	    (push 
-	     (create-command
-	      "play"
-	      "play <column>"
-	      "play <column>: Play a move and get computers counter move. Column: 0..9 A..F"
-	      (list #'parse-x)
-	      #'game-command-play-human) table)
-	    
+	    ;;
+	    ;; Commands in reverse order as to be printed by help function
+	    ;; do not reverse table due to reference hold by help command
+	    ;;
 	    (push
 	     (create-command
-	      "board"
-	      "board"
-	      "board: Print current board"
+	      "quit"
+	      "quit"
+	      "quit: Quit game"
 	      '()
-	      #'game-command-print-board) table)
-
-	    (push
-	     (create-command
-	      "set-level"
-	      "set-level <n>"
-	      "set-level <n>: Set the number of half-moves the computer will execute to determine it's best counter-move"
-	      (list #'parse-level)
-	      #'game-command-set-level) table)
-	    
-	    (push
-	     (create-command
-	      "set-board-size"
-	      "set-board-size <width> <height>"
-	      "set-board-size <width> <height>: Set size of the board"
-	      (list #'parse-board-dimension #'parse-board-dimension)
-	      #'game-command-set-board-size) table)
-	    
-	    (push
-	     (create-command
-	      "toggle-color"
-	      "toggle-color"
-	      "toggle-color: Toggle the players color"
-	      '()
-	      #'game-command-toggle-color) table)
-	    
-	    (push
-	     (create-command
-	      "continue"
-	      "continue"
-	      "continue: Computer plays next move"
-	      '()
-	      #'game-command-play-computer) table)
+	      #'game-command-quit) table)
 
 	    (push
 	     (create-command
@@ -218,14 +185,59 @@
 	    
 	    (push
 	     (create-command
-	      "quit"
-	      "quit"
-	      "quit: Quit game"
+	      "continue"
+	      "continue"
+	      "continue: Computer plays next move"
 	      '()
-	      #'game-command-quit) table)
+	      #'game-command-play-computer) table)
 
-	    (nreverse table)
-	    ))
+	    (push
+	     (create-command
+	      "toggle-color"
+	      "toggle-color"
+	      "toggle-color: Toggle the players color"
+	      '()
+	      #'game-command-toggle-color) table)
+	    
+	    (push
+	     (create-command
+	      "set-board-size"
+	      "set-board-size <width> <height>"
+	      "set-board-size <width> <height>: Set size of the board"
+	      (list #'parse-board-dimension #'parse-board-dimension)
+	      #'game-command-set-board-size) table)
+	    
+	    (push
+	     (create-command
+	      "set-level"
+	      "set-level <n>"
+	      "set-level <n>: Set the number of half-moves the computer will execute to determine it's best counter-move"
+	      (list #'parse-level)
+	      #'game-command-set-level) table)
+	    
+	    (push
+	     (create-command
+	      "board"
+	      "board"
+	      "board: Print current board"
+	      '()
+	      #'game-command-print-board) table)
+
+	    (push 
+	     (create-command
+	      "play"
+	      "play <column>"
+	      "play <column>: Play a move and get computers counter move. Column: 0..9 A..F"
+	      (list #'parse-x)
+	      #'game-command-play-human) table)
+	    
+	    (push 
+	     (create-command
+	      "help"
+	      "help"
+	      "help"
+	      '()
+	      (lambda (context) (game-command-print-help-text context table))) table)))
 	 (context
 	  (let ((context (make-instance 'context)))
 	    (setf (slot-value context 'board) (create-board 7 6))
