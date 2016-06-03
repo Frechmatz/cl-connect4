@@ -1,5 +1,5 @@
 
-(in-package :cfi)
+(in-package :cfi-server)
 
 (define-condition invalid-placement-error (error)
   ((text :initarg :text :reader text)))
@@ -89,7 +89,7 @@ Token values are o x and nil. This function will not not be called with out-of-b
 
 (defun ccfi-placement-to-board (placement)
   (let ((board nil))
-    (cfi:decode-placement
+    (decode-placement
      placement
      (lambda (dx dy)
        (setf board (board:create-board dx dy)))

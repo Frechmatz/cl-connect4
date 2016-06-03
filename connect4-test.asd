@@ -27,7 +27,7 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "engine")))
-	       (:module "src/cfi"
+	       (:module "src/cfi-server"
                         :serial t
                         :components ((:file "packages")
 				     (:file "token")
@@ -63,7 +63,7 @@
 				     (:file "board-09")
 				     (:file "board-10")
 				     ))
-	       (:module "test/cfi"
+	       (:module "test/cfi-server"
                         :serial t
                         :components ((:file "decode-placement-tests")
 				     (:file "play-result-formatter")

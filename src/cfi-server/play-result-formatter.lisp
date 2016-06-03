@@ -1,6 +1,6 @@
 
 
-(in-package :cfi)
+(in-package :cfi-server)
 
 (defun play-result-formatter-move (result)
   (format nil "~a"

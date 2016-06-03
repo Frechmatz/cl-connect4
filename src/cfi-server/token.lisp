@@ -1,5 +1,5 @@
 
-(in-package :cfi)
+(in-package :cfi-server)
 
 
 (alexandria:define-constant TOKEN-X "x" :test #'equal)

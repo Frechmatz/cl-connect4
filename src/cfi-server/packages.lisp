@@ -1,6 +1,6 @@
 
 
-(defpackage :cfi
+(defpackage :cfi-server
   (:use :cl :cl-ppcre :alexandria :board :engine)
   (:export :decode-placement)
   (:export :invalid-placement-error)

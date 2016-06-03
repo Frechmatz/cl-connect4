@@ -6,7 +6,7 @@
 	       :hunchentoot
 	       :cl-ppcre
 	       :alexandria
-	       :connect4-cfi
+	       :connect4-cfi-server
 	       :cl-who
 	       :hunchensocket
 	       ;;:defrest

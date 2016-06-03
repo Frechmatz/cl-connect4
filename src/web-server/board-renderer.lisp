@@ -36,7 +36,7 @@ Problems with this approach:
 
 (defun render-ccfi-board (ccfi-placement)
   (let ((board nil) (width nil) (height nil))
-    (cfi::decode-placement
+    (cfi-server::decode-placement
      ccfi-placement
      (lambda (dx dy)
        (setf width dx)

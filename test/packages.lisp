@@ -1,4 +1,4 @@
 
 (defpackage :connect4-test
-  (:use :cl :lisp-unit :board :engine :cfi)
+  (:use :cl :lisp-unit :board :engine :cfi-server)
   )

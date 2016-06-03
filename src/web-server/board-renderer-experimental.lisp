@@ -39,7 +39,7 @@ Experimental board renderer using divs to layout the play field
 
 (defun render-ccfi-board (ccfi-placement)
   (let ((board nil) (width nil) (height nil))
-    (cfi::decode-placement
+    (cfi-server::decode-placement
      ccfi-placement
      (lambda (dx dy)
        (setf width dx)

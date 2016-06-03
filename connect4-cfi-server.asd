@@ -1,4 +1,4 @@
-(defsystem :connect4-cfi
+(defsystem :connect4-cfi-server
   :serial t
   :version "1.0.0"
   :licence "Public Domain / 0-clause MIT"
@@ -11,13 +11,12 @@
 			:components ((:file "packages")
 				     (:file "logger")
 				     ))
-	       (:module "src/cfi"
+	       (:module "src/cfi-server"
 			:serial t
 			:components ((:file "packages")
 				     (:file "token")
 				     (:file "play-result-formatter")
 				     (:file "server")
-;;				     (:file "default-server")
 				     (:file "decode-placement")
 				     ))
    ))

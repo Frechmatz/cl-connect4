@@ -1,5 +1,5 @@
  
-(in-package :cfi)
+(in-package :cfi-server)
 
 (defclass cfi-server ()
   (
