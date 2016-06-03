@@ -4,7 +4,7 @@ CFI-Server as a websocket
 
 (in-package :connect4-cfi-websocket)
 
-(defclass connect4-server (cfi:default-server)
+(defclass connect4-server (cfi:cfi-server)
   ((websocket-client :initform "Olli" :accessor websocket-client :initarg :websocket-client)))
 
 (defclass cfi-resource (hunchensocket:websocket-resource)

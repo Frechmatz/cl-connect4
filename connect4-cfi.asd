@@ -17,7 +17,7 @@
 				     (:file "token")
 				     (:file "play-result-formatter")
 				     (:file "server")
-				     (:file "default-server")
+;;				     (:file "default-server")
 				     (:file "decode-placement")
 				     ))
    ))
