@@ -43,17 +43,17 @@ For monochrome output, not using ANSI escape sequences:
 
 ## Run the Web-Client
 
-First, you need to start the server:
+Start the server:
 ```bash
 sbcl
 * (asdf:load-system "connect4-web-server")
 * (connect4-web-server:start)
 ```
-You can now enter the following Url into your browser to start a game:
+Enter the following Url into your browser to start a game:
 ```bash
 http://localhost:8002
 ```
-To stop the server enter 
+Stop the server: 
 ```bash
 * (connect4-web-server:stop)
 ```
