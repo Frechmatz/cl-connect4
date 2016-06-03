@@ -21,13 +21,11 @@
 
 * Web-Client
 ** TODO Support of IE10
-** TODO Responsiveness (better adaption of board redendering according to size of view)
+** TODO Responsiveness (better adaption of board rendering according to size of view)
 ** TODO Minimal layout for mobile devices
 ** TODO Better handling of final game state
 ** TODO Allow user to quit a move
 ** TODO Display an activity indicator while a move is being calculated by the engine
 ** TODO Allow user to specify the board size
 
-* Cleanup
-** TODO Delete branches
 
