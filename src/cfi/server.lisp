@@ -14,13 +14,13 @@
 (defgeneric put-command (cfi-server command)
   (:documentation "Add a command to the comamnd queue"))
 (defgeneric write-message (cfi-server message))
-(defgeneric connected (cfi-server))
-(defgeneric disconnected (cfi-server))
+(defgeneric start (cfi-server))
+(defgeneric stop (cfi-server))
 
-(defmethod connected ((server cfi-server))
+(defmethod start ((server cfi-server))
   (write-message server (format nil "ready")))
 
-(defmethod disconnected ((server cfi-server))
+(defmethod stop ((server cfi-server))
   (setf (slot-value server 'disconnected-flag) t))
 
 (defun is-quitting (server)

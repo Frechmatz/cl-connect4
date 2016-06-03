@@ -33,10 +33,11 @@ CFI-Server as a websocket
 (defmethod hunchensocket:client-connected ((cur-cfi-resource cfi-resource) cfi-client)
   (logger:log-message :info  "Client connected")
   (setf (slot-value cfi-client 'cfi-server) (make-instance 'connect4-server :websocket-client cfi-client))
-  (cfi:connected (slot-value cfi-client 'cfi-server)))
+  (cfi:start (slot-value cfi-client 'cfi-server)))
 
 (defmethod hunchensocket:client-disconnected ((cur-cfi-resource cfi-resource) cfi-client)
-  (logger:log-message :info "Client disconnected"))
+  (logger:log-message :info "Client disconnected")
+  (cfi:stop (slot-value cfi-client 'cfi-server)))
 
 (defmethod hunchensocket:text-message-received ((cur-cfi-resource cfi-resource) cfi-client message)
   (logger:log-message :info  (format nil "Text message received: ~a" message))

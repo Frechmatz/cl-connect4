@@ -10,6 +10,7 @@
   (:export :ccfi-token-to-color)
   (:export :cfi-server)
   (:export :put-command)
-  (:export :connected)
+  (:export :start)
+  (:export :stop)
   )
 
