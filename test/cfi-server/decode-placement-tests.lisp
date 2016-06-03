@@ -52,7 +52,7 @@
 ;; simple dimension detection
 (define-test test-ccfi-decode-board-3 ()
 	     (let ((width nil) (height nil))
-	       (cfi-server:decode-placement "xxx/xxx"
+	       (cfi-server::decode-placement "xxx/xxx"
 				  (lambda (dx dy) (setf width dx) (setf height dy))
 				  (lambda (x y token) nil))
 	       (assert-true (equal width 3) "test-ccfi-decode-board-3: Failed 1")

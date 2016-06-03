@@ -11,14 +11,19 @@
    (disconnected-flag :initform nil :accessor disconnected-flag)
    ))
 
-(defgeneric put-command (cfi-server command)
-  (:documentation "Add a command to the comamnd queue"))
-(defgeneric write-message (cfi-server message))
+(defgeneric put (cfi-server command)
+  (:documentation "Add a command according to the Cfi-Specification to the queue."))
+
+(defgeneric message (cfi-server message)
+  (:documentation
+   "Abstract callback handler to be implemented by a server.
+    Is being called with strings according to the Cfi-Specification"))
+
 (defgeneric start (cfi-server))
 (defgeneric stop (cfi-server))
 
 (defmethod start ((server cfi-server))
-  (write-message server (format nil "ready")))
+  (message server (format nil "ready")))
 
 (defmethod stop ((server cfi-server))
   (setf (slot-value server 'disconnected-flag) t))
@@ -43,7 +48,7 @@
 
 (defun write-debug-message (server message)
   (if (slot-value server 'debug-flag)
-      (write-message server (as-comment message))))
+      (message server (as-comment message))))
 
 (defun try-invoke-next-command (server)
   (if (is-current-command server)
@@ -60,14 +65,14 @@
   (set-current-command server command)
   (let ((msg (execute-command server command)))
     (write-debug-message server (format nil "returning result ~a for command: ~a" msg command))
-    (write-message server msg))
+    (message server msg))
   (set-current-command server nil)
   (try-invoke-next-command server))
 
-(defmethod put-command ((server cfi-server) command)
-  (logger:log-message :info (format nil "put-command: ~a" command))
+(defmethod put ((server cfi-server) command)
+  (logger:log-message :info (format nil "put: ~a" command))
   (if (equal command "ping")
-      (write-message server "pong")
+      (message server "pong")
       (progn
 	(queues:qpush (slot-value server 'command-queue) command)
 	(try-invoke-next-command server))))

@@ -27,7 +27,7 @@ CFI-Server as a websocket
   (logger:log-message :info (format nil "Sending message: ~a" message))
   (hunchensocket:send-text-message cur-cfi-client (apply #'format nil message args)))
 
-(defmethod cfi-server::write-message ((the-server connect4-server) message)
+(defmethod cfi-server:message ((the-server connect4-server) message)
   (answer (slot-value the-server 'websocket-client) message))
 
 (defmethod hunchensocket:client-connected ((cur-cfi-resource cfi-resource) cfi-client)
@@ -41,5 +41,5 @@ CFI-Server as a websocket
 
 (defmethod hunchensocket:text-message-received ((cur-cfi-resource cfi-resource) cfi-client message)
   (logger:log-message :info  (format nil "Text message received: ~a" message))
-  (cfi-server:put-command (slot-value cfi-client 'cfi-server) message))
+  (cfi-server:put (slot-value cfi-client 'cfi-server) message))
 
