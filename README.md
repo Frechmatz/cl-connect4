@@ -8,7 +8,7 @@ Clone the project and add the following systems to your asdf-system path:
 ```bash
 connect4
 connect4-console
-connect4-cfi
+connect4-cfi-server
 connect4-web-server
 ```
 
