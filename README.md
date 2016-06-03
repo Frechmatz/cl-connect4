@@ -39,7 +39,7 @@ For monochrome output, not using ANSI escape sequences:
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc/gameplay.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/gameplay.jpg)
 
 ## Run the Web-Client
 
@@ -60,4 +60,4 @@ Stop the server:
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc/client1.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/client1.jpg)
