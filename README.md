@@ -23,7 +23,7 @@ hunchentoot
 hunchensocket
 cl-svg
 ```
-There are no dependencies on third-party JavaScript and CSS libraries
+There are no dependencies on third-party JavaScript/CSS libraries
 
 ## Run the Console-Client
 
