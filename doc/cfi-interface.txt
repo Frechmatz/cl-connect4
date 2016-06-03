@@ -69,9 +69,10 @@ Piece placement
 
 - The placement consists of a string containing the rows of the board.
 - Rows are separated by the '/' (slash) character.
+- The placement string starts with the bottom row (y = 0)
 - Each row specifies the piece placement from left to right.
 - An occupied field is represented by it's token.
-- Empty fields are represented by a number that indicates the count of
+- Empty fields are represented by a number that specifies the count of
   successive empty columns.
 
 Example:
