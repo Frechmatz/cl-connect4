@@ -2,8 +2,7 @@
 /*
   LayoutController
   - Sets the size of the playfield table according to the actual size of its parent
-    (don't know how to this via Css)
-  - Registers a global resize handler
+  - Sets the cell size
 */
 
 var LayoutController = function() {
@@ -14,23 +13,23 @@ var LayoutController = function() {
 
     var layoutBoard = function() {
 	var clientArea = document.getElementById(boardId);
-	var clientDx = clientArea.clientWidth;
-	var clientDy = clientArea.clientHeight;
 	var boardArea = document.getElementById(boardTableId);
-	boardArea.style.width = clientDx + 'px';
-	boardArea.style.height = clientDy + 'px';
+	boardArea.style.width = clientArea.clientWidth + 'px';
+	boardArea.style.height = clientArea.clientHeight + 'px';
 	var bs = board.getSize();
 	var borderSpace = Math.max(bs.width, bs.height) * 2;
-	var cellSizeX = (clientDx - borderSpace) / (0 + bs.width);
-	var cellSizeY = (clientDy - borderSpace) / (0 + bs.height);
+	var cellSizeX = (clientArea.clientWidth - borderSpace) / (0 + bs.width);
+	var cellSizeY = (clientArea.clientHeight - borderSpace) / (0 + bs.height);
 	var cellSize = Math.min(cellSizeX, cellSizeY);
+	/*
 	var msg =
-	     'clientDx: ' + clientDx +
-	    ' clientDy: ' + clientDy +
+	     'clientDx: ' + clientArea.clientWidth +
+	    ' clientDy: ' + clientArea.clientHeight +
 	    ' boardDx: ' + bs.width +
 	    ' boardDy: ' + bs.height +
 	    ' cellSize: ' + cellSize
 	console.log(msg);
+	*/
 	board.forEachCell( function(cell) {
 	     cell.style.width = cellSize;
 	     cell.style.height = cellSize;

@@ -40,26 +40,6 @@ GameController.prototype.init = function() {
 	}
     }.bind(this);
 
-    /*
-    document.getElementById('link-toggle-color').onclick = function(event) {
-	event.preventDefault();
-	if( !this.isBlockButton()) {
-	    this.toggleHumanPlayersToken();
-	}
-    }.bind(this);
-    */
-
-    /*
-    document.getElementById('link-debug').onclick = function(event) {
-	event.preventDefault();
-	if (!this.isBlockButton()) {
-	    //var placement = board.getCcfiPlacement();
-	    //this.cfiClient.sendCommand('play ' + placement + ' x' + ' 1' + '' );
-	    this.cfiClient.sendCommand('play oxxxoox/o1oxx2/x1xoo2/2ooo2/2xxo2/3xx2 o 6');
-	}
-    }.bind(this);
-    */
-
     board.forEachCell( function(cell) {
 	cell.onclick = this.cellClickHandler.bind(this);
     }.bind(this));
