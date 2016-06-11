@@ -44,9 +44,11 @@
 	(format t "~%Hi there. The main server has been started.")
 	(format t "~%The server can be reached via http://localhost:~a" *port*)
 	(hunchentoot:define-easy-handler (root :uri "/") ()
-	  (logger:log-message :info (format nil "query parameters: ~a" (hunchentoot:query-string*)))
+	  (logger:log-message :info (format nil "Root page requested. Query parameters: ~a" (hunchentoot:query-string*)))
 	  (setf (hunchentoot:content-type*) "text/html")
-	  (start-page ))
+	  (start-page
+	   :dx (param-as-positive-integer (hunchentoot:query-string*) "dx" :default-value 6 )
+	   :dy (param-as-positive-integer (hunchentoot:query-string*) "dy" :default-value 5)))
 	(hunchentoot:define-easy-handler (buttons-debug :uri "/buttons/debug.svg") ()
 	  (setf (hunchentoot:content-type*) "image/svg+xml")
 	  (connect4-buttons:get-debug-button))
@@ -149,8 +151,9 @@
 				#'connect4-board-renderer-experimental:render-ccfi-board
 				;; "xxx4/4ooo/7/7/2oooxx/7"
 				;;"xxo2ox/oxo4/1xo4/2x4/7/7"
-				"7/7/7/7/7/7"
+				;;"7/7/7/7/7/7"
 				;;"12/12/12/12/12/12/12/12"
+				(funcall #'cfi-server:create-placement dx dy)
 				))))
 		  (:div :class "console"
 			(:div :class "console-content"

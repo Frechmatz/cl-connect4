@@ -21,6 +21,7 @@
 			:serial t
 			:components ((:file "packages")
 				     (:file "websocket")
+				     (:file "query-parser")
 				     (:file "server")
 				     (:file "board-renderer")
 				     (:file "board-renderer-experimental")
