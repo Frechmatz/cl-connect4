@@ -1,10 +1,17 @@
 
+$section-background-color: blue;
+$section-font-color: yellow;
+
 $cell-color-o: green;
 $cell-color-x: red;
  
 $cell-color-o-highlight: palegreen;
 // https://upload.wikimedia.org/wikipedia/commons/f/fd/Color_icon_red.svg
 $cell-color-x-highlight: #fe8484;
+
+$playground-background-color: violet;
+
+$navbar-width: 60px;
 
 .page-wrapper {
     padding: 20px;
@@ -50,7 +57,7 @@ Layout of Body: Navbar, Playground, Console
     display: -webkit-flex;
 }
 .body .navbar {
-    width: 60px;
+    width: $navbar-width;
     margin-right: 20px;
 }
 .body .console {
@@ -100,11 +107,42 @@ body {
 Styling navbar
 */
 .navbar {
-    background-color: blue;
+    background-color: $section-background-color;
 }
 .navbar span {
     color: yellow;
 }
+
+.navbar ul {
+    /* Bullet entfernen und Abstand vom Rand auf. */
+    /* Wichtig für die Unterdivs, da deren Referenzpunkt der Text des List-Items/Links ist*/
+    /* Jetzt kann ich die x-position des Unterdialogs relativ zur Breite der Toolbar setzen */
+    list-style-type: none;
+    padding-left: 0px;
+    margin-left: 0px;
+    /* Bei Float-Positionierung der Toolbar geht der Margin mit rein (weil das Element keinen
+          direkten Nachbarn mehr hat.) */
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.navbaritem {
+    display: block;
+    position: relative;
+}
+
+.navbaritem:hover .navbaritemsubdialog {
+    display: block;
+    position: absolute;
+    left: $navbar-width;
+    top: -5px;
+}
+
+.navbaritemsubdialog {
+    display: none;
+    z-index: 5000;
+}
+
 .navbar a {
     background-repeat: no-repeat;
     display: block;
@@ -123,22 +161,22 @@ Styling navbar
 .navbar .link-toggle-color {
     background-image: url('/buttons/togglecolor.svg');
 }
-.navbar .link-debug {
-    background-image: url('/buttons/debug.svg');
+.navbar .link-set-board-size {
+    background-image: url('/static/setboardsize.svg');
 }
 
 /*
 Styling playground 
 */
 .body .playground {
-    background-color: violet;
+    background-color: $playground-background-color;
 }
 
 /*
 Styling: Header
 */
 .header {
-    background-color: blue;
+    background-color: $section-background-color;
     background-image: url(/static/made-with-lisp-ellipse.png);
     background-repeat: no-repeat;
     background-size: contain;
@@ -159,7 +197,7 @@ Styling: Header
 Styling: Footer
 */
 .footer {
-    background-color: blue;
+    background-color: $section-background-color;
     display: flex;
     display: -webkit-flex;
     align-items: center;
@@ -274,3 +312,44 @@ the purpose of this token is to avoid css injection via javascript
 }
 
 
+/*
+Styling of board size form 
+*/
+
+.set-board-size-form {
+    border: solid;
+    background: $section-background-color;
+    color: $section-font-color;
+    border-color: $playground-background-color;
+    width: 10em;
+}
+
+.set-board-size-form .wrapper {
+    margin: 10px 10px 10px 10px;
+}
+
+/*
+.set-board-size-form .input-group {
+    padding-bottom: 20px;
+    clear: both;
+    width: 100%;
+}
+*/
+
+.set-board-size-form .title {
+    width: 100%;
+    color: $section-font-color;
+}
+
+.set-board-size-form label {
+    display: block;
+    width: 35%;
+    //background: yellow;
+    float: left;
+}
+.set-board-size-form .input {
+    display: block;
+    width: 65%;
+    //background: green;
+    float: left;
+}

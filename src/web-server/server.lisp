@@ -140,9 +140,28 @@
 	    (:div :class "header" (:h1 (cl-who:str (funcall #'message))))
 	    (:div :class "body" 
 		  (:div :class "navbar"
-			(:a :class "link-new-game" :id "link-new-game" :title "New Game" :href "#" (:span "New game"))
-			;; (:a :class "link-toggle-color" :id "link-toggle-color" :title "Toggle color" :href "#" (:span "Toggle color"))
-			;; (:a :class "link-debug" :id "link-debug" :title "Debug" :href "#" (:span "Debug"))
+			(:ul :class "navbarmenu"
+			 (:li :class "navbaritem"
+			      (:a :class "link-new-game" :id "link-new-game" :title "New Game" :href "#" (:span "New game")))
+			 (:li :class "navbaritem"
+			      (:a :class "link-set-board-size" :id "link-set-board-size" :title "Set board size" :href "#" (:span "Set board size"))
+			      (:div :class "navbaritemsubdialog set-board-size-form"
+				    (:div :class "wrapper"
+					  (:p :class "title" "Set board size")
+					  (:form :method "get"
+						 (:div :class "input-group"
+						       (:label :for "#board-size-form-input-dx" "Width:")
+						       (:input :class "input" :type "text" :name "dx" :id "board-size-form-input-dx"))
+						 (:div :class "input-group"
+						       (:label :for "#board-size-form-input-dy" "Height:")
+						       (:input :class "input" :type "text" :name "dy" :id "board-size-form-input-dy"))
+						 
+						 (:input :type "submit")
+						 )
+					  ))
+			      )
+			 ;; (:a :class "link-debug" :id "link-debug" :title "Debug" :href "#" (:span "Debug"))
+			 )
 			)
 		  (:div :class "playground"
 			(:div :class "board" :id "board"
