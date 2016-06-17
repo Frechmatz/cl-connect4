@@ -12,6 +12,7 @@ GameController.prototype.init = function() {
     this.cfiClient.init();
     this.setHumanPlayersToken(board.getTokenForX());
     footer.hideFinalGameStateIndicator();
+    footer.stopActivity();
     
     footer.setFinalStateContinueHandler( function() {
 	this.processingFinalState = false;
@@ -71,6 +72,7 @@ GameController.prototype.cellClickHandler = function(evt) {
     var that = this;
     this.locked = true;
     board.clearFieldMarker();
+    footer.startActivity();
     async.waterfall(
 	[
 	    // Apply humans move
@@ -138,6 +140,7 @@ GameController.prototype.cellClickHandler = function(evt) {
 	    }
 	],
 	function(err, finalGameStateReached) {
+	    footer.stopActivity();
 	    if(finalGameStateReached) {
 		that.processingFinalState = true;
 	    }

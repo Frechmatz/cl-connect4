@@ -245,6 +245,32 @@ Styling: Footer
     display: block;
 }
 
+/*
+Activity indicator
+ */
+
+.footer .activity-indicator {
+    padding-left: 6px;
+    padding-right: 6px;
+    height: calc( #{$footer-height} - 10px);
+    color: $section-font-color;
+    background-color: green;
+    margin-left: 5px;
+}
+.footer .activity-indicator[data-value="OFF"] {
+    display: none;
+}
+.footer .activity-indicator[data-value="1"] {
+    display: block;
+    background-color: black;
+    color: yellow;
+}
+.footer .activity-indicator[data-value="0"] {
+    display: block;
+    background-color: yellow;
+    color: black;
+}
+
 
 
 /*

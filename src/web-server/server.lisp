@@ -180,6 +180,7 @@
 	    (:div :class "footer" :id "footer"
 		  (:a :class "human-players-token-indicator" :href "#" :title "Toggle Color" (:p "Your Color"))
 		  (:a :class "final-state-click-to-continue" :href "#" (:p "Click to continue"))
+		  (:a :class "activity-indicator" :href "#" (:p "Computer is calculating. Please wait..."))
 		  )
 	    )))))
 
