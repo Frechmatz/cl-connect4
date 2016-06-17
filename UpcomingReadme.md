@@ -1,5 +1,5 @@
 # Connect4
-#### A Common Lisp implementation of the Connect Four game. Play against the computer via the Console-Client or your Web-Browser.
+#### A Common Lisp implementation of the Connect Four game. Play against the computer via the Console or the Web-Browser.
 
 ## Installation
 
@@ -8,7 +8,7 @@ Clone the project and add the following systems to your asdf-system path:
 ```bash
 connect4
 connect4-console
-connect4-cfi
+connect4-cfi-server
 connect4-web-server
 ```
 
@@ -23,7 +23,7 @@ hunchentoot
 hunchensocket
 cl-svg
 ```
-There are no dependencies on third-party JavaScript and CSS libraries, such as jquery or bootstrap.
+There are no dependencies on third-party JavaScript/CSS libraries
 
 ## Run the Console-Client
 
@@ -39,26 +39,25 @@ For monochrome output, not using ANSI escape sequences:
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc/gameplay.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/gameplay.jpg)
 
 ## Run the Web-Client
 
-First, you need to start the server:
+Start the server:
 ```bash
 sbcl
 * (asdf:load-system "connect4-web-server")
 * (connect4-web-server:start)
 ```
-You can now enter the following Url into your browser to start a game:
+Enter the following Url into your browser to start a game:
 ```bash
 http://localhost:8002
 ```
-To stop the server enter 
+Stop the server: 
 ```bash
 * (connect4-web-server:stop)
 ```
-into the Repl.
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/doc/client1.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/client1.jpg)
