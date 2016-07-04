@@ -11,8 +11,7 @@ A simple logger
 (defun format-message (level message)
   (format nil "~a ~a: ~a" (get-current-time-string) level message))
 
-(defparameter *appender* (list
-			  (lambda (message) (princ message))))
+(defparameter *appender* ())
 
 ;; Levels: :debug, :warn, :info, :error
 (defun log-message (level message)

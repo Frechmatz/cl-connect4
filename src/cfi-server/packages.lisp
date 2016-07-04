@@ -1,7 +1,7 @@
 
 
 (defpackage :cfi-server
-  (:use :cl :cl-ppcre :alexandria :board :engine)
+  (:use :cl :cl-ppcre :alexandria :bordeaux-threads :board :engine)
   (:export :create-placement)
   (:export :cfi-server)
   (:export :put)

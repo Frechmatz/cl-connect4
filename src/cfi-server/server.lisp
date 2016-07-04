@@ -8,7 +8,9 @@
    (quit-flag :initform nil :accessor quit-flag)
    (debug-flag :initform nil :accessor debug-flag)
    (current-command :initform nil :accessor current-command)
-   (disconnected-flag :initform nil :accessor disconnected-flag)
+   (started-flag :initform nil :accessor started-flag)
+   (stopping-flag :initform nil :accessor stopping-flag)
+   (stopping-flag-lock :initform (bt:make-lock "stopping-flag-lock") :accessor stopping-flag-lock)
    ))
 
 (defgeneric put (cfi-server command)
@@ -21,12 +23,66 @@
 
 (defgeneric start (cfi-server))
 (defgeneric stop (cfi-server))
+(defgeneric is-started (cfi-server))
+(defgeneric is-stopping (cfi-server))
+(defgeneric set-is-stopping (cfi-server flag))
+
+(defun write-debug-message (server message)
+  (if (slot-value server 'debug-flag)
+      (message server (as-comment message))))
+
+(defmethod is-started ((server cfi-server))
+  (slot-value server 'started-flag))
+
+(defmethod is-stopping ((server cfi-server))
+  (let ((stopping nil))
+    (bt:with-lock-held ((slot-value server 'stopping-flag-lock))
+      (setf stopping (slot-value server 'stopping-flag)))
+    stopping))
+
+(defmethod set-is-stopping ((server cfi-server) flag)
+  (bt:with-lock-held ((slot-value server 'stopping-flag-lock))
+      (setf (slot-value server 'stopping-flag) flag)))
+
 
 (defmethod start ((server cfi-server))
-  (message server (format nil "ready")))
+  (if (is-stopping server)
+      (message server (as-error "Server is shutting down"))
+      (progn
+	(if (is-started server)
+	    (message server (as-error "Server already started"))
+	    (progn
+	      (setf (slot-value server 'started-flag) 1) 
+	      (bt:make-thread (lambda ()
+				(logger:log-message :info "Worker thread: Started")
+				(loop
+				   (if (is-stopping server)
+				       (return))
+				   (logger:log-message :info "Worker thread: Nothing to do. Going to sleep")
+				   (sleep 20))
+				(logger:log-message :info "Worker thread: Finished")
+				(write-debug-message server "Worker thread: Finished")
+				(set-is-stopping server nil)))
+	      (message server "ready")
+	      )))))
+
 
 (defmethod stop ((server cfi-server))
-  (setf (slot-value server 'disconnected-flag) t))
+  (if (is-stopping server)
+      (message server (as-error "Server is shutting down"))
+      (progn
+	(if (not (is-started server))
+	    (message server (as-error "Server not started"))
+	    (progn 
+	      ;; todo: synchronous shut down of threads
+	      (set-is-stopping server 1)
+	      (setf (slot-value server 'started-flag) nil)
+	      (write-debug-message server "Server stopped")
+	      (message server (as-comment "Server stopped"))
+	      (set-is-stopping server nil)
+	    )))))
+
+
 
 (defun is-quitting (server)
   (slot-value server 'quit-flag))
@@ -46,9 +102,6 @@
 (defun as-error (str)
   (format nil "# ~a" str))
 
-(defun write-debug-message (server message)
-  (if (slot-value server 'debug-flag)
-      (message server (as-comment message))))
 
 (defun try-invoke-next-command (server)
   (if (is-current-command server)
@@ -70,12 +123,18 @@
   (try-invoke-next-command server))
 
 (defmethod put ((server cfi-server) command)
-  (logger:log-message :info (format nil "put: ~a" command))
-  (if (equal command "ping")
-      (message server "pong")
+  (if (is-stopping server)
+      (message server (as-error "Server is shutting down"))
       (progn
-	(queues:qpush (slot-value server 'command-queue) command)
-	(try-invoke-next-command server))))
+	(if (not (is-started server))
+	    (message server (as-error "Server has not been started"))
+	    (progn
+	      (logger:log-message :info (format nil "put: ~a" command))
+	      (if (equal command "ping")
+		  (message server "pong")
+		  (progn
+		    (queues:qpush (slot-value server 'command-queue) command)
+		    (try-invoke-next-command server))))))))
 
 
 ;;
