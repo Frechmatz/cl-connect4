@@ -4,10 +4,9 @@
 (defclass cfi-server ()
   (
    (name :initarg :name :initform "OllisServer" :accessor name)
-   (command-queue :initform (queues:make-queue :simple-queue) :accessor command-queue)
+   (command-queue :initform (queues:make-queue :simple-cqueue) :accessor command-queue)
    (quit-flag :initform nil :accessor quit-flag)
    (debug-flag :initform nil :accessor debug-flag)
-   (current-command :initform nil :accessor current-command)
    (started-flag :initform nil :accessor started-flag)
    (stopping-flag :initform nil :accessor stopping-flag)
    (stopping-flag-lock :initform (bt:make-lock "stopping-flag-lock") :accessor stopping-flag-lock)
@@ -30,6 +29,9 @@
 (defun write-debug-message (server message)
   (if (slot-value server 'debug-flag)
       (message server (as-comment message))))
+
+(defun next-command (server)
+  (queues:qpop (slot-value server 'command-queue)))
 
 (defmethod is-started ((server cfi-server))
   (slot-value server 'started-flag))
@@ -58,8 +60,12 @@
 				(loop
 				   (if (is-stopping server)
 				       (return))
-				   (logger:log-message :info "Worker thread: Nothing to do. Going to sleep")
-				   (sleep 20))
+				   (let ((cmd (next-command server)))
+				     (if cmd
+					 (invoke-command server cmd)
+					 (progn
+					   ;;(logger:log-message :info "Worker thread: Nothing to do. Going to sleep")
+					   (sleep 1)))))
 				(logger:log-message :info "Worker thread: Finished")
 				(write-debug-message server "Worker thread: Finished")
 				(set-is-stopping server nil)))
@@ -74,15 +80,16 @@
 	(if (not (is-started server))
 	    (message server (as-error "Server not started"))
 	    (progn 
-	      ;; todo: synchronous shut down of threads
 	      (set-is-stopping server 1)
 	      (setf (slot-value server 'started-flag) nil)
-	      (write-debug-message server "Server stopped")
-	      (message server (as-comment "Server stopped"))
-	      (set-is-stopping server nil)
-	    )))))
-
-
+	      (loop
+		 (if (not (is-stopping server))
+		     (return)
+		     (progn
+		       (message server (as-comment "Stopping server..."))
+		       (sleep 1)
+		       )))
+	      (message server (as-comment "Server stopped")))))))
 
 (defun is-quitting (server)
   (slot-value server 'quit-flag))
@@ -90,37 +97,18 @@
 (defun quit (server)
   (setf (slot-value server 'quit-flag) t))
 
-(defun is-current-command (server)
-  (slot-value server 'current-command))
-
-(defun set-current-command (server cmd)
-  (setf (slot-value server 'current-command) cmd))
-
 (defun as-comment (str)
   (format nil "# ~a" str))
 
 (defun as-error (str)
   (format nil "# ~a" str))
 
-
-(defun try-invoke-next-command (server)
-  (if (is-current-command server)
-      nil
-      (progn
-	(let ((cmd (queues:qpop (slot-value server 'command-queue))))
-	  (if cmd
-	      (invoke-command server cmd)
-	      )))))
-
    
 (defun invoke-command (server command)
   (write-debug-message server (format nil "invoking command: ~a" command))
-  (set-current-command server command)
   (let ((msg (execute-command server command)))
     (write-debug-message server (format nil "returning result ~a for command: ~a" msg command))
-    (message server msg))
-  (set-current-command server nil)
-  (try-invoke-next-command server))
+    (message server msg)))
 
 (defmethod put ((server cfi-server) command)
   (if (is-stopping server)
@@ -132,9 +120,7 @@
 	      (logger:log-message :info (format nil "put: ~a" command))
 	      (if (equal command "ping")
 		  (message server "pong")
-		  (progn
-		    (queues:qpush (slot-value server 'command-queue) command)
-		    (try-invoke-next-command server))))))))
+		    (queues:qpush (slot-value server 'command-queue) command)))))))
 
 
 ;;
