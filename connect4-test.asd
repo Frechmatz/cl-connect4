@@ -5,7 +5,7 @@
   :serial t
   :description "Tests of the Connect Four game"
   :long-description "Tests of the Connect Four game"
-  :depends-on (:lisp-unit :alexandria :cl-ppcre)
+  :depends-on (:lisp-unit :alexandria :cl-ppcre :bordeaux-threads)
   :components (
 	       (:module "src/connect4/board"
                         :serial t

@@ -82,69 +82,74 @@ If t returns a list consisting of such move otherwise return the moves given int
 ;;; color: The computers color
 ;;;
 ;;; create a clone of the board that for performance reasons will be manipulated during the traversal
-(defun play (the-board color max-depth &key (start-column nil))
+(defun play (the-board color max-depth &key (start-column nil) (is-quit-fn nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
   (let (
 	(board (clone-board the-board))
 	(result nil)
 	(cur-line '())
+	(cur-result nil)
 	(column-filter start-column)
+	(quit-fn (if is-quit-fn is-quit-fn (lambda () nil)))
 	(*column-weights*
 	 (calc-column-weights (get-width the-board))))
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
-	       (let (
-		     (generated-moves (movegenerator:generate-moves board :column-filter column-filter))
-		     (moves ())
-		     (score nil)
-		     (is-four nil))
-		 (setf column-filter nil)
-		 (setf generated-moves (peek-is-four generated-moves board color))
-		 (dolist (move generated-moves)
-		   (progn
-		     (nset-field board (first move) (second move) color) ; do move
-		     (setf score (board-score board (first move) (second move) )) ; calc score
-		     (setf is-four (>= score 1.0)) ; 4 pieces in a row?
-		     (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
-		     (setf score (/ score (expt 10 (- cur-depth 1))))
-		     (push (list (first move) color (if is-four "MATE" nil)) cur-line)
-		     ;; final state or no more moves availabe or max depth reached
-		     (if (or is-four (not (movegenerator:is-move-available board)) (equal cur-depth max-depth))
-			 (progn
-			   (push (list (first move) (second move) score (copy-list cur-line)) moves)
-			   )
-			 (progn
-			   (setf score (minmax-inner board (toggle-color color) (not is-opponent) (+ cur-depth 1)))
-			   (push (list (first move) (second move) (third score) (fourth score)) moves)))
-		     (nclear-field board (first move) (second move)) ; undo move
-		     (setf cur-line (cdr cur-line))
-		     )
-		   )
-		 (let ((result (reduce:reduce-scores
-				moves
-				is-opponent
-				;; Score getter
-				(lambda (m) (third m))
-				;; Weight getter
-				(lambda (m) (aref *column-weights* (first m)))
-				:skip-randomizer (if (equal cur-depth 1) nil t))))
-		   (funcall *engine-notification-reduced-scores* board color is-opponent cur-depth result moves)
-		   result)
-		 )))
-      (setf result (minmax-inner board color nil 1))
-      ;; revert best line
-      (setf result (list (first result) (second result) (third result) (reverse (fourth result))))
-      (if (not (equalp board the-board))
-	  (progn
-	    (format t "~%Fatal error: Temporary board is not equal to incoming one~%")
-	    (format t "Original board: ~%")
-	    (format t the-board)
-	    (format t "~%Temporary board: ~%")
-	    (format t board)
-	    (format t "~%")
-	    ;; Game Over
-	    (error 'internal-error :text "Temporary board is not equal to the incoming one")
-	    ))
-      result
-      )))
+	       (if (and cur-result (funcall quit-fn))
+		   cur-result
+		   (let (
+			 (generated-moves (movegenerator:generate-moves board :column-filter column-filter))
+			 (moves ())
+			 (score nil)
+			 (is-four nil))
+		     (setf column-filter nil)
+		     (setf generated-moves (peek-is-four generated-moves board color))
+		     (dolist (move generated-moves)
+		       (progn
+			 (nset-field board (first move) (second move) color) ; do move
+			 (setf score (board-score board (first move) (second move) )) ; calc score
+			 (setf is-four (>= score 1.0)) ; 4 pieces in a row?
+			 (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
+			 (setf score (/ score (expt 10 (- cur-depth 1))))
+			 (push (list (first move) color (if is-four "MATE" nil)) cur-line)
+			 ;; final state or no more moves availabe or max depth reached
+			 (if (or is-four (not (movegenerator:is-move-available board)) (equal cur-depth max-depth))
+			     (progn
+			       (push (list (first move) (second move) score (copy-list cur-line)) moves)
+			       )
+			     (progn
+			       (setf score (minmax-inner board (toggle-color color) (not is-opponent) (+ cur-depth 1)))
+			       (push (list (first move) (second move) (third score) (fourth score)) moves)))
+			 (nclear-field board (first move) (second move)) ; undo move
+			 (setf cur-line (cdr cur-line))
+			 )
+		       )
+		     (let ((result (reduce:reduce-scores
+				    moves
+				    is-opponent
+				    ;; Score getter
+				    (lambda (m) (third m))
+				    ;; Weight getter
+				    (lambda (m) (aref *column-weights* (first m)))
+				    :skip-randomizer (if (equal cur-depth 1) nil t))))
+		       (funcall *engine-notification-reduced-scores* board color is-opponent cur-depth result moves)
+		       (setf cur-result result)
+		       result)
+		     ))))
+	     (setf result (minmax-inner board color nil 1))
+	     ;; revert best line
+	     (setf result (list (first result) (second result) (third result) (reverse (fourth result))))
+	     (if (not (equalp board the-board))
+		 (progn
+		   (format t "~%Fatal error: Temporary board is not equal to incoming one~%")
+		   (format t "Original board: ~%")
+		   (format t the-board)
+		   (format t "~%Temporary board: ~%")
+		   (format t board)
+		   (format t "~%")
+		   ;; Game Over
+		   (error 'internal-error :text "Temporary board is not equal to the incoming one")
+		   ))
+	     result
+	     )))
 

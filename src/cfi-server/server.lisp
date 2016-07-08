@@ -6,10 +6,12 @@
    (name :initarg :name :initform "OllisServer" :accessor name)
    (command-queue :initform (queues:make-queue :simple-cqueue) :accessor command-queue)
    (quit-flag :initform nil :accessor quit-flag)
+   (quit-flag-lock :initform (bt:make-lock "quit-flag-lock") :accessor quit-flag-lock)
    (debug-flag :initform nil :accessor debug-flag)
    (started-flag :initform nil :accessor started-flag)
    (stopping-flag :initform nil :accessor stopping-flag)
    (stopping-flag-lock :initform (bt:make-lock "stopping-flag-lock") :accessor stopping-flag-lock)
+   (put-lock :initform (bt:make-lock "put-lock") :accessor queue-lock)
    ))
 
 (defgeneric put (cfi-server command)
@@ -32,6 +34,34 @@
 
 (defun next-command (server)
   (queues:qpop (slot-value server 'command-queue)))
+
+(defparameter *backend-skip-cycles* 1000)
+
+(defun create-backend-callback-handler (interval-seconds
+					callback-fn
+					&key
+					  default-return-value
+					  is-sticky-return-value)
+  "Returns a wrapper function that filters high-frequency calls of 
+the backend without using a lock. Filtered calls return the value 
+of the initial/latest call of the callback function. The initial return
+value is initialized by calling the callback function." 
+  (let ((counter 0)
+	(start-time (get-internal-real-time))
+	(return-value default-return-value))
+    (let ((fn (lambda ()
+	       (setf counter (+ counter 1))
+	       (if (> counter *backend-skip-cycles*)
+		   (progn
+		     (setf counter 0)
+		     (let ((cur-time (get-internal-real-time)))
+		       (if (>= (/ (- cur-time start-time) internal-time-units-per-second) interval-seconds)
+			   (progn
+			     (setf start-time cur-time)
+			     (let ((result (funcall callback-fn)))
+			       (if is-sticky-return-value (setf return-value result))))))))
+	       return-value)))
+      fn)))
 
 (defmethod is-started ((server cfi-server))
   (slot-value server 'started-flag))
@@ -65,9 +95,10 @@
 					 (invoke-command server cmd)
 					 (progn
 					   ;;(logger:log-message :info "Worker thread: Nothing to do. Going to sleep")
+					   (release-quit server)
 					   (sleep 1)))))
 				(logger:log-message :info "Worker thread: Finished")
-				(write-debug-message server "Worker thread: Finished")
+				(message server (as-comment "Worker thread: Stopped"))
 				(set-is-stopping server nil)))
 	      (message server "ready")
 	      )))))
@@ -92,10 +123,27 @@
 	      (message server (as-comment "Server stopped")))))))
 
 (defun is-quitting (server)
-  (slot-value server 'quit-flag))
+  (let ((flag nil))
+    (bt:with-lock-held ((slot-value server 'quit-flag-lock))
+      (setf flag (slot-value server 'quit-flag)))
+    flag))
 
 (defun quit (server)
-  (setf (slot-value server 'quit-flag) t))
+  (bt:with-lock-held ((slot-value server 'quit-flag-lock))
+    (message server (as-comment "Set quit flag to true"))
+    (setf (slot-value server 'quit-flag) t)))
+
+(defun release-quit (server)
+  ;; block to put commands into queue and check
+  ;; if queue is empty.
+  ;; if not, then reset the quit flag
+  (bt:with-lock-held ((slot-value server 'put-lock))
+    (if (= 0 (queues:qsize (slot-value server 'command-queue)))
+	(bt:with-lock-held ((slot-value server 'quit-flag-lock))
+	  (if (slot-value server 'quit-flag)
+	      (progn 
+		(message server (as-comment "Reset quit flag"))
+		(setf (slot-value server 'quit-flag) nil)))))))
 
 (defun as-comment (str)
   (format nil "# ~a" str))
@@ -116,11 +164,16 @@
       (progn
 	(if (not (is-started server))
 	    (message server (as-error "Server has not been started"))
-	    (progn
+	    (bt:with-lock-held ((slot-value server 'put-lock))
 	      (logger:log-message :info (format nil "put: ~a" command))
-	      (if (equal command "ping")
-		  (message server "pong")
-		    (queues:qpush (slot-value server 'command-queue) command)))))))
+	      (cond
+		((string= command "ping")
+		 (message server "pong"))
+		((string= command "quit")
+		 (quit server))
+		(t
+		   (queues:qpush (slot-value server 'command-queue) command))))))))
+
 
 
 ;;
@@ -140,10 +193,22 @@
 	(error 'invalid-arguments :text (format nil "~a" s))))))
 
 (defun quit-handler (server)
+  (breaK)
+  (message server "quit handler called")
   (quit server))
 
 (defun play-handler (server board token depth &key column)
-  (let ((parsed-board (parse board #'ccfi-placement-to-board)))
+  (let ((parsed-board (parse board #'ccfi-placement-to-board))
+	(quit-handler
+	 (create-backend-callback-handler
+	  2
+	  (lambda ()
+	    (message server (as-comment (format nil "IsQuit-Handler called. Quitting: ~a" (is-quitting server))))
+	    (is-quitting server)
+	    )
+	  :default-return-value nil
+	  :is-sticky-return-value 1
+	  )))
     (format-play-result
      parsed-board
      (engine:play
@@ -151,6 +216,7 @@
       (parse token #'ccfi-token-to-color)
       (parse-integer depth)
       :start-column (if column (parse-integer column) nil)
+      :is-quit-fn quit-handler
       ))))
   
 (defparameter *handler* 
@@ -180,7 +246,7 @@
   (mapcar #'preprocess-parameter list))
 
 (defun invoke-command-handler (server name lambda-list)
-  ;; (declare (optimize (debug 3) (speed 0) (space 0)))
+  (declare (optimize (debug 3) (speed 0) (space 0)))
   (logger:log-message :debug (format nil "invoke-command-handler: ~a ~a" name lambda-list))
   (handler-case
       (let ((handler (get-handler name)))
