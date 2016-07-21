@@ -26,16 +26,30 @@
    (server-lock :initform (bt:make-lock "server-lock"))
    ))
 
+
+(defgeneric start (cfi-server)
+  (:documentation
+   "Starts the queue processing"))
+
+(defgeneric stop (cfi-server)
+  (:documentation
+   "Signal that the server shall stop working as soon as possible."))
+
 (defgeneric put (cfi-server command)
-  (:documentation "Add a command according to the Cfi-Specification to the queue."))
+  (:documentation
+   "Add a command to the queue. Commands must apply to the Cfi-Specification. 
+   If the server hasn't been started or has been stopped, the command is ignored."))
 
 (defgeneric message (cfi-server message)
   (:documentation
    "Abstract callback handler to be implemented by a server.
     Is being called with strings according to the Cfi-Specification"))
 
-(defgeneric start (cfi-server))
-(defgeneric stop (cfi-server))
+(defgeneric get-state (cfi-server)
+  (:documentation
+   "Get the state of the server. Returns an alist holding the properties :server-state and :worker-state")
+  )
+  
 
 ;;
 ;; Tool functions to be removed from this file

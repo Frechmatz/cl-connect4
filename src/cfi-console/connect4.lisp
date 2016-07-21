@@ -24,6 +24,18 @@
     (format out "~a~%" message)
     (finish-output out))))
 
+(defun stop-server (server)
+  "Stop the server and wait until the server has stopped."
+  (stop server)
+  (loop
+     (format t  "Stopping server...~%")
+     (let ((state (get-state server)))
+       (if (eql (second (assoc :server-state state)) cfi-server:+SERVER-STATE-STOPPED+)
+	   (progn
+	     (format t "Server stopped~%")
+	     (return))
+	   (sleep 1)))))
+	     
 (defun read-cmd ()
   (read-line))
 
@@ -36,7 +48,7 @@
        (let ((cmd (read-cmd)))
 	 (cond
 	   ((string= cmd "stop")
-	    (stop server)
+	    (stop-server server)
 	    (return))
 	   (t (put server cmd)
 	      ))))))

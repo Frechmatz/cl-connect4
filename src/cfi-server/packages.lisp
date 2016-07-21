@@ -8,5 +8,7 @@
   (:export :message)
   (:export :start)
   (:export :stop)
+  (:export :get-state)
+  (:export :+SERVER-STATE-STOPPED+)
   )
 

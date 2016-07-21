@@ -7,6 +7,13 @@
 
 (in-package :cfi-server)
 
+(defmethod get-state ((server cfi-server))
+  (bt:with-lock-held ((slot-value server 'server-lock))
+  (list
+   (list :server-state (slot-value server 'server-state))
+   (list :worker-state (slot-value server 'worker-state)))))
+
+
 (defmethod start ((server cfi-server))
   (bt:with-lock-held ((slot-value server 'server-lock))
     (cond
@@ -25,7 +32,8 @@
 			      (if is-stop-server
 				  (progn
 				    (bt:with-lock-held ((slot-value server 'server-lock))
-				      (setf (slot-value server 'worker-state) +WORKER-STATE-TERMINATED+))
+				      (setf (slot-value server 'worker-state) +WORKER-STATE-TERMINATED+)
+				      (setf (slot-value server 'server-state) +SERVER-STATE-STOPPED+))
 				    (logger:log-message :info "Worker thread: Stopped")
 				    (return)))
 			      (if (not next-command)
@@ -45,27 +53,12 @@
 				    ))))))))))
 
 (defmethod stop ((server cfi-server))
-  (let ((wait-for-stop nil))
-    (bt:with-lock-held ((slot-value server 'server-lock))
-      (if (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state))
-	  (progn
-	    (setf wait-for-stop t)
-	    (setf (slot-value server 'server-state) +SERVER-STATE-STOPPING+))))
-    (if wait-for-stop
-	(loop
-	   (message server (as-comment "Stopping server..."))
-	   (sleep 1)
-	   (let ((stopped nil))
-	     (bt:with-lock-held ((slot-value server 'server-lock))
-	       (setf stopped (if (eql +WORKER-STATE-TERMINATED+ (slot-value server 'worker-state))
-				 t
-				 nil)))
-	     (if stopped
-		 (progn
-		   (bt:with-lock-held ((slot-value server 'server-lock))
-		     (setf (slot-value server 'server-state) +SERVER-STATE-STOPPED+))
-		   (return)))
-	     )))))
+  (bt:with-lock-held ((slot-value server 'server-lock))
+    (cond
+      ((eql +SERVER-STATE-INITIALIZED+ (slot-value server 'server-state))
+       (setf (slot-value server 'server-state) +SERVER-STATE-STOPPED+))
+      ((eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state))
+       (setf (slot-value server 'server-state) +SERVER-STATE-STOPPING+)))))
 
 (defmethod put ((server cfi-server) command)
   (with-lock-held ((slot-value server 'server-lock))
