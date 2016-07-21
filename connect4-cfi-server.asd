@@ -15,9 +15,12 @@
 			:serial t
 			:components ((:file "packages")
 				     (:file "token")
+				     (:file "decode-placement")
 				     (:file "play-result-formatter")
 				     (:file "encode-placement")
+				     (:file "lazy-handler")
+				     (:file "server-class")
+				     (:file "server-commands")
 				     (:file "server")
-				     (:file "decode-placement")
 				     ))
    ))

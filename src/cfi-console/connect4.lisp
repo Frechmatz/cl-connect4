@@ -29,13 +29,14 @@
 
 (defun lets-go ()
   (let ((server (make-instance 'connect4-server)))
-    (format t "Let's go~%")
+    (start server)
+    (format t "Started server~%")
     (loop
-       (format t "Enter command (start, stop, exit and cfi-command)~%")
+       (format t "Enter command (stop or any cfi-command)~%")
        (let ((cmd (read-cmd)))
 	 (cond
-	   ((string= cmd "exit") (return))
-	   ((string= cmd "stop") (stop server))
-	   ((string= cmd "start") (start server))
+	   ((string= cmd "stop")
+	    (stop server)
+	    (return))
 	   (t (put server cmd)
 	      ))))))
