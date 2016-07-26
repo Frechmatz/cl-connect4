@@ -43,6 +43,15 @@
    :is-sticky-return-value t
    ))
   
+(defun create-lazy-info-handler (server)
+  (create-lazy-handler
+   4 ;; every 4 seconds
+   (lambda ()
+     (lambda (info)
+       (message server (format-info info))))
+   :default-return-value nil
+   :is-sticky-return-value nil
+   ))
 
 ;;
 ;; Handler invoking stuff
@@ -64,7 +73,7 @@
   (mapcar #'preprocess-parameter list))
 
 (defun invoke-command-handler (server name lambda-list)
-  (declare (optimize (debug 3) (speed 0) (space 0)))
+  ;; (declare (optimize (debug 3) (speed 0) (space 0)))
   (logger:log-message :debug (format nil "invoke-command-handler: ~a ~a" name lambda-list))
   (handler-case
       (let ((handler (get-handler name)))
@@ -107,6 +116,7 @@
       (parse-integer depth)
       :start-column (if column (parse-integer column) nil)
       :is-quit-fn (create-lazy-quit-play-handler server)
+      :info-fn (create-lazy-info-handler server)
       ))))
   
 (add-handler :play #'play-handler)

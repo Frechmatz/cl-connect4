@@ -1,3 +1,6 @@
+/*
+sass --watch connect4.scss:connect4.css
+ */
 
 $section-background-color: blue;
 $section-font-color: yellow;
@@ -271,7 +274,25 @@ Activity indicator
     color: black;
 }
 
-
+/*
+Quit-Button
+*/
+.footer .quit-button {
+    padding-left: 6px;
+    padding-right: 6px;
+    height: calc( #{$footer-height} - 10px);
+    color: $section-font-color;
+    background-color: green;
+    margin-left: 5px;
+}
+.footer .quit-button[data-value="OFF"] {
+    display: none;
+}
+.footer .quit-button[data-value="ON"] {
+    display: block;
+    background-color: black;
+    color: yellow;
+}
 
 /*
 Styling: Console

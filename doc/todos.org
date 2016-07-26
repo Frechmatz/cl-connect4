@@ -13,7 +13,6 @@
 
 * CFI-Server / CFI-Core
 ** TODO Try to rework decode-placement function (code looks messy)
-** TODO Multithreading / Support of quit command
 ** TODO Formatting of score value ("-0.0")
 
 * Web-Server
@@ -24,8 +23,6 @@
 ** TODO Responsiveness (better adaption of board rendering according to size of view)
 ** TODO Minimal layout for mobile devices
 ** TODO Better handling of final game state
-** TODO Allow user to quit a move
-** TODO Display an activity indicator while a move is being calculated by the engine
-** TODO Allow user to specify the board size
+** TODO Allow user to specify the difficulty level
 
 

@@ -82,20 +82,27 @@ If t returns a list consisting of such move otherwise return the moves given int
 ;;; color: The computers color
 ;;;
 ;;; create a clone of the board that for performance reasons will be manipulated during the traversal
-(defun play (the-board color max-depth &key (start-column nil) (is-quit-fn nil))
+(defun play (the-board color max-depth &key (start-column nil) (is-quit-fn nil) (info-fn nil))
   "Minimax implementation. Calculates a counter move. max-depth >= 1"
   (let (
 	(board (clone-board the-board))
+	(move-count 0)
 	(result nil)
 	(cur-line '())
 	(cur-result nil)
 	(column-filter start-column)
-	(quit-fn (if is-quit-fn is-quit-fn (lambda () nil)))
 	(*column-weights*
 	 (calc-column-weights (get-width the-board))))
+    (if (not info-fn)
+	(setf info-fn (lambda() nil)))
+    (if (not is-quit-fn)
+	(setf is-quit-fn (lambda() nil)))
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
-	       (if (and cur-result (funcall quit-fn))
+	       (let ((fn (funcall info-fn)))
+		 (if fn
+		     (funcall fn (list (list :plies move-count)))))
+	       (if (and cur-result (funcall is-quit-fn))
 		   cur-result
 		   (let (
 			 (generated-moves (movegenerator:generate-moves board :column-filter column-filter))
@@ -106,6 +113,7 @@ If t returns a list consisting of such move otherwise return the moves given int
 		     (setf generated-moves (peek-is-four generated-moves board color))
 		     (dolist (move generated-moves)
 		       (progn
+			 (setf move-count (+ move-count 1))
 			 (nset-field board (first move) (second move) color) ; do move
 			 (setf score (board-score board (first move) (second move) )) ; calc score
 			 (setf is-four (>= score 1.0)) ; 4 pieces in a row?

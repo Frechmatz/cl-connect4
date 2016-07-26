@@ -27,6 +27,11 @@ GameController.prototype.init = function() {
 	    this.toggleHumanPlayersToken();
 	}
     }.bind(this));
+
+    footer.setQuitHandler( function() {
+	console.log('Quit');
+	this.cfiClient.sendCommand('quit');
+    }.bind(this));
     
     this.isBlockButton = function() {
     	return this.locked || this.processingFinalState;

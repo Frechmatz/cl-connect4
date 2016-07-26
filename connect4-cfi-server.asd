@@ -17,6 +17,7 @@
 				     (:file "token")
 				     (:file "decode-placement")
 				     (:file "play-result-formatter")
+				     (:file "info-formatter")
 				     (:file "encode-placement")
 				     (:file "lazy-handler")
 				     (:file "server-class")

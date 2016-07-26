@@ -14,9 +14,7 @@
 			 (close stream))))
 
 (defclass connect4-server (cfi-server:cfi-server)
-  (
-   (message-lock :initform (bt:make-lock "message-lock") :accessor message-lock)
-   ))
+  ((message-lock :initform (bt:make-lock "message-lock") :accessor message-lock)))
 
 (let ((out *standard-output*))
   (defmethod cfi-server:message ((the-server connect4-server) message)

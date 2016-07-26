@@ -54,6 +54,21 @@ var Footer = function() {
 	}.bind(this);
     };
 
+    var showQuitButton = function(show) {
+	var f = document.getElementById(footerId);
+	var c = f.querySelector('.quit-button');
+	c.dataset.value =  show ? 'ON' : 'OFF';
+    }
+    
+    this.setQuitHandler = function(handler) {
+	var f = document.getElementById(footerId);
+	var c = f.querySelector('.quit-button');
+	c.onclick = function(event) {
+	    event.preventDefault();
+	    handler();
+	}.bind(this);
+    };
+
     var setActivityStatus = function(value) {
 	var f = document.getElementById(footerId);
 	var c = f.querySelector('.activity-indicator');
@@ -71,6 +86,7 @@ var Footer = function() {
 	    that.activityTimerHandle = setInterval(function() {
 		that.activityToggle = that.activityToggle == '1' ? '0' : '1';
 		setActivityStatus(that.activityToggle);
+		showQuitButton(true);
 	    }, 1000)
 	}, 3000);
     };
@@ -82,6 +98,7 @@ var Footer = function() {
 	    clearTimeout(h);
 	}
 	setActivityStatus('OFF');
+	showQuitButton(false);
     };
     
 };
