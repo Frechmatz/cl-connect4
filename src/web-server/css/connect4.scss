@@ -210,16 +210,9 @@ Styling: Footer
     display: block;
     padding-left: 6px;
     padding-right: 6px;
-    //width: calc( #{$footer-height} - 10px);
     height: calc( #{$footer-height} - 10px);
     margin-left: 5px;
 }
-
-/*
-.footer .human-players-token-indicator p {
-    text-align: center;
-}
-*/
 
 .footer .human-players-token-indicator[data-human-players-token="x"] {
     background-color: $cell-color-x;
@@ -227,6 +220,16 @@ Styling: Footer
 .footer .human-players-token-indicator[data-human-players-token="o"] {
     background-color: $cell-color-o;
 }
+
+.footer .level-indicator {
+    display: block;
+    padding-left: 6px;
+    padding-right: 6px;
+    height: calc( #{$footer-height} - 10px);
+    margin-left: 5px;
+    background-color: $playground-background-color;
+}
+
 
 .footer .final-state-click-to-continue {
     padding-left: 6px;
@@ -368,35 +371,31 @@ Styling of board size form
     background: $section-background-color;
     color: $section-font-color;
     border-color: $playground-background-color;
-    width: 10em;
 }
 
 .set-board-size-form .wrapper {
     margin: 10px 10px 10px 10px;
 }
 
-/*
-.set-board-size-form .input-group {
-    padding-bottom: 20px;
-    clear: both;
-    width: 100%;
-}
-*/
-
 .set-board-size-form .title {
     width: 100%;
     color: $section-font-color;
 }
 
+.set-board-size-form .input-group {
+    display: flex;
+    display: -webkit-flex;
+    padding-bottom: 5px;
+}
+
+/*
+Set width relative to width of '0' character 
+because we haven't explicitly set a font-size and therefore
+it has the default value of 16px which is way too large
+*/
 .set-board-size-form label {
-    display: block;
-    width: 35%;
-    //background: yellow;
-    float: left;
+    width: 8ch;
 }
 .set-board-size-form .input {
-    display: block;
-    width: 65%;
-    //background: green;
-    float: left;
+    width: 20ch;
 }

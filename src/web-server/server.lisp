@@ -147,7 +147,7 @@
 			      (:a :class "link-set-board-size" :id "link-set-board-size" :title "Set board size" :href "#" (:span "Set board size"))
 			      (:div :class "navbaritemsubdialog set-board-size-form"
 				    (:div :class "wrapper"
-					  (:p :class "title" "Set board size")
+					  (:div :class "title" (:p "Set board size"))
 					  (:form :method "get"
 						 (:div :class "input-group"
 						       (:label :for "#board-size-form-input-dx" "Width:")
@@ -179,6 +179,7 @@
 			      (:textarea :class "console-textarea" :id "console-textarea"))))
 	    (:div :class "footer" :id "footer"
 		  (:a :class "human-players-token-indicator" :href "#" :title "Toggle Color" (:p "Your Color"))
+		  (:a :class "level-indicator" :href "#" :title "Cycle through levels" (:p "Level {level}"))
 		  (:a :class "final-state-click-to-continue" :href "#" (:p "Click to continue"))
 		  (:div :class "activity-indicator" (:p "Computer is calculating. Please wait..."))
 		  (:a :class "quit-button" :href "#" (:p "Quit"))

@@ -8,11 +8,13 @@ var GameController = function() {
 };
 
 GameController.prototype.init = function() {
+    this.level = 6;
     this.cfiClient.addListener(new ConsoleListener( ['ping', 'pong']));
     this.cfiClient.init();
     this.setHumanPlayersToken(board.getTokenForX());
     footer.hideFinalGameStateIndicator();
     footer.stopActivity();
+    footer.setLevel(this.level);
     
     footer.setFinalStateContinueHandler( function() {
 	this.processingFinalState = false;
@@ -28,6 +30,14 @@ GameController.prototype.init = function() {
 	}
     }.bind(this));
 
+    footer.setClickedLevelHandler( function() {
+	console.log('Cycle Level');
+	if( !this.isBlockButton()) {
+	    this.level = this.level < 12 ? this.level + 1 : 1;
+	    footer.setLevel(this.level);
+	}
+    }.bind(this));
+    
     footer.setQuitHandler( function() {
 	console.log('Quit');
 	this.cfiClient.sendCommand('quit');
@@ -131,7 +141,7 @@ GameController.prototype.cellClickHandler = function(evt) {
 		    return cb(null, isFour);
 		}));
 		that.cfiClient.sendCommand(
-		    ['play', board.getCcfiPlacement(), board.toggleToken(that.humanPlayersToken), '6'].join(' '));
+		    ['play', board.getCcfiPlacement(), board.toggleToken(that.humanPlayersToken), that.level].join(' '));
 	    },
 	    // Check if draw
 	    function(finalGameStateReached, cb) {

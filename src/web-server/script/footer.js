@@ -9,6 +9,7 @@ var Footer = function() {
     var clickHereMsg = 'Click here to start a new game.';
     this.activityTimerHandle = null;
     this.activityToggle = null;
+    this.initialLevelText = null;
     
     this.setHumanPlayersToken = function(token) {
 	var f = document.getElementById(footerId);
@@ -16,6 +17,25 @@ var Footer = function() {
 	c.setAttribute('data-human-players-token', token);
     };
 
+    this.setLevel = function(level) {
+	var f = document.getElementById(footerId);
+	var c = f.querySelector('.level-indicator p');
+	if (!this.initialLevelText) {
+	    this.initialLevelText = c.childNodes[0].textContent;
+	}
+	var text = this.initialLevelText.replace('{level}', level);
+	c.childNodes[0].textContent = text;
+    };
+
+    this.setClickedLevelHandler = function(handler) {
+	var f = document.getElementById(footerId);
+	var c = f.querySelector('.level-indicator');
+	c.onclick = function(event) {
+	    event.preventDefault();
+	    handler();
+	}.bind(this);
+    };
+    
     var indicateFinalStateImpl = function(state, message) {
 	var f = document.getElementById(footerId);
 	var c = f.querySelector('.final-state-click-to-continue');

@@ -17,12 +17,13 @@
 
 * Web-Server
 ** TODO Rethink Lisp-magic to determine static/ directory 
+** TODO Consider: Move Socket-Server out of Web-Server
+
 
 * Web-Client
 ** TODO Support of IE10
 ** TODO Responsiveness (better adaption of board rendering according to size of view)
 ** TODO Minimal layout for mobile devices
 ** TODO Better handling of final game state
-** TODO Allow user to specify the difficulty level
-
+** TODO User friendly formatting of info message
 
