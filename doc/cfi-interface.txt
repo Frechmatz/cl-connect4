@@ -5,9 +5,9 @@ Connect 4 Server Interface
 Introduction
 ============
 
-This document specifies the interface of the Connect Four Server. The emphasis is
+This document specifies the interface of a Connect Four Game Server. The emphasis is
 on easy implementation for both clients and servers. The interface doesn't
-support advanced features such as pondering or a clock.
+support yet features such as pondering or a clock.
 
 Key points:
 
@@ -16,22 +16,14 @@ Key points:
 
 - Except of it's command queue the server is stateless.
 
-- Commands sent to the server are immediately scheduled for processing. There is
-  no special command such as GO that explicitly initiates processing.
+- Commands sent to the server are immediately scheduled for processing.
 
 General
 =======
 
-Commands passed to the server are processed in incoming order. Commands are immediately
-scheduled for processing. If the server is currently processing a command, the new
+Commands sent to the server are processed in incoming order. Commands are immediately
+scheduled for processing. If the server is currently processing a command, the incoming
 command is added to the command queue.
-
-Example:
-
-> play ....
-> play ....
-< bestmove ....
-< bestmove ....
 
 Token, Coordinate System, Placement
 ===================================
@@ -42,8 +34,7 @@ as defined here: https://github.com/adamsc/common-connect-four-interface
 Token
 -----
 
-The two pieces of the game are represented by the tokens 'x' and 'o'. It's
-up to client implementations to assign any color to them.
+The two pieces of the game are represented by the tokens 'x' and 'o'.
 
 Coordinate system
 -----------------
@@ -61,12 +52,13 @@ Piece placement
 - The placement string starts with the bottom row (y = 0)
 - Each row specifies the piece placement from left to right.
 - An occupied field is represented by it's token.
-- Empty fields are represented by a number that specifies the count of
+- Empty fields are represented by a number that is the count of
   successive empty columns.
 
 Example:
 
-Empty board consisting of 6 rows and 7 columns. 
+An empty board consisting of 6 rows and 7 columns. 
+
 The placement string is: 7/7/7/7/7/7
 
 Example:
@@ -102,8 +94,7 @@ play
 ----
 
 Let the server calculate a move. Each play command is answered by the server
-with a "bestmove" response even if the command has been quit. During
-calculation of the best move the server may send info messages to the client.
+with a "bestmove" response.
 
 Syntax: play <board> <token> <depth> [--column <column>]
 
@@ -127,14 +118,17 @@ commands are accepted but will also be quit.
 Example:
 
 > play ...
+< info ...
+< info ...
 > quit
+< info ...
 < bestmove ...
 
 Example:
 
 > play ...
-> quit
 > play ...
+> quit
 < bestmove ...
 < bestmove ...
 
@@ -193,7 +187,7 @@ Example:
 info
 ----
 
-Info messages can be sent back to the client any time.
+An informational message. Info messages can be sent back to the client any time.
 
 Syntax: info [--plies <number>] [....]
 

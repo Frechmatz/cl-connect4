@@ -37,7 +37,8 @@
 	 (setf is-quitting (or
 			    (slot-value server 'quit-flag)
 			    (not (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state))))))
-       (logger:log-message :debug (format nil "is-quit-handler called. Quitting: ~a" is-quitting))
+       (if is-quitting
+	   (logger:log-message :info "Send quit signal to engine"))
        is-quitting))
    :default-return-value nil
    :is-sticky-return-value t
@@ -45,10 +46,10 @@
   
 (defun create-lazy-info-handler (server)
   (create-lazy-handler
-   4 ;; every 4 seconds
+   10 ;; every 10 seconds
    (lambda ()
      (lambda (info)
-       (message server (format-info info))))
+       (save-send-message-with-lock server (format-info info))))
    :default-return-value nil
    :is-sticky-return-value nil
    ))
@@ -96,7 +97,7 @@
 	 (lambda-list (rest tokens))
 	 (cmd (intern (string-upcase (car tokens)))))
     (let ((result (invoke-command-handler server cmd lambda-list)))
-      (logger:log-message :debug (format nil "returning result ~a for command: ~a" result cmdline))
+      (logger:log-message :debug (format nil "Returning result ~a for command: ~a" result cmdline))
       result)))
 
 
@@ -113,8 +114,8 @@
      (engine:play
       parsed-board
       (parse token #'ccfi-token-to-color)
-      (parse-integer depth)
-      :start-column (if column (parse-integer column) nil)
+      (parse depth #'parse-integer)
+      :start-column (if column (parse column #'parse-integer) nil)
       :is-quit-fn (create-lazy-quit-play-handler server)
       :info-fn (create-lazy-info-handler server)
       ))))

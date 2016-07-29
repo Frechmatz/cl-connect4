@@ -76,7 +76,7 @@ var CfiClient = function() {
 	    function() {
 		doSend('ping', true);
 	    },
-	    10*1000
+	    30*1000
 	) 
     };
 

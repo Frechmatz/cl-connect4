@@ -3,7 +3,7 @@
 * Unit Tests
 ** TODO Test move generator
 
-* Engine / Play-Function
+* Engine
 ** TODO Alpha/Beta-Pruning
 ** TODO Check calculation of column-weights for width 7 
    (weights should differ for each column but they do not)
@@ -12,18 +12,17 @@
 ** TODO Formatting of score value ("-0.0")
 
 * CFI-Server / CFI-Core
-** TODO Try to rework decode-placement function (code looks messy)
 ** TODO Formatting of score value ("-0.0")
 
 * Web-Server
 ** TODO Rethink Lisp-magic to determine static/ directory 
-** TODO Consider: Move Socket-Server out of Web-Server
-
+** TODO Broadcast shutdown message when server is stopped
 
 * Web-Client
 ** TODO Support of IE10
 ** TODO Responsiveness (better adaption of board rendering according to size of view)
-** TODO Minimal layout for mobile devices
+** TODO Minimal site for mobile devices
 ** TODO Better handling of final game state
-** TODO User friendly formatting of info message
-
+** TODO Better visualization of info --plies messages (numbers shown in console are hard to read)
+** TODO Splitter between board and console
+** TODO Resizing problems. Sometimes the console area gets too narrow

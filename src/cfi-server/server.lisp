@@ -7,6 +7,18 @@
 
 (in-package :cfi-server)
 
+;; message 'wrapper' that ensures that the message function won't be
+;; called if the server has been stopped. Assumes that a lock is
+;; being held
+(defun save-send-message-no-lock (server msg)
+  (if (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state))
+      (message server msg)
+      (logger:log-message :info (format nil "Supressed message: ~a" msg))))
+  
+(defun save-send-message-with-lock (server msg)
+  (bt:with-lock-held ((slot-value server 'server-lock))
+    (save-send-message-no-lock server msg)))
+
 (defmethod get-state ((server cfi-server))
   (bt:with-lock-held ((slot-value server 'server-lock))
   (list
@@ -49,7 +61,9 @@
 						+WORKER-STATE-QUITTING+
 						+WORKER-STATE-PROCESSING+
 						)))
-				    (message server (execute-command server next-command))
+				    (let ((msg (execute-command server next-command)))
+				      (bt:with-lock-held ((slot-value server 'server-lock))
+					(save-send-message-no-lock server msg)))
 				    ))))))))))
 
 (defmethod stop ((server cfi-server))
@@ -63,12 +77,12 @@
 (defmethod put ((server cfi-server) command)
   (with-lock-held ((slot-value server 'server-lock))
     (if (not (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state)))
-	(message server (as-error "Server not started or shutting down"))
+	(logger:log-message :error (as-error "Server not started or shutting down"))
 	(progn
 	  (logger:log-message :info (format nil "put: ~a" command))
 	  (cond
 	    ((string= command "ping")
-	     (message server "pong"))
+	     (save-send-message-no-lock server "pong"))
 	    ((string= command "quit")
 	     (setf (slot-value server 'quit-flag) t))
 	    (t

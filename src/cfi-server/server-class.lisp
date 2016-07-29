@@ -29,11 +29,11 @@
 
 (defgeneric start (cfi-server)
   (:documentation
-   "Starts the queue processing"))
+   "Starts the queue processing."))
 
 (defgeneric stop (cfi-server)
   (:documentation
-   "Signal that the server shall stop working as soon as possible."))
+   "Signal, that the server shall terminate."))
 
 (defgeneric put (cfi-server command)
   (:documentation
@@ -43,12 +43,14 @@
 (defgeneric message (cfi-server message)
   (:documentation
    "Abstract callback handler to be implemented by a server.
-    Is being called with strings according to the Cfi-Specification"))
+    Is being called with messages according to the Cfi-Specification.
+    The message handler will only be called if the server is 
+    in state +SERVER-STATE-RUNNING+"))
 
 (defgeneric get-state (cfi-server)
   (:documentation
-   "Get the state of the server. Returns an alist holding the properties :server-state and :worker-state")
-  )
+   "Get the state of the server. Returns an alist holding the 
+    properties :server-state and :worker-state"))
   
 
 ;;
