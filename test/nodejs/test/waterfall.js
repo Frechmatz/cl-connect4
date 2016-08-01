@@ -2,7 +2,7 @@
 var needle = require('needle');
 var assert = require('assert');
 
-var url = 'http://localhost:8002/script/async.js';
+var url = 'http://localhost:7999/script/async.js';
 var async = null;
 
 before(function(done) {

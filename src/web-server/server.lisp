@@ -2,9 +2,9 @@
 (in-package :connect4-web-server)
 
 (defparameter *server* nil)
-(defparameter *port* 8002)
+(defparameter *port* 7999)
 (defparameter *websocket-server* nil)
-(defparameter *websocket-port* 8003)
+(defparameter *websocket-port* 7998)
 
 (defvar *this-file* (load-time-value
                      (or #.*compile-file-pathname* *load-pathname*)))

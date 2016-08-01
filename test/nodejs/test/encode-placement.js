@@ -2,7 +2,7 @@
 var needle = require('needle');
 var assert = require('assert');
 
-var url = 'http://localhost:8002/script/board.js';
+var url = 'http://localhost:7999/script/board.js';
 
 var board1 = [
     [ '_', '_', '_', '_' ],

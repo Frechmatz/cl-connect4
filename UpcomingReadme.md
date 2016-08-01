@@ -51,7 +51,7 @@ sbcl
 ```
 Enter the following Url into your browser to start a game:
 ```bash
-http://localhost:8002
+http://localhost:7999
 ```
 Stop the server: 
 ```bash

@@ -57,7 +57,7 @@ var CfiClient = function() {
 	//var url = 'ws://localhost:8003/ccfi';
 	var location = window.location;
 	console.log(location);
-	var url = 'ws://' + location.hostname + ':8003/ccfi'; 
+	var url = 'ws://' + location.hostname + ':7998/ccfi'; 
 	websocket = new WebSocket(url);
 	websocket.onopen = function(evt) { onOpen(evt) };
 	websocket.onclose = function(evt) { onClose(evt) };

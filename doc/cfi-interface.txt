@@ -112,8 +112,8 @@ chosen by a player.
 quit
 ----
 
-Quits all running and pending commands. While processing the Quit command new
-commands are accepted but will also be quit.
+Quits all running and pending commands. Commands will stop as soon as possible.
+While processing the Quit command new commands are accepted but will also be quit.
 
 Example:
 
@@ -192,7 +192,7 @@ An informational message. Info messages can be sent back to the client any time.
 Syntax: info [--plies <number>] [....]
 
 --plies <number> The number of plies (half-moves) the computer has played so far
-while processing a play command.
+while processing the current play command.
   
 Example:
 
