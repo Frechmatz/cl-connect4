@@ -1,19 +1,23 @@
-
 ;;
 ;; Implementation of the server-class methods
-;; Handles all the state transitions
 ;;
 
-
 (in-package :cfi-server)
+
+(defun as-debug (str)
+  (format nil "debug ~a" str))
 
 ;; message 'wrapper' that ensures that the message function won't be
 ;; called if the server has been stopped. Assumes that a lock is
 ;; being held
 (defun save-send-message-no-lock (server msg)
-  (if (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state))
-      (message server msg)
-      (logger:log-message :info (format nil "Supressed message: ~a" msg))))
+  (if (or
+       (eql +SERVER-STATE-INITIALIZED+ (slot-value server 'server-state))
+       (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state)))
+      (progn
+	(logger:log-message :debug (format nil "Sending ~a" msg))
+	(message server msg))
+      (logger:log-message :debug (format nil "Could not send ~a" msg))))
   
 (defun save-send-message-with-lock (server msg)
   (bt:with-lock-held ((slot-value server 'server-lock))
@@ -26,15 +30,16 @@
    (list :worker-state (slot-value server 'worker-state)))))
 
 
-(defmethod start ((server cfi-server))
-  (bt:with-lock-held ((slot-value server 'server-lock))
+(defun start (server)
+  "Starts the server. Does not aquire a lock"
     (cond
       ((not (eql +SERVER-STATE-INITIALIZED+ (slot-value server 'server-state)))
-       (logger:log-message :error "A server cannot be re-started"))
+       (save-send-message-no-lock server (as-debug "The server cannot be re-started")))
       (t
        (setf (slot-value server 'server-state) +SERVER-STATE-RUNNING+)
+       (save-send-message-no-lock server "started")
        (bt:make-thread (lambda ()
-			 (logger:log-message :info "Worker thread: Started")
+			 (logger:log-message :debug "Worker thread: Started")
 			 (loop
 			    (let ((is-stop-server nil) (next-command nil) (is-quit-commands nil))
 			      (bt:with-lock-held ((slot-value server 'server-lock))
@@ -46,7 +51,7 @@
 				    (bt:with-lock-held ((slot-value server 'server-lock))
 				      (setf (slot-value server 'worker-state) +WORKER-STATE-TERMINATED+)
 				      (setf (slot-value server 'server-state) +SERVER-STATE-STOPPED+))
-				    (logger:log-message :info "Worker thread: Stopped")
+				    (logger:log-message :debug "Worker thread: Stopped")
 				    (return)))
 			      (if (not next-command)
 				  (progn
@@ -64,29 +69,35 @@
 				    (let ((msg (execute-command server next-command)))
 				      (bt:with-lock-held ((slot-value server 'server-lock))
 					(save-send-message-no-lock server msg)))
-				    ))))))))))
+				    )))))))))
 
-(defmethod stop ((server cfi-server))
-  (bt:with-lock-held ((slot-value server 'server-lock))
-    (cond
-      ((eql +SERVER-STATE-INITIALIZED+ (slot-value server 'server-state))
-       (setf (slot-value server 'server-state) +SERVER-STATE-STOPPED+))
-      ((eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state))
-       (setf (slot-value server 'server-state) +SERVER-STATE-STOPPING+)))))
+(defun stop (server)
+  "Stops the server. Does not aquire a lock."
+  (cond
+    ((eql +SERVER-STATE-INITIALIZED+ (slot-value server 'server-state))
+     (setf (slot-value server 'server-state) +SERVER-STATE-STOPPED+))
+    ((eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state))
+     (setf (slot-value server 'server-state) +SERVER-STATE-STOPPING+))))
 
 (defmethod put ((server cfi-server) command)
   (with-lock-held ((slot-value server 'server-lock))
-    (if (not (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state)))
-	(logger:log-message :error (as-error "Server not started or shutting down"))
-	(progn
-	  (logger:log-message :info (format nil "put: ~a" command))
-	  (cond
-	    ((string= command "ping")
-	     (save-send-message-no-lock server "pong"))
-	    ((string= command "quit")
-	     (setf (slot-value server 'quit-flag) t))
-	    (t
-	     (queues:qpush (slot-value server 'command-queue) command)))))))
+    (logger:log-message :debug (format nil "put: ~a" command))
+    (cond
+      ((string= command "ping")
+       (save-send-message-no-lock server "pong"))
+      ((string= command "quit")
+       (setf (slot-value server 'quit-flag) t))
+      ((string= command "stop")
+       (stop server))
+      ((string= command "start")
+       (start server))
+      (t
+       (if (not (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state)))
+	   (progn
+	     (logger:log-message :error (format nil "put rejected because server is not running"))
+	     (save-send-message-no-lock server (as-debug
+						"Command rejected because server is not running, or stopping or stopped")))
+	   (queues:qpush (slot-value server 'command-queue) command))))))
 
 
 

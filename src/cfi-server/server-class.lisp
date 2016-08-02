@@ -18,7 +18,7 @@
 
 (defclass cfi-server ()
   (
-   (name :initarg :name :initform "OllisServer" :accessor name)
+   (name :initarg :name :initform "CfiServer" :accessor name)
    (command-queue :initform (queues:make-queue :simple-cqueue))
    (quit-flag :initform nil)
    (server-state :initform +SERVER-STATE-INITIALIZED+)
@@ -26,40 +26,19 @@
    (server-lock :initform (bt:make-lock "server-lock"))
    ))
 
-
-(defgeneric start (cfi-server)
-  (:documentation
-   "Starts the queue processing."))
-
-(defgeneric stop (cfi-server)
-  (:documentation
-   "Signal, that the server shall terminate."))
-
 (defgeneric put (cfi-server command)
   (:documentation
-   "Add a command to the queue. Commands must apply to the Cfi-Specification. 
-   If the server hasn't been started or has been stopped, the command is ignored."))
+   "Add a command to the queue. Commands must conform to the Cfi-Specification."))
 
 (defgeneric message (cfi-server message)
   (:documentation
-   "Abstract callback handler to be implemented by a server.
-    Is being called with messages according to the Cfi-Specification.
-    The message handler will only be called if the server is 
-    in state +SERVER-STATE-RUNNING+"))
+   "Callback handler to be implemented by a server.
+    Is being called with response messages according to the Cfi-Specification.
+    This function will not be called if the server has stopped 
+    or is stopping."))
 
 (defgeneric get-state (cfi-server)
   (:documentation
    "Get the state of the server. Returns an alist holding the 
     properties :server-state and :worker-state"))
   
-
-;;
-;; Tool functions to be removed from this file
-;;
-
-(defun as-comment (str)
-  (format nil "# ~a" str))
-
-(defun as-error (str)
-  (format nil "# ~a" str))
-

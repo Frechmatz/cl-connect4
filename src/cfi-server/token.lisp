@@ -6,9 +6,15 @@
 (alexandria:define-constant TOKEN-O "o" :test #'equal)
 
 (defun ccfi-token-to-color (token)
-  (if (not token)
-      board:EMPTY
-      (if (equal token "x") board:BLACK board:WHITE)))
+  (cond
+    ((not token)
+     board:EMPTY)
+    ((equal token "x")
+     board:BLACK)
+    ((equal token "o")
+     board:WHITE)
+    (t
+     (error 'parse-error :text (format nil "Invalid token: ~a" token)))))
 
 
 

@@ -1,9 +1,11 @@
+;;
+;; Helper functions to create Cfi placement representions
+;;
 
 (in-package :cfi-server)
 
-
-
 (defun create-placement (dx dy)
+  "Create an empty board" 
   (let ((b "") (first t))
     (dotimes (y dy)
       (if (not first)

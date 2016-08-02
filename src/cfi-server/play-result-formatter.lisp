@@ -1,4 +1,6 @@
-
+;;
+;; Helper functions to format the response of a play command
+;;
 
 (in-package :cfi-server)
 

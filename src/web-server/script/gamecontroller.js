@@ -106,7 +106,7 @@ GameController.prototype.cellClickHandler = function(evt) {
 		    return cb(null, isFour);
 		}));
 		that.cfiClient.sendCommand(
-		    ['play', board.getCcfiPlacement(), that.humanPlayersToken, '1', '--searchmove', c.x].join(' '));
+		    ['play', board.getCcfiPlacement(), that.humanPlayersToken, '1', '--column', c.x].join(' '));
 	    },
 	    // Check if still a move is available
 	    function(finalGameStateReached, cb) {

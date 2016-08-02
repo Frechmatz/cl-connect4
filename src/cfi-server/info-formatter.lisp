@@ -1,3 +1,6 @@
+;;
+;; Helper functions to format an info response
+;;
 
 (in-package :cfi-server)
 

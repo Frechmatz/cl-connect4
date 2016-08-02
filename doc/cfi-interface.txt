@@ -14,16 +14,13 @@ Key points:
 - The communication between client and server is text based. The communication
   is asynchronous.
 
-- Except of it's command queue the server is stateless.
-
-- Commands sent to the server are immediately scheduled for processing.
+- The server is stateless.
 
 General
 =======
 
 Commands sent to the server are processed in incoming order. Commands are immediately
-scheduled for processing. If the server is currently processing a command, the incoming
-command is added to the command queue.
+scheduled for processing.
 
 Token, Coordinate System, Placement
 ===================================
@@ -73,6 +70,24 @@ The placement string is: oo1oxo1x/o2xxx1o/7x/8
 
 Commands
 ========
+
+start
+-----
+
+Starts the server. The server sends back a "started" response when
+initialization of the server has completed.
+
+Example:
+
+> start
+< started
+
+stop
+----
+
+Stops the server. After having received the stop command the
+server will not send back any messages to the client and will not
+accept new commands.
 
 ping
 ----
@@ -187,7 +202,8 @@ Example:
 info
 ----
 
-An informational message. Info messages can be sent back to the client any time.
+An informational message. Informational messages can be sent to
+the client any time.
 
 Syntax: info [--plies <number>] [....]
 
@@ -200,3 +216,21 @@ Example:
 < info --plies 56780
 < info --plies 100000
 < bestmove ...
+
+debug
+-----
+
+A debug message. Debug messages can be sent to the client any time.
+They can be used by a server to indicate for example syntax errors.
+
+Syntax: debug message
+
+Example:
+
+> play 6/6/6 a 1
+< debug Command PLAY called with invalid arguments.
+
+
+
+
+

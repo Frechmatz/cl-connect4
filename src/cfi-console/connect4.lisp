@@ -24,7 +24,7 @@
 
 (defun stop-server (server)
   "Stop the server and wait until the server has stopped."
-  (stop server)
+  (put server "stop")
   (loop
      (format t  "Stopping server...~%")
      (let ((state (get-state server)))
@@ -39,13 +39,13 @@
 
 (defun lets-go ()
   (let ((server (make-instance 'connect4-server)))
-    (start server)
-    (format t "Started server~%")
+    (format t "Instantiated server~%")
     (loop
-       (format t "Enter command (stop or any cfi-command)~%")
+       (format t "Enter Cfi command~%")
        (let ((cmd (read-cmd)))
 	 (cond
 	   ((string= cmd "stop")
+	    ;; Stop server and wait until it has stopped
 	    (stop-server server)
 	    (return))
 	   (t (put server cmd)

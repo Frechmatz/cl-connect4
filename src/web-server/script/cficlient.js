@@ -67,6 +67,7 @@ var CfiClient = function() {
 
     function onOpen(evt) {
 	callListeners('onOpen', evt);
+	doSend("start");
 	if (this.timerId != null) {
 	    window.clearInterval(this.timerId);
 	    this.timerId = null;

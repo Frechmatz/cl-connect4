@@ -52,24 +52,6 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
 	  (/ 1 (+ 1 distance)))
 	)))
 
-(defun peek-is-four (moves board color)
-  "Check all moves if an immediate four is present. 
-If t returns a list consisting of such move otherwise return the moves given into function"
-  (let ((four-move nil) (score nil))
-    (dolist (move moves)
-      (if (not four-move)
-	  (progn 
-	    (nset-field board (first move) (second move) color) ; do move
-	    (setf score (board-score board (first move) (second move))) ; calc score
-	    (nclear-field board (first move) (second move)) ; undo move
-	    (if (>= score 1.0) ;; 4 pieces in a row?
-		(progn
-		  (setf four-move move)
-		  )
-		))))
-    (if four-move
-	(list four-move)
-	moves)))
   
 ;;;
 ;;; Returns a tupel (x y score line) where
@@ -82,21 +64,15 @@ If t returns a list consisting of such move otherwise return the moves given int
 ;;; color: The computers color
 ;;;
 ;;; create a clone of the board that for performance reasons will be manipulated during the traversal
-(defun play (the-board color max-depth &key (start-column nil) (is-quit-fn nil) (info-fn nil))
-  "Minimax implementation. Calculates a counter move. max-depth >= 1"
+(defun play (the-board color max-depth &key (start-column nil) (is-quit-fn (lambda() nil)) (info-fn (lambda() nil)))
+  "Minmax implementation. Calculates a counter move. max-depth >= 1"
   (let (
 	(board (clone-board the-board))
 	(move-count 0)
-	(result nil)
 	(cur-line '())
 	(cur-result nil)
 	(column-filter start-column)
-	(*column-weights*
-	 (calc-column-weights (get-width the-board))))
-    (if (not info-fn)
-	(setf info-fn (lambda() nil)))
-    (if (not is-quit-fn)
-	(setf is-quit-fn (lambda() nil)))
+	(*column-weights* (calc-column-weights (get-width the-board))))
     ;; cur-depth >= 1
     (labels ((minmax-inner (board color is-opponent cur-depth)
 	       (let ((fn (funcall info-fn)))
@@ -104,14 +80,9 @@ If t returns a list consisting of such move otherwise return the moves given int
 		     (funcall fn (list (list :plies move-count)))))
 	       (if (and cur-result (funcall is-quit-fn))
 		   cur-result
-		   (let (
-			 (generated-moves (movegenerator:generate-moves board :column-filter column-filter))
-			 (moves ())
-			 (score nil)
-			 (is-four nil))
+		   (let ((moves ()) (score nil) (is-four nil))
 		     (setf column-filter nil)
-		     (setf generated-moves (peek-is-four generated-moves board color))
-		     (dolist (move generated-moves)
+		     (dolist (move (movegenerator:generate-moves board :column-filter column-filter))
 		       (progn
 			 (setf move-count (+ move-count 1))
 			 (nset-field board (first move) (second move) color) ; do move
@@ -122,16 +93,12 @@ If t returns a list consisting of such move otherwise return the moves given int
 			 (push (list (first move) color (if is-four "MATE" nil)) cur-line)
 			 ;; final state or no more moves availabe or max depth reached
 			 (if (or is-four (not (movegenerator:is-move-available board)) (equal cur-depth max-depth))
-			     (progn
 			       (push (list (first move) (second move) score (copy-list cur-line)) moves)
-			       )
 			     (progn
 			       (setf score (minmax-inner board (toggle-color color) (not is-opponent) (+ cur-depth 1)))
 			       (push (list (first move) (second move) (third score) (fourth score)) moves)))
 			 (nclear-field board (first move) (second move)) ; undo move
-			 (setf cur-line (cdr cur-line))
-			 )
-		       )
+			 (setf cur-line (cdr cur-line))))
 		     (let ((result (reduce:reduce-scores
 				    moves
 				    is-opponent
@@ -144,20 +111,9 @@ If t returns a list consisting of such move otherwise return the moves given int
 		       (setf cur-result result)
 		       result)
 		     ))))
-	     (setf result (minmax-inner board color nil 1))
-	     ;; revert best line
-	     (setf result (list (first result) (second result) (third result) (reverse (fourth result))))
-	     (if (not (equalp board the-board))
-		 (progn
-		   (format t "~%Fatal error: Temporary board is not equal to incoming one~%")
-		   (format t "Original board: ~%")
-		   (format t the-board)
-		   (format t "~%Temporary board: ~%")
-		   (format t board)
-		   (format t "~%")
-		   ;; Game Over
-		   (error 'internal-error :text "Temporary board is not equal to the incoming one")
-		   ))
-	     result
-	     )))
+	     (let ((result (minmax-inner board color nil 1)))
+	       ;; revert best line
+	       (setf result (list (first result) (second result) (third result) (reverse (fourth result))))
+	       result
+	     ))))
 

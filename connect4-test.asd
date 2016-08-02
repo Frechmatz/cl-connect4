@@ -52,7 +52,6 @@
                                      (:file "detect-four")
                                      (:file "board-score")
                                      (:file "column-weights")
-                                     (:file "peek-is-four")
 				     (:file "full-board")
                                      (:file "board-00")
                                      (:file "board-01")

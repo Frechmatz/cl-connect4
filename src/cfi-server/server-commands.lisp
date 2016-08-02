@@ -1,8 +1,6 @@
 ;;
-;; Command implementations
-;; 
+;; Implementation of Cfi command handlers
 ;;
-
 
 (in-package :cfi-server)
 
@@ -13,8 +11,6 @@
   (push fn *handler*)
   (push symbol *handler*))
 
-
-
 (define-condition invalid-arguments (error)
   ((text :initarg :text :reader text)))
 
@@ -23,10 +19,7 @@
   (handler-case
       (funcall parser s)
     (error (err)
-      (progn
-	(logger:log-message :error (format nil "parse failed: ~a" err))
-	(error 'invalid-arguments :text (format nil "~a" s))))))
-
+	(error 'invalid-arguments :text (format nil "Parsing failed ~a" err)))))
 
 (defun create-lazy-quit-play-handler (server)
   (create-lazy-handler
@@ -38,7 +31,7 @@
 			    (slot-value server 'quit-flag)
 			    (not (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state))))))
        (if is-quitting
-	   (logger:log-message :info "Send quit signal to engine"))
+	   (logger:log-message :info "Notified engine to quit processing"))
        is-quitting))
    :default-return-value nil
    :is-sticky-return-value t
@@ -80,15 +73,11 @@
       (let ((handler (get-handler name)))
 	(if handler
 	    (apply handler server lambda-list)
-	    (as-error (format nil "Unknown command: ~a" name))))
+	    (as-debug (format nil "Unknown command: ~a" name))))
     (invalid-arguments (err)
-      (progn
-	(logger:log-message :error (format nil "invoke-command-handler failed: ~a" err))
-	(as-error (format nil "Command ~a called with invalid arguments" name))))
+      (as-debug (format nil "Command ~a called with invalid arguments. Error was ~a" name err)))
     (error (err)
-      (progn
-	(logger:log-message :error (format nil "invoke-command-handler failed: ~a" err))
-	(as-error (format nil "Command ~a failed or called with insufficient arguments" name))))))
+      (as-debug (format nil "Command ~a failed or called with invalid arguments. Error was ~a" name err)))))
 
 
 (defun execute-command (server cmdline)
@@ -96,12 +85,7 @@
   (let* ((tokens (build-lambda-list (cl-ppcre:split "\\s" cmdline)))
 	 (lambda-list (rest tokens))
 	 (cmd (intern (string-upcase (car tokens)))))
-    (let ((result (invoke-command-handler server cmd lambda-list)))
-      (logger:log-message :debug (format nil "Returning result ~a for command: ~a" result cmdline))
-      result)))
-
-
-
+    (invoke-command-handler server cmd lambda-list)))
 
 ;;
 ;; Handlers
