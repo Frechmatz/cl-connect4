@@ -26,6 +26,7 @@
 	       (:module "src/connect4/engine"
                         :serial t
                         :components ((:file "packages")
+				     (:file "board-controller")
                                      (:file "engine")))
 	       (:module "src/cfi-server"
                         :serial t
@@ -61,6 +62,7 @@
 				     (:file "board-08")
 				     (:file "board-09")
 				     (:file "board-10")
+				     (:file "board-controller")
 				     ))
 	       (:module "test/cfi-server"
                         :serial t

@@ -25,6 +25,7 @@
 	       (:module "src/connect4/engine"
 			:serial t
 			:components ((:file "packages")
+				     (:file "board-controller")
 				     (:file "engine")
 				     ))
    ))
