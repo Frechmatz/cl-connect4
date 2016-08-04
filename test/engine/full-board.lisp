@@ -19,5 +19,18 @@
 	      :expected-final-columns '()
 	      ))
 
+(define-test test-no-move-available-2 ()
+	     (run-minmax-test 
+	      "test-no-move-available-2"
+	      (create-test-board (list
+		      ".bwbw"
+		      "bbbwb"
+		      "wbwbw"
+		      "bwbwb"
+		      ))
+	      board:WHITE 6
+	      :print-final-scores t
+	      :expected-final-columns '(0)
+	      ))
 
 

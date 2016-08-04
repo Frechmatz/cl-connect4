@@ -69,7 +69,7 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
   (let (
 	(board (clone-board the-board))
 	(move-count 0)
-	(cur-line '())
+	(cur-path '())
 	(cur-result nil)
 	(column-filter start-column)
 	(*column-weights* (calc-column-weights (get-width the-board))))
@@ -80,29 +80,30 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
 		     (funcall fn (list (list :plies move-count)))))
 	       (if (and cur-result (funcall is-quit-fn))
 		   cur-result
-		   (let ((moves ()))
+		   (let ((row-scores ()))
 		     (setf column-filter nil)
 		     (dolist (move (movegenerator:generate-moves board :column-filter column-filter))
-		       (setf move-count (+ move-count 1))
-		       (nset-field board (first move) (second move) color) ; do move
-		       (let* ((score (board-score board (first move) (second move))) (is-four (>= score 1.0)))
-			 (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
-			 (setf score (/ score (expt 10 (- cur-depth 1))))
-			 (push (list (first move) color (if is-four "MATE" nil)) cur-line)
-			 ;; final state or no more moves availabe or max depth reached
-			 (if (or is-four (not (movegenerator:is-move-available board)) (equal cur-depth max-depth))
-			     (push (list (first move) (second move) score (copy-list cur-line)) moves)
-			     (let ((minmax-result (minmax-inner board (toggle-color color) (not is-opponent) (+ cur-depth 1))))
-			       (push (list (first move) (second move) (third minmax-result) (fourth minmax-result)) moves))))
-			 (nclear-field board (first move) (second move)) ; undo move
-			 (setf cur-line (cdr cur-line)))
+		       (let ((x (first move)) (y (second move)))
+			 (setf move-count (+ move-count 1))
+			 (nset-field board x y color) ; do move
+			 (let* ((score (board-score board x y)) (is-four (>= score 1.0)))
+			   (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
+			   (setf score (/ score (expt 10 (- cur-depth 1))))
+			   (push (list x color (if is-four "MATE" nil)) cur-path)
+			   ;; final state or no more moves availabe or max depth reached
+			   (if (or is-four (not (movegenerator:is-move-available board)) (equal cur-depth max-depth))
+			       (push (list x y score (copy-list cur-path)) row-scores)
+			       (let ((minmax-result (minmax-inner board (toggle-color color) (not is-opponent) (+ cur-depth 1))))
+				 (push (list x y (third minmax-result) (fourth minmax-result)) row-scores))))
+			 (nclear-field board x y) ; undo move
+			 (setf cur-path (cdr cur-path))))
 		     (let ((result (reduce:reduce-scores
-				    moves
+				    row-scores
 				    is-opponent
 				    (lambda (m) (third m)) ;; Score getter
 				    (lambda (m) (aref *column-weights* (first m))) ;; Weight getter
 				    :skip-randomizer (if (equal cur-depth 1) nil t))))
-		       (funcall *engine-notification-reduced-scores* board color is-opponent cur-depth result moves)
+		       (funcall *engine-notification-reduced-scores* board color is-opponent cur-depth result row-scores)
 		       (setf cur-result result)
 		       result)
 		     ))))

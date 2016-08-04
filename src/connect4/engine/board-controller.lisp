@@ -6,7 +6,7 @@
    (board :initform nil)
    (validate :initarg :validate :initform t)
    (count :initform 0)
-   (stack :initform '())
+   (path :initform '())
    ))
 
 (defmethod initialize-instance :after ((controller board-controller) &key board)
@@ -24,7 +24,7 @@
   (:documentation ""
   ))
 
-(defgeneric get-stack (board-controller)
+(defgeneric get-path (board-controller)
   (:documentation ""
   ))
 
@@ -36,8 +36,8 @@
 (defmethod get-count ((controller board-controller))
   (slot-value controller 'count))
 
-(defmethod get-stack ((controller board-controller))
-  (slot-value controller 'stack))
+(defmethod get-path ((controller board-controller))
+  (slot-value controller 'path))
 
 (defmethod set-boardfield ((controller board-controller) x y token)
   (if (slot-value controller 'validate)
@@ -45,14 +45,14 @@
 	  (error "Field is not empty")))
   (nset-field (slot-value controller 'board) x y token)
   (setf (slot-value controller 'count) (+ 1 (slot-value controller 'count)))
-  (push (list x y token) (slot-value controller 'stack))
+  (push (list x y token) (slot-value controller 'path))
   (slot-value controller 'board))
 
 (defmethod undo-set-boardfield ((controller board-controller))
   (if (slot-value controller 'validate)
-      (if (eql nil (slot-value controller 'stack))
+      (if (eql nil (slot-value controller 'path))
 	  (error "No more move to undo")))
-  (let ((field (pop (slot-value controller 'stack))))
+  (let ((field (pop (slot-value controller 'path))))
     (nclear-field (slot-value controller 'board) (first field) (second field)))
   (slot-value controller 'board))
 
