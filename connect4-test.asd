@@ -43,10 +43,6 @@
 	       (:module "test/playresult"
 			:serial t
 			:components ((:file "playresult")))
-	       (:module "test/movegenerator"
-			:serial t
-			:components (
-				     (:file "move-available")))
 	       (:module "test/engine"
                         :serial t
                         :components ((:file "testutil")

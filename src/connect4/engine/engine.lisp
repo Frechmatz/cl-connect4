@@ -82,7 +82,10 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
 		   cur-result
 		   (let ((row-scores ()))
 		     (setf column-filter nil)
-		     (dolist (move (movegenerator:generate-moves board :column-filter column-filter))
+		     (let ((next-moves (movegenerator:generate-moves board :column-filter column-filter)))
+		       (if (not next-moves)
+			   nil ;;; no moves to play, giving up...
+		       (dolist (move next-moves)
 		       (let ((x (first move)) (y (second move)))
 			 (setf move-count (+ move-count 1))
 			 (nset-field board x y color) ; do move
@@ -90,13 +93,17 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
 			   (if is-opponent (setf score (* -1.0 score))) ; invert score if opponents draw
 			   (setf score (/ score (expt 10 (- cur-depth 1))))
 			   (push (list x color (if is-four "MATE" nil)) cur-path)
-			   ;; final state or no more moves availabe or max depth reached
-			   (if (or is-four (not (movegenerator:is-move-available board)) (equal cur-depth max-depth))
+			   ;; final state or max depth reached
+			   (if (or is-four (equal cur-depth max-depth))
 			       (push (list x y score (copy-list cur-path)) row-scores)
 			       (let ((minmax-result (minmax-inner board (toggle-color color) (not is-opponent) (+ cur-depth 1))))
-				 (push (list x y (third minmax-result) (fourth minmax-result)) row-scores))))
+				 (if minmax-result
+				     (push (list x y (third minmax-result) (fourth minmax-result)) row-scores)
+				     ;;; inner call has given up. use previous result
+				     (push (list x y score (copy-list cur-path)) row-scores)
+				     ))))
 			 (nclear-field board x y) ; undo move
-			 (setf cur-path (cdr cur-path))))
+			 (setf cur-path (cdr cur-path))))))
 		     (let ((result (reduce:reduce-scores
 				    row-scores
 				    is-opponent

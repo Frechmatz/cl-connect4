@@ -11,10 +11,3 @@
        (if row (push (list x row) moves)))
      moves)))
 
-(defun is-move-available (board)
-  "Low cost function to check if at least one move is available"
-  (let (( move-left nil))
-    (dotimes (x (get-width board))
-      (if (not (field-set-p board x 0)) (setf move-left t)))
-    move-left))
-
