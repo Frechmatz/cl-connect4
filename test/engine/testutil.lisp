@@ -70,19 +70,19 @@
 	   (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%"
 		   name-of-test
 		   (playresult:play-result-column best-move)
-		   (play-result-score best-move)
+		   (playresult:play-result-score best-move)
 		   expected-final-columns))))
     (if expected-final-move-score
 	(assert-true
 	 ;; Regarding the comparison of floats, see also
 	 ;; http://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node74.html
-	 (= expected-final-move-score (play-result-score best-move))
+	 (= expected-final-move-score (playresult:play-result-score best-move))
 	 (format t "~a: Unexpected final score value: ~a Expected score value: ~a~%"
 		 name-of-test
-		 (play-result-score best-move)
+		 (playresult:play-result-score best-move)
 		 expected-final-move-score)))
     (if (eq is-mate-expected-for-player 0)
-	(assert-true (not (playresult:play-result-is-four-n best-move)) (format nil "Must not be mate")))
+	(assert-true (not (playresult:play-result-is-four-n best-move)) (format t "~a: Must not be mate" name-of-test)))
     (if (eq is-mate-expected-for-player 1)
 	(assert-true (playresult:play-result-is-four-n best-move) (format t "~a: Must be mate~%" name-of-test)))
     best-move))

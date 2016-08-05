@@ -81,8 +81,8 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
 	       (if (and cur-result (funcall is-quit-fn))
 		   cur-result
 		   (let ((row-scores ()))
-		     (setf column-filter nil)
 		     (let ((next-moves (movegenerator:generate-moves board :column-filter column-filter)))
+		       (setf column-filter nil)
 		       (if (not next-moves)
 			   nil ;;; no moves to play, giving up...
 			   (dolist (move next-moves)
