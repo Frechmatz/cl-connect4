@@ -18,8 +18,7 @@
 					       "...w..."
 					       )))
 	       (setf score (engine::board-score board 3 2))
-	       (assert-true (>= score 0.5) (format t "test-board-score-3 failed. Score is ~a~%" score))
-	       ))
+	       (assert-true (>= score 0.5))))
 
 
 (define-test test-board-score-4 ()
@@ -33,6 +32,5 @@
 					       "...w..."
 					       "...w..."
 					       )))
-	       (assert-equal 1.0 (engine::board-score board 3 2) (format t "test-board-score-4 failed"))
-	       ))
+	       (assert-equal 1.0 (engine::board-score board 3 2))))
 

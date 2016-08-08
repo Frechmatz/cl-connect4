@@ -1,6 +1,10 @@
 
 (in-package :connect4-test)
 
+;; https://github.com/OdonataResearchLLC/lisp-unit/issues/36
+(defun or-workaround (a b)
+  (or a b))
+
 ;;; Maximize
 (define-test test-get-reduced-scores-1 ()
 	     (let (
@@ -19,10 +23,10 @@
 			     (format t "test-get-reduced-scores-1: Wrong score~%"))
 	       (assert-equal 1.0 (third (second resulting-moves))
 			     (format t "test-get-reduced-scores-1: Wrong score~%"))
-	       (assert-true (or (equal 1 (first (first resulting-moves)))
+	       (assert-true (or-workaround (equal 1 (first (first resulting-moves)))
 				(equal 2 (first (first resulting-moves))))
 				(format t "test-get-reduced-scores-1: Wrong column~%"))
-	       (assert-true (or (equal 1 (first (second resulting-moves)))
+	       (assert-true (or-workaround (equal 1 (first (second resulting-moves)))
 				(equal 2 (first (second resulting-moves))))
 			    (format t "test-get-reduced-scores-1: Wrong column~%"))
 	       (assert-true (not (equal
@@ -47,10 +51,10 @@
 			     (format t "test-get-reduced-scores-2: Wrong score~%"))
 	       (assert-equal 0.0 (third (second resulting-moves))
 			     (format t "test-get-reduced-scores-2: Wrong score~%"))
-	       (assert-true (or (equal 0 (first (first resulting-moves)))
+	       (assert-true (or-workaround (equal 0 (first (first resulting-moves)))
 				(equal 3 (first (first resulting-moves))))
 			    (format t "test-get-reduced-scores-2: Wrong column~%"))
-	       (assert-true (or (equal 0 (first (second resulting-moves)))
+	       (assert-true (or-workaround (equal 0 (first (second resulting-moves)))
 				(equal 3 (first (second resulting-moves))))
 			    (format t "test-get-reduced-scores-2: Wrong column~%"))
 	       (assert-true (not (equal

@@ -1,6 +1,7 @@
 
 (in-package :connect4-test)
 
+
 (define-test test-detect4-diagonal ()
   (let ( (board nil))
     (setf board (create-test-board (list
@@ -10,11 +11,11 @@
 		      "..w.w.."
 		      ".w...w."
 		      )))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 2 1))) (format t "test-detect4-diagonal-1 failed"))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 4 1))) (format t "test-detect4-diagonal-2 failed"))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 5 4))) (format t "test-detect4-diagonal-3 failed"))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 1 4))) (format t "test-detect4-diagonal-4 failed"))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 3 2))) (format t "test-detect4-diagonal-5 failed"))
+    (assert-true (= 4 (length (board:get-connected-pieces board 2 1))))
+    (assert-true (= 4 (length (board:get-connected-pieces board 4 1))))
+    (assert-true (= 4 (length (board:get-connected-pieces board 5 4))))
+    (assert-true (= 4 (length (board:get-connected-pieces board 1 4))))
+    (assert-true (= 4 (length (board:get-connected-pieces board 3 2))))
     ))
 
 (define-test test-detect4-horizontal ()
@@ -26,9 +27,9 @@
 		      "..wwb.."
 		      ".w.b.w."
 		      )))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 2 2))) (format t "test-detect4-horizontal-1 failed"))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 5 2))) (format t "test-detect4-horizontal-2 failed"))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 3 2))) (format t "test-detect4-horizontal-3 failed"))
+    (assert-true (= 4 (length (board:get-connected-pieces board 2 2))))
+    (assert-true (= 4 (length (board:get-connected-pieces board 5 2))))
+    (assert-true (= 4 (length (board:get-connected-pieces board 3 2))))
     ))
 
 (define-test test-detect4-vertical ()
@@ -40,8 +41,8 @@
 		      "..wwb.."
 		      ".w.w.w."
 		      )))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 3 1))) (format t "test-detect4-vertical-1 failed"))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 3 4))) (format t "test-detect4-vertical-2 failed"))
-    (assert-true (>= 4 (length (board:get-connected-pieces board 3 2))) (format t "test-detect4-vertical-3 failed"))
+    (assert-true (= 4 (length (board:get-connected-pieces board 3 1))))
+    (assert-true (= 4 (length (board:get-connected-pieces board 3 4))))
+    (assert-true (= 4 (length (board:get-connected-pieces board 3 2))))
     ))
 
