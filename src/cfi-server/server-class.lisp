@@ -19,7 +19,7 @@
 (defclass cfi-server ()
   (
    (name :initarg :name :initform "CfiServer" :accessor name)
-   (command-queue :initform (queues:make-queue :simple-cqueue))
+   (command-queue :initform (queues:make-queue :simple-queue))
    (quit-flag :initform nil)
    (server-state :initform +SERVER-STATE-INITIALIZED+)
    (worker-state :initform +WORKER-STATE-WORKER-NOT-STARTED+)

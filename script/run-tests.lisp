@@ -12,7 +12,7 @@
 (asdf:load-system "connect4-test" :force t)
 (in-package :connect4-test)
 (format t "~%Running tests...~%")
-(setf lisp-unit:*print-failures* t)
+;;(setf lisp-unit:*print-failures* t)
 (use-debugger)
 (run-tests)
 

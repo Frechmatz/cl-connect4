@@ -26,18 +26,16 @@
 
 ;;; Check that win situation won't be detected with traversal depth of 4
 (define-test test-board-09-a ()
-	     (run-minmax-test 
-	      "test-board-09-a" (create-board-09) board:WHITE 4
-	      :expected-final-columns '(0 1 2 3 4)
-	      ;; :print-final-scores t
-	      :is-mate-expected-for-player 0
-	      ))
-
+	     (let ((result
+		    (engine:play
+		     (create-board-09) board:WHITE 4)))
+	       (assert-played-column result '(0 1 2 3 4))
+	       (assert-is-not-mate result)))
 
 ;;; Check that win situation is detected with traversal depth of 6
 (define-test test-board-09-b ()
-	     (run-minmax-test 
-	      "test-board-09-b" (create-board-09) board:WHITE 6
-	      :expected-final-columns '(1)
-	      :is-mate-expected-for-player 1
-	      ))
+	     (let ((result
+		    (engine:play
+		     (create-board-09) board:WHITE 6)))
+	       (assert-played-column result '(1))
+	       (assert-is-mate result)))

@@ -35,57 +35,21 @@
   (let ((result '()))
     (dotimes (current-column board-width)
       (if (not (find-if (lambda (c) (equal c current-column)) columns))
-	  (push current-column result))
-      ) result))
+	  (push current-column result)))
+    result))
 
-(defun run-minmax-test (name-of-test board color depth
-			&key 
-			  (print-final-scores nil)
-			  (print-all-scores nil)
-			  (expected-final-scores nil)
-			  (expected-final-columns nil)
-			  (expected-final-move-score nil)
-			  (is-mate-expected-for-player nil))
-  ;; (format t "Running minmax test ~a~%" name-of-test)
-  (let ( (best-move nil)
-	 (engine::*engine-notification-reduced-scores*
-	  (lambda (board color is-opponent depth reduced-score all-scores)
-	    (declare (ignore board))
-	    (if (or (and print-final-scores (equal depth 1)) print-all-scores)
-		(progn
-		  (format t
-			  "~%~a: Reduced scores: Depth: ~a Color: ~a Is-Opponent: ~a Score: ~a All scores:~%~a~%"
-			  name-of-test depth color is-opponent (third reduced-score) all-scores)))
-	    (if (and expected-final-scores (equal depth 1))
-		(assert-true (equal-scores-p
-			      all-scores
-			      expected-final-scores)
-			     (format t "~a: Final scores do not match. Expected:~%~a~%Resulting:~%~a~%"
-				     name-of-test expected-final-scores all-scores))))))
-    (setf best-move (engine:play board color depth))
-    (if expected-final-columns
-	(progn
-	  (assert-true
-	   (find-if (lambda (c) (equal c (playresult:play-result-column best-move))) expected-final-columns)
-	   (format t "~a: Wrong move chosen: ~a. Score: ~a Expected move: ~a~%"
-		   name-of-test
-		   (playresult:play-result-column best-move)
-		   (playresult:play-result-score best-move)
-		   expected-final-columns))))
-    (if expected-final-move-score
-	(assert-true
-	 ;; Regarding the comparison of floats, see also
-	 ;; http://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node74.html
-	 (= expected-final-move-score (playresult:play-result-score best-move))
-	 (format t "~a: Unexpected final score value: ~a Expected score value: ~a~%"
-		 name-of-test
-		 (playresult:play-result-score best-move)
-		 expected-final-move-score)))
-    (if (eq is-mate-expected-for-player 0)
-	(assert-true (not (playresult:play-result-is-four-n best-move)) (format t "~a: Must not be mate" name-of-test)))
-    (if (eq is-mate-expected-for-player 1)
-	(assert-true (playresult:play-result-is-four-n best-move) (format t "~a: Must be mate~%" name-of-test)))
-    best-move))
+;; see https://github.com/OdonataResearchLLC/lisp-unit/issues/36
+(defun lisp-unit-or-wrapper (a b)
+  (or a b))
 
+(defmacro assert-played-column (cur-playresult allowed-columns)
+  `(assert-true (lisp-unit-or-wrapper
+		 (and (not ,allowed-columns) (not (playresult:play-result-column ,cur-playresult)))
+		 (find-if (lambda (c) (equal c (playresult:play-result-column ,cur-playresult))) ,allowed-columns))))
 
+(defmacro assert-is-mate (cur-playresult)
+  `(assert-true (playresult:play-result-is-four-n ,cur-playresult)))
+ 
+(defmacro assert-is-not-mate (cur-playresult)
+  `(assert-true (not (playresult:play-result-is-four-n ,cur-playresult))))
 

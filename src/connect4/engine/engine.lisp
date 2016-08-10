@@ -15,12 +15,6 @@
 (defvar *column-weights* nil
   "This array defines the weight of each column of the current board. 0 > weight <= 1.0")
 
-(defvar *engine-notification-reduced-scores*
-  (lambda (board color is-opponent depth reduced-score all-scores)
-  (declare (ignore board color is-opponent depth reduced-score all-scores))
-  nil)
-  "Handler that is called each time after a minimizing/maximizing of a row of scores took place")
-
 (defun toggle-color (color)
   (if (eq color WHITE) BLACK WHITE))
 
@@ -110,7 +104,6 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
 				    (lambda (m) (third m)) ;; Score getter
 				    (lambda (m) (aref *column-weights* (first m))) ;; Weight getter
 				    :skip-randomizer (if (equal cur-depth 1) nil t))))
-		       (funcall *engine-notification-reduced-scores* board color is-opponent cur-depth result row-scores)
 		       (setf cur-result result)
 		       result)
 		     ))))

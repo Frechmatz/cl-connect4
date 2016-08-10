@@ -7,9 +7,8 @@
 ;;;;
 
 (define-test test-board-score-3 ()
-	     (let ( (board nil) (score nil)
-		    (engine::*column-weights* (make-array 7 :initial-element 1.0)) 
-		    )
+	     (let ((board nil) (score nil)
+		    (engine::*column-weights* (make-array 7 :initial-element 1.0)))
 	       (setf board (create-test-board (list
 					       "......."
 					       "......."
@@ -22,9 +21,8 @@
 
 
 (define-test test-board-score-4 ()
-	     (let ( (board nil)
-		   (engine::*column-weights* (make-array 7 :initial-element 1.0)) 
-		    )
+	     (let ((board nil)
+		   (engine::*column-weights* (make-array 7 :initial-element 1.0)))
 	       (setf board (create-test-board (list
 					       "......."
 					       "...w..."

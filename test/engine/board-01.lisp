@@ -21,18 +21,15 @@
 
 ;;; Let computer lose with a traversal depth of 4 half-moves
 (define-test test-board-01-a ()
-	     (run-minmax-test 
-	      "test-board-01-a" (create-board-01) board:WHITE 4
-	      :expected-final-columns '(0 1 2 3 4 5 6)
-	      ;;:print-final-scores t
-	      ;;:expected-final-move-score 0.0
-	      ))
+	     (let ((result
+		    (engine:play
+		     (create-board-01) board:WHITE 4)))
+	       (assert-played-column result '(0 1 2 3 4 5 6))))
 
 ;;; Let computer counter the the threat with a traversal depth of 6 half-moves
 (define-test test-board-01-b ()
-	     (run-minmax-test 
-	      "test-board-01-b" (create-board-01) board:WHITE 6
-	      :expected-final-columns '(3 4 5)
-	      ;; :print-final-scores t
-	      ))
+	     (let ((result
+		    (engine:play
+		     (create-board-01) board:WHITE 6)))
+	       (assert-played-column result '(3 4 5))))
 

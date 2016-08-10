@@ -18,17 +18,17 @@
 
 ;;; BLACK must answer with negative value for all columns
 (define-test test-board-07-a ()
-	     (run-minmax-test 
-	      "test-board-07-a" (create-board-07) board:BLACK 2
-	      :expected-final-columns '(0 1 2 3 4)
-	      :is-mate-expected-for-player 0
-	      ))
+	     (let ((result
+		    (engine:play
+		     (create-board-07) board:BLACK 2)))
+	       (assert-played-column result '(0 1 2 3 4))
+	       (assert-is-not-mate result)))
 
 ;;; WHITE must answer with 0 or 4
 (define-test test-board-07-c ()
-	     (run-minmax-test 
-	      "test-board-07-c" (create-board-07) board:WHITE 2
-	      :expected-final-columns '(4 0)
-	      :is-mate-expected-for-player 1
-	      ))
+	     (let ((result
+		    (engine:play
+		     (create-board-07) board:WHITE 2)))
+	       (assert-played-column result '(4 0))
+	       (assert-is-mate result)))
 

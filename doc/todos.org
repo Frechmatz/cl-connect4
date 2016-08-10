@@ -2,10 +2,6 @@
 
 * Unit Tests
 ** TODO Test move generator
-** TODO Cleanup the mess
-   - Redundancy in tests (name of test is written out multiple times.
-     We need a helper macro
-   - testutil.lisp is an ugly mess
 ** TODO Write a test for the play command that checks if the
    start-column parameter is properly handled
 
@@ -14,9 +10,10 @@
 ** TODO Check calculation of column-weights for width 7 
    (weights should differ for each column but they do not)
 ** TODO Result should be returned as an assoc list
+   - Add final scores to result
+   - Eliminate engine::*engine-notification-reduced-scores*
 ** TODO play(): Eliminate the list reversal that is applied when
    the final result is returned 
-
 
 * Connect4-Console
 ** TODO Formatting of score value ("-0.0")

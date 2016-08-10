@@ -6,31 +6,28 @@
 (in-package :connect4-test)
 
 (define-test test-no-move-available ()
-	     (run-minmax-test 
-	      "test-no-move-available"
-	      (create-test-board (list
-		      "wbwbw"
-		      "bwbwb"
-		      "wbwbw"
-		      "bwbwb"
-		      ))
-	      board:WHITE 6
-	      ;; :print-final-scores t
-	      :expected-final-columns '()
-	      ))
+	     (let ((result
+		    (engine:play
+		     (create-test-board
+		      (list
+		       "wbwbw"
+		       "bwbwb"
+		       "wbwbw"
+		       "bwbwb"))
+		     board:WHITE
+		     6)))
+	       (assert-played-column result '())))
 
 (define-test test-no-move-available-2 ()
-	     (run-minmax-test 
-	      "test-no-move-available-2"
-	      (create-test-board (list
-		      ".bwbw"
-		      "bbbwb"
-		      "wbwbw"
-		      "bwbwb"
-		      ))
-	      board:WHITE 6
-	      :print-final-scores t
-	      :expected-final-columns '(0)
-	      ))
-
+	     (let ((result
+		    (engine:play
+		     (create-test-board
+		      (list
+		       ".bwbw"
+		       "bbbwb"
+		       "wbwbw"
+		       "bwbwb" ))
+		     board:WHITE
+		     6)))
+	       (assert-played-column result '(0))))
 

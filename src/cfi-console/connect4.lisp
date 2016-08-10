@@ -38,6 +38,7 @@
   (read-line))
 
 (defun lets-go ()
+  (logger:log-message :debug "Started cfi console client")
   (let ((server (make-instance 'connect4-server)))
     (format t "Instantiated server~%")
     (loop
