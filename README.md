@@ -40,7 +40,7 @@ For monochrome output, not using ANSI escape sequences:
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/gameplay.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/lowres-console-1.jpg)
 
 ## Run the Web-Client
 
