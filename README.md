@@ -61,4 +61,4 @@ Stop the server:
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/client1.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/lowres-web-1.jpg)
