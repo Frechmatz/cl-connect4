@@ -22,6 +22,7 @@ cl-who
 hunchentoot
 hunchensocket
 cl-svg
+bordeaux-threads
 ```
 There are no dependencies on third-party JavaScript/CSS libraries
 
