@@ -42,7 +42,7 @@ For monochrome output, not using ANSI escape sequences:
 
 ![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/lowres-console-1.jpg)
 
-[[High-Res Screenshot](https://raw.github.com/frechmatz/connect4/master/screenshots/highres-console-1.jpg)]
+[[Hi-Res](https://raw.github.com/frechmatz/connect4/master/screenshots/highres-console-1.jpg)]
 
 ## Run the Web-Client
 
@@ -65,4 +65,4 @@ Stop the server:
 
 ![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/lowres-web-1.jpg)
 
-[[High-Res-Screenshot](https://raw.github.com/frechmatz/connect4/master/screenshots/highres-web-1.jpg)]
+[[Hi-Res](https://raw.github.com/frechmatz/connect4/master/screenshots/highres-web-1.jpg)]
