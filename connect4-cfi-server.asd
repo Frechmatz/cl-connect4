@@ -4,7 +4,7 @@
   :licence "Public Domain / 0-clause MIT"
   :description "Implements the Connect Four Interface (CFI)"
   :long-description "Implements the Connect Four Interface (CFI)"
-  :depends-on (:cl-ppcre :alexandria :connect4 :queues.simple-cqueue)
+  :depends-on (:cl-ppcre :alexandria :connect4 :queues.simple-cqueue :bordeaux-threads)
   :components (
 	       (:module "src/logger"
 			:serial t

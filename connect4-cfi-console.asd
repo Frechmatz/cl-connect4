@@ -2,7 +2,7 @@
   :serial t
   :version "1.0.0"
   :licence "Public Domain / 0-clause MIT"
-  :depends-on (:cl-ppcre :alexandria :connect4-cfi-server :bordeaux-threads)
+  :depends-on (:cl-ppcre :alexandria :connect4-cfi-server)
   :components (
 	       (:module "src/cfi-console"
 			:serial t
