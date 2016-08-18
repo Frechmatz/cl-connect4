@@ -6,12 +6,12 @@
 
 (defun play-result-formatter-move (result)
   (format nil "~a"
-	  (if (playresult:play-result-no-move-available result)
+	  (if (not (engine:play-result-is-move result))
 	      "NULL"
-	      (playresult:play-result-column result))))
+	      (engine:play-result-column result))))
 
 (defun play-result-formatter-four (result)
-  (if (playresult:play-result-is-four-n result)
+  (if (engine:play-result-is-four-n result)
       (format nil "--four ~a"
 	      (reduce
 	       (lambda (a b) (concatenate
@@ -19,12 +19,12 @@
 			      (format nil "~a" a)
 			      "/"
 			      (format nil "~a" b)))
-	       (playresult:play-result-players-move-sequence result)))
+	       (engine:play-result-players-move-sequence result)))
       ""))
 
 (defun play-result-formatter-score (result)
-  (if (not (playresult:play-result-no-move-available result))
-      (format nil "--score ~$" (playresult:play-result-score result))
+  (if (engine:play-result-is-move result)
+      (format nil "--score ~$" (engine:play-result-score result))
       ""))
 
 (defun get-line (board x y color)
@@ -40,7 +40,7 @@
     x y)))
   
 (defun play-result-formatter-line (board result)
-  (if (playresult:play-result-is-four-1 result)
+  (if (engine:play-result-is-four-1 result)
       (format nil "--line ~a"
 	      (reduce
 	       (lambda (a b) (concatenate 'string a "/" b))
@@ -52,9 +52,9 @@
 			     (format nil "~a" (second i))))
 		(get-line
 		 board
-		 (playresult:play-result-column result)
-		 (playresult:play-result-row result)
-		 (playresult:play-result-players-color result)))))
+		 (engine:play-result-column result)
+		 (engine:play-result-row result)
+		 (engine:play-result-players-color result)))))
       ""))
 
 

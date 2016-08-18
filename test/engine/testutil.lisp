@@ -44,12 +44,12 @@
 
 (defmacro assert-played-column (cur-playresult allowed-columns)
   `(assert-true (lisp-unit-or-wrapper
-		 (and (not ,allowed-columns) (not (playresult:play-result-column ,cur-playresult)))
-		 (find-if (lambda (c) (equal c (playresult:play-result-column ,cur-playresult))) ,allowed-columns))))
+		 (and (not ,allowed-columns) (not (engine:play-result-column ,cur-playresult)))
+		 (find-if (lambda (c) (equal c (engine:play-result-column ,cur-playresult))) ,allowed-columns))))
 
 (defmacro assert-is-mate (cur-playresult)
-  `(assert-true (playresult:play-result-is-four-n ,cur-playresult)))
+  `(assert-true (engine:play-result-is-four-n ,cur-playresult)))
  
 (defmacro assert-is-not-mate (cur-playresult)
-  `(assert-true (not (playresult:play-result-is-four-n ,cur-playresult))))
+  `(assert-true (not (engine:play-result-is-four-n ,cur-playresult))))
 

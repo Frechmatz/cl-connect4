@@ -109,6 +109,12 @@ Returns a value 0 >= value <= 1, where 1 signals a winning position"
 		     ))))
       (let ((result (minmax-inner board color nil 1)))
 	;; revert best line
-	(list (first result) (second result) (third result) (reverse (fourth result)))
+	;;(list (first result) (second result) (third result) (reverse (fourth result)))
+	(make-instance 'playresult
+		       :color color
+		       :column (first result)
+		       :row (second result)
+		       :score (third result)
+		       :move-sequence (reverse (fourth result)))
 	))))
 

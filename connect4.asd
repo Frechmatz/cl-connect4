@@ -18,13 +18,10 @@
 			:serial t
 			:components ((:file "packages")
                                      (:file "movegenerator")))
-	       (:module "src/connect4/playresult"
-			:serial t
-			:components ((:file "packages")
-                                     (:file "playresult")))
 	       (:module "src/connect4/engine"
 			:serial t
 			:components ((:file "packages")
+				     (:file "playresult")
 				     (:file "board-controller")
 				     (:file "engine")
 				     ))

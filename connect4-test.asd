@@ -19,14 +19,11 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "movegenerator")))
-	       (:module "src/connect4/playresult"
-                        :serial t
-                        :components ((:file "packages")
-                                     (:file "playresult")))
 	       (:module "src/connect4/engine"
                         :serial t
                         :components ((:file "packages")
 				     (:file "board-controller")
+				     (:file "playresult")
                                      (:file "engine")))
 	       (:module "src/cfi-server"
                         :serial t
@@ -41,8 +38,8 @@
 			:serial t
 			:components ((:file "reduce-scores")))
 	       (:module "test/playresult"
-			:serial t
-			:components ((:file "playresult")))
+	       		:serial t
+	       		:components ((:file "playresult")))
 	       (:module "test/engine"
                         :serial t
                         :components ((:file "testutil")
@@ -64,8 +61,7 @@
                         :serial t
                         :components ((:file "decode-placement-tests")
 				     (:file "play-result-formatter")
-				     )
-			)
+				     ))
   ))
 
 
