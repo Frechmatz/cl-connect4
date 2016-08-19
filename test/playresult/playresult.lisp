@@ -52,11 +52,11 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE "")))))
+			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK "") (4 0 ,board:WHITE "")))))
     (let ((r (engine::play-result-filter-move-sequence-by-token result board:BLACK)))
 	       (assert-true (eql 1 (length r)))
-	       (assert-true (eql (second (first r)) board:BLACK))
-	       (assert-true (eql 3 (length (first r)))))))
+	       (assert-true (eql (third (first r)) board:BLACK))
+	       (assert-true (eql 4 (length (first r)))))))
 
 (define-test play-result-filter-move-sequence-by-token-2 ()
   (let ((result (make-instance 'engine:playresult
@@ -64,13 +64,13 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE "")))))
+			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK "") (4 0 ,board:WHITE "")))))
 	     (let ((r (engine::play-result-filter-move-sequence-by-token result board:WHITE)))
 	       (assert-true (eql 2 (length r)))
-	       (assert-true (eql 3 (length (first r))))
-	       (assert-true (eql 3 (length (second r))))
-	       (assert-true (eql (second (first r)) board:WHITE))
-	       (assert-true (eql (second (second r)) board:WHITE)))))
+	       (assert-true (eql 4 (length (first r))))
+	       (assert-true (eql 4 (length (second r))))
+	       (assert-true (eql (third (first r)) board:WHITE))
+	       (assert-true (eql (third (second r)) board:WHITE)))))
 
 (define-test play-result-players-move-sequence-1 ()
   (let ((result (make-instance 'engine:playresult
@@ -78,7 +78,7 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE "")))))
+			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK "") (4 0 ,board:WHITE "")))))
 	     (let ((r (engine::play-result-players-move-sequence result)))
 	       (assert-true (eql 2 (length r)))
 	       (assert-true (eql 2 (first r)))
@@ -90,7 +90,7 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE "")))))
+			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK "") (4 0 ,board:WHITE "")))))
     (assert-false (engine::play-result-is-four-n result))))
 
 (define-test play-result-is-four-n-2 ()
@@ -99,7 +99,7 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 ,board:WHITE "") (3 ,board:BLACK "MATE") (4 ,board:WHITE "")))))
+			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK "MATE") (4 0 ,board:WHITE "")))))
     (assert-false (engine::play-result-is-four-n result))))
 
 (define-test play-result-is-four-n-3 ()
@@ -108,7 +108,7 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 ,board:WHITE "MATE") (3 ,board:BLACK "") (4 ,board:WHITE "")))))
+			     :move-sequence `((2 0 ,board:WHITE "MATE") (3 0 ,board:BLACK "") (4 0 ,board:WHITE "")))))
     (assert-true (engine::play-result-is-four-n result))))
 
 (define-test play-result-is-four-n-4 ()
@@ -117,6 +117,6 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE "MATE")))))
+			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK "") (4 0 ,board:WHITE "MATE")))))
     (assert-true (engine::play-result-is-four-n result))))
 

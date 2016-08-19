@@ -25,8 +25,10 @@
 		     (create-board-00)
 		     board:WHITE
 		     1)))
+	       (format t "Sequence: ~a~%" (engine::play-result-move-sequence result))
 	       (assert-played-column result '(2))
-	       (assert-is-mate result)))
+	       (assert-is-mate result)
+	       ))
 
 ;;; Test with traversal depth 6
 ;;; Computer must chose direct win

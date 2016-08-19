@@ -28,6 +28,10 @@
   (:documentation ""
   ))
 
+(defgeneric decorate-path (board-controller value)
+  (:documentation ""
+  ))
+
 (defgeneric get-count (board-controller))
 
 (defmethod get-board ((controller board-controller))
@@ -37,7 +41,9 @@
   (slot-value controller 'count))
 
 (defmethod get-path ((controller board-controller))
-  (slot-value controller 'path))
+  ;; return a copy because the path slot
+  ;; will be modified when fields are set and unset.
+  (copy-list (slot-value controller 'path)))
 
 (defmethod set-boardfield ((controller board-controller) x y token)
   (if (slot-value controller 'validate)
@@ -56,3 +62,9 @@
     (nclear-field (slot-value controller 'board) (first field) (second field)))
   (slot-value controller 'board))
 
+(defmethod decorate-path ((controller board-controller) value)
+  (let ((path (slot-value controller 'path)))
+    (if path
+	(let ((item (first path)))
+	  (setf (slot-value controller 'path)
+		(concatenate 'list (list (list (first item) (second item) (third item) value)) (cdr path)))))))

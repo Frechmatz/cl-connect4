@@ -32,7 +32,7 @@ Accessor functions for the result returned by engine:play
 
 (defun play-result-filter-move-sequence-by-token (result token)
   (remove-if-not
-   (lambda (item) (eql (second item) token))
+   (lambda (item) (eql (third item) token))
    (play-result-move-sequence result)))
 
 (defun play-result-players-move-sequence (result)
@@ -45,11 +45,11 @@ Accessor functions for the result returned by engine:play
       nil))
 
 (defun play-result-is-four-1 (result)
-  (equal (third (first (play-result-move-sequence result))) "MATE"))
+  (equal (fourth (first (play-result-move-sequence result))) "MATE"))
   
 (defun play-result-is-four-n (result)
   (let ((token (play-result-players-color result)))
     (remove-if-not
-     (lambda (item) (equal (third item) "MATE"))
+     (lambda (item) (equal (fourth item) "MATE"))
      (play-result-filter-move-sequence-by-token result token))))
 

@@ -40,3 +40,18 @@
       (assert-true (= 1 (length cur-path)))
       (assert-true (equal `( (4 5 ,board::WHITE)) cur-path)))))
 
+(define-test test-board-controller-decorate-path-1 ()
+  (let ((controller (make-instance 'engine::board-controller :board (create-board 6 7))))
+    (engine::set-boardfield controller 4 5 board::WHITE)
+    (engine::set-boardfield controller 5 5 board::BLACK)
+    (engine::decorate-path controller "DECORATED")
+    (let ((cur-path (engine::get-path controller)))
+      (assert-true (string= "DECORATED" (fourth (first cur-path)))))))
+
+(define-test test-board-controller-decorate-path-2 ()
+  (let ((controller (make-instance 'engine::board-controller :board (create-board 6 7))))
+    (engine::set-boardfield controller 4 5 board::WHITE)
+    (engine::decorate-path controller "DECORATED")
+    (engine::set-boardfield controller 5 5 board::BLACK)
+    (let ((cur-path (engine::get-path controller)))
+      (assert-true (string= "DECORATED" (fourth (second cur-path)))))))

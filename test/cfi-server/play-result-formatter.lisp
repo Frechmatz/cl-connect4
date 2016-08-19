@@ -7,7 +7,7 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 ,board:WHITE "") (3 ,board:BLACK "") (4 ,board:WHITE "MATE")))))
+			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK "") (4 0 ,board:WHITE "MATE")))))
 	     (let ((r (cfi-server::play-result-formatter-four result)))
 	       (assert-true
 		(string= r "--four 2/4")
@@ -22,11 +22,11 @@
 			     :color board:WHITE
 			     :score 0.0
 			     :move-sequence
-			     `((5 ,board:WHITE NIL)
-				  (2 ,board:BLACK NIL)
-				  (5 ,board:WHITE NIL)
-				  (5 ,board:BLACK NIL)
-				  (5 ,board:WHITE "MATE"))
+			     `((5 0 ,board:WHITE NIL)
+				  (2 0 ,board:BLACK NIL)
+				  (5 0 ,board:WHITE NIL)
+				  (5 0 ,board:BLACK NIL)
+				  (5 0 ,board:WHITE "MATE"))
 			     )))
     (let ((r  (cfi-server::play-result-formatter-four result)))
       (assert-true
