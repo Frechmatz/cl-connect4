@@ -99,7 +99,7 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK "MATE") (4 0 ,board:WHITE "")))))
+			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK 1.0) (4 0 ,board:WHITE "")))))
     (assert-false (engine::play-result-is-four-n result))))
 
 (define-test play-result-is-four-n-3 ()
@@ -108,7 +108,7 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 0 ,board:WHITE "MATE") (3 0 ,board:BLACK "") (4 0 ,board:WHITE "")))))
+			     :move-sequence `((2 0 ,board:WHITE 1.0) (3 0 ,board:BLACK "") (4 0 ,board:WHITE "")))))
     (assert-true (engine::play-result-is-four-n result))))
 
 (define-test play-result-is-four-n-4 ()
@@ -117,6 +117,6 @@
 			     :row 0
 			     :color board:WHITE
 			     :score 0.0
-			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK "") (4 0 ,board:WHITE "MATE")))))
+			     :move-sequence `((2 0 ,board:WHITE "") (3 0 ,board:BLACK "") (4 0 ,board:WHITE 1.0)))))
     (assert-true (engine::play-result-is-four-n result))))
 

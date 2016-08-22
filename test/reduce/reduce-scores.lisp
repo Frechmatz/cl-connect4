@@ -72,8 +72,8 @@
 	       (setf move (reduce:reduce-scores
 			   moves
 			   nil
-			   (lambda (m) (third m))
-			   (lambda (m) 1.0)))
+			   :get-score-fn (lambda (m) (third m))
+			   :get-weight-fn (lambda (m) 1.0)))
 	       (assert-equal 2 (first move) (format t "test-reduce-scores-1: Wrong column chosen: ~a~%" (first move)))
 	       ))
 
@@ -86,8 +86,8 @@
 	       (setf move (reduce:reduce-scores
 			   moves
 			   t
-			   (lambda (m) (third m))
-			   (lambda (m) 1.0)
+			   :get-score-fn (lambda (m) (third m))
+			   :get-weight-fn (lambda (m) 1.0)
 			   :skip-randomizer t))
 	       (assert-equal 0 (first move) (format t "test-reduce-scores-2: Wrong column chosen: ~a~%" (first move)))
 	       ))
@@ -101,8 +101,8 @@
 	       (setf move (reduce:reduce-scores
 			   moves
 			   nil
-			   (lambda (m) (third m))
-			   (lambda (m) 1.0)))
+			   :get-score-fn (lambda (m) (third m))
+			   :get-weight-fn (lambda (m) 1.0)))
 	       (assert-equal 2 (first move) (format t "test-reduce-scores-3: Wrong column chosen: ~a~%" (first move)))
 	       ))
 
@@ -115,8 +115,8 @@
 	       (setf move (reduce:reduce-scores
 			   moves
 			   t
-			   (lambda (m) (third m))
-			   (lambda (m) 1.0)))
+			   :get-score-fn (lambda (m) (third m))
+			   :get-weight-fn (lambda (m) 1.0)))
 	       (assert-equal 1 (first move) (format t "test-reduce-scores-4: Wrong column chosen: ~a~%" (first move)))
 	       ))
 
@@ -129,8 +129,8 @@
 	       (setf move (reduce:reduce-scores
 			   moves
 			   nil
-			   (lambda (m) (third m))
-			   (lambda (m) 1.0)
+			   :get-score-fn (lambda (m) (third m))
+			   :get-weight-fn (lambda (m) 1.0)
 			   :skip-randomizer t))
 	       (assert-equal 0 (first move) (format t "test-reduce-scores-5: Wrong column chosen: ~a~%" (first move)))
 	       ))
@@ -144,8 +144,8 @@
 	       (setf move (reduce:reduce-scores
 			   moves
 			   t
-			   (lambda (m) (third m))
-			   (lambda (m) 1.0)
+			   :get-score-fn (lambda (m) (third m))
+			   :get-weight-fn (lambda (m) 1.0)
 			   :skip-randomizer t))
 	       (assert-equal 0 (first move) (format t "test-reduce-scores-6: Wrong column chosen: ~a~%" (first move)))
 	       ))
@@ -160,8 +160,8 @@
 	       (setf move (reduce:reduce-scores
 			   moves
 			   t
-			   (lambda (m) (third m))
-			   (lambda (m) 1.0)
+			   :get-score-fn (lambda (m) (third m))
+			   :get-weight-fn (lambda (m) 1.0)
 			   :skip-randomizer t))
 	       (assert-equal nil move (format t "test-reduce-scores-7: Failed~%"))
 	       ))

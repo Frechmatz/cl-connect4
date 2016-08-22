@@ -2,12 +2,12 @@
 (in-package :engine)
 
 (defclass board-controller ()
-  (
-   (board :initform nil)
+  ((board :initform nil)
    (validate :initarg :validate :initform t)
    (count :initform 0)
-   (path :initform '())
-   ))
+   (path :initform '()))
+   (:documentation "")
+  )
 
 (defmethod initialize-instance :after ((controller board-controller) &key board)
   (setf (slot-value controller 'board) (clone-board board)))

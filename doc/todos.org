@@ -9,16 +9,8 @@
 ** TODO Alpha/Beta-Pruning
 ** TODO Check calculation of column-weights for width 7 
    (weights should differ for each column but they do not)
-** TODO Result should be returned as an assoc list
-   - Add final scores to result
-   - Eliminate engine::*engine-notification-reduced-scores*
-** TODO play(): Eliminate the list reversal that is applied when
-   the final result is returned 
 
-* Connect4-Console
-** TODO Formatting of score value ("-0.0")
-
-* CFI-Server / CFI-Core
+* Connect4-Console / CFI-Server
 ** TODO Formatting of score value ("-0.0")
 
 * Web-Server
@@ -26,7 +18,7 @@
 ** TODO Broadcast shutdown message when server is stopped
 
 * Web-Client
-** TODO Support of IE10
+** TODO Support of IE10/11
 ** TODO Responsiveness (better adaption of board rendering according to size of view)
 ** TODO Minimal site for mobile devices
 ** TODO Better handling of final game state

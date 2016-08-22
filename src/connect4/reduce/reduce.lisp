@@ -49,7 +49,7 @@ Maximize: #'> Minimize: #'<"
 	   moves)))))
 
 
-(defun reduce-scores (moves is-opponent get-score-fn get-weight-fn &key (skip-randomizer nil))
+(defun reduce-scores (moves is-opponent &key get-score-fn get-weight-fn (skip-randomizer nil))
   "Reduce list of possible moves.
   moves: list of moves
   get-score-fn: function that returns the score of a move
