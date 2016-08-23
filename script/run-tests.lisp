@@ -13,7 +13,7 @@
 (in-package :connect4-test)
 (format t "~%Running tests...~%")
 ;; uncomment, when tests fail
-;;(setf lisp-unit:*print-failures* t)
+;; (setf lisp-unit:*print-failures* t)
 (use-debugger)
 (run-tests)
 

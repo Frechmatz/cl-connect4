@@ -6,33 +6,42 @@
    (validate :initarg :validate :initform t)
    (count :initform 0)
    (path :initform '()))
-   (:documentation "")
+  (:documentation
+   "Class to play moves on a board. Moves can be undone. The current move sequence (the path)
+    is kept and can be decorated, for example with a board score. Also a total count of 
+    moves (plies) is provided.")
   )
 
 (defmethod initialize-instance :after ((controller board-controller) &key board)
   (setf (slot-value controller 'board) (clone-board board)))
 
 (defgeneric get-board (board-controller)
-  (:documentation ""
+  (:documentation "Get the current board"
   ))
 
 (defgeneric set-boardfield (board-controller x y token)
-  (:documentation ""
+  (:documentation "Set a field"
   ))
 
 (defgeneric undo-set-boardfield (board-controller)
-  (:documentation ""
+  (:documentation "Undo the last move."
   ))
 
 (defgeneric get-path (board-controller)
-  (:documentation ""
+  (:documentation "Get the current move sequence, aka the path. The path
+is represented by a list of (x y color <decoration>). The first entry of the list
+represents the first move made."
   ))
 
 (defgeneric decorate-path (board-controller value)
-  (:documentation ""
+  (:documentation "Decorate the latest move with a value. Will be provided as fourth
+entry for each path segment."
   ))
 
-(defgeneric get-count (board-controller))
+(defgeneric get-count (board-controller)
+  (:documentation
+   "Get the total count of moves (plies) that have been made. Undoing a move
+    doesn't effect this count"))
 
 (defmethod get-board ((controller board-controller))
   (slot-value controller 'board))

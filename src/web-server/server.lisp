@@ -144,7 +144,7 @@
 			 (:li :class "navbaritem"
 			      (:a :class "link-new-game" :id "link-new-game" :title "New Game" :href "#" (:span "New game")))
 			 (:li :class "navbaritem"
-			      (:a :class "link-set-board-size" :id "link-set-board-size" :title "Set board size" :href "#" (:span "Set board size"))
+			      (:a :class "link-set-board-size" :id "link-set-board-size" :href "#")
 			      (:div :class "navbaritemsubdialog set-board-size-form"
 				    (:div :class "wrapper"
 					  (:div :class "title" (:p "Set board size"))

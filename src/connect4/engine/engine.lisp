@@ -7,12 +7,28 @@
 (defun toggle-color (color)
   (if (eq color WHITE) BLACK WHITE))
 
+(defparameter *CENTER-WIDTH-PERCENT* 0.2)
+
 (defun calc-column-weights (board-width)
   "Calculate a weight for each column. The nearer to the center the higher the weight"
-  (let ((weights (make-array board-width)))
-    (dotimes (x board-width)
-      ;; 1 / (1 + Distance from center)
-      (setf (aref weights x) (/ 1.0 (+ 1 (abs (- (/ board-width 2) x))))))
+  (let ((weights (make-array board-width))
+	;; 1-based center column (width == 7 -> Center = 4)
+	(center-column-1 (ceiling (/ board-width 2)))
+	;; Width of center "window" where the distance is treated equal.
+	;; Without this window the computer would always choose the absolute
+	;; center of the board and kill the fun of the game play
+	(center-width-dx (round (/ (* board-width *CENTER-WIDTH-PERCENT*) 2))))
+    ;;(format t "~%center-column-1: ~a center-width-dx: ~a~%" center-column-1 center-width-dx)
+    ;; column-1: 1-based current column
+    (flet ((center-distance (column-1)
+	     (let ((d (abs (- center-column-1 column-1))))
+	       ;;(format t "~%Distance is ~a" d)
+	       (if (<= d center-width-dx)
+		   0
+		   d))))
+      (dotimes (x board-width)
+	;; 1 / (1 + Distance from center)
+	(setf (aref weights x) (/ 1.0 (+ 1 (center-distance (+ 1 x)))))))
     weights))
 
 (defun board-score (board x y)
