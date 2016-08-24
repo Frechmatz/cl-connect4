@@ -1,6 +1,3 @@
-#|
-Accessor functions for the result returned by engine:play
-|#
 
 (in-package :engine)
 
@@ -9,8 +6,8 @@ Accessor functions for the result returned by engine:play
    (column :initarg :column)
    (row :initarg :row)
    (score :initarg :score)
-   (move-sequence :initarg :move-sequence)
-   ))
+   (move-sequence :initarg :move-sequence))
+  (:documentation "Representation of the result returned by engine:play"))
 
 (defun play-result-column (result)
   "Get column of the played move"
@@ -25,10 +22,11 @@ Accessor functions for the result returned by engine:play
   (slot-value result 'score))
 
 (defun play-result-is-move (result)
+  "Check if any move could be played"
   (slot-value result 'row))
 
 (defun play-result-move-sequence (result)
-  "Get played move sequence. (first move-sequence) represents the start move"
+  "Get played move sequence. (first move-sequence) represents the first move"
   (slot-value result 'move-sequence))
 
 (defun play-result-players-color (result)

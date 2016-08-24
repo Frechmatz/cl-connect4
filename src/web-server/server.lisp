@@ -35,13 +35,13 @@
 
 (defun start-main-server ()
   (if *server*
-      (format t "~%Main server already running~%")
+      (format t "~%Web server already running~%")
       (progn
 	(setf *server* (hunchentoot:start
 			(make-instance
 			 'hunchentoot:easy-acceptor
 			 :port *port*)))
-	(format t "~%Hi there. The main server has been started.")
+	(format t "~%Hi there. The web server has been started.")
 	(format t "~%The server can be reached via http://localhost:~a" *port*)
 	(hunchentoot:define-easy-handler (root :uri "/") ()
 	  (logger:log-message :info (format nil "Root page requested. Query parameters: ~a" (hunchentoot:query-string*)))
@@ -79,11 +79,11 @@
 
 (defun stop-main-server ()
   (if (not *server*)
-      (format t "~%Main server is not running")
+      (format t "~%Web server is not running")
       (let ((srv *server*))
 	(setf *server* nil)
 	(hunchentoot:stop srv)
-	(format t "The main server has been stopped.")
+	(format t "The web server has been stopped.")
 	)))
 
 (defun start-websocket-server ()

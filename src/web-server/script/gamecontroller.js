@@ -1,4 +1,7 @@
 
+/*
+  Central Game controller
+ */
 
 var GameController = function() {
     this.cfiClient = new CfiClient();

@@ -2,12 +2,14 @@
 Connect 4 Server Interface 
 ==========================
 
+Version 1.0 (08/2016; Olli)
+
 Introduction
 ============
 
 This document specifies the interface of a Connect Four Game Server. The emphasis is
 on easy implementation for both clients and servers. The interface doesn't
-support yet features such as pondering or a clock.
+support features such as pondering or a clock.
 
 Key points:
 
@@ -229,8 +231,4 @@ Example:
 
 > play 6/6/6 a 1
 < debug Command PLAY called with invalid arguments.
-
-
-
-
 

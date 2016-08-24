@@ -2,13 +2,8 @@
 
 * Unit Tests
 ** TODO Test move generator
-** TODO Write a test for the play command that checks if the
-   start-column parameter is properly handled
-
-* Engine
-** TODO Alpha/Beta-Pruning
-** TODO Check calculation of column-weights for width 7 
-   (weights should differ for each column but they do not)
+** TODO Write test for column-weight calculation of engine
+** TODO Write test for start-column argument of play function of engine:play
 
 * Connect4-Console / CFI-Server
 ** TODO Formatting of score value ("-0.0")
