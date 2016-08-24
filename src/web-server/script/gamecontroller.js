@@ -108,8 +108,12 @@ GameController.prototype.cellClickHandler = function(evt) {
 		    };
 		    return cb(null, isFour);
 		}));
+		var curPlacement = board.getCcfiPlacement();
+		// Put players move into the board now because
+		// waiting for the response results in too much latency
+		board.setFieldToken(c.x, targetRow, that.humanPlayersToken);
 		that.cfiClient.sendCommand(
-		    ['play', board.getCcfiPlacement(), that.humanPlayersToken, '1', '--column', c.x].join(' '));
+		    ['play', curPlacement, that.humanPlayersToken, '1', '--column', c.x].join(' '));
 	    },
 	    // Check if still a move is available
 	    function(finalGameStateReached, cb) {
