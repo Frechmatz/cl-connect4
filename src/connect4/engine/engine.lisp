@@ -8,14 +8,12 @@
   (if (eq color WHITE) BLACK WHITE))
 
 (defparameter *COLUMN-WEIGHTS-PLATEAU-BORDER* 2)
-(defun calc-column-weights (board-width)
-  "Calculate a weight for each column. The nearer to the center the higher the weight"
-  (let ((weights (make-array board-width)))
-    (flet ((is-plateau (column-0)
-	     (and (>= column-0 *COLUMN-WEIGHTS-PLATEAU-BORDER*) (< column-0 (- board-width *COLUMN-WEIGHTS-PLATEAU-BORDER*)))))
-      (dotimes (x board-width)
-	(setf (aref weights x) (if (is-plateau x) 1.0 0.5))))
-    weights))
+(defun calc-column-weight (board column-0)
+  "Calculate a weight for a column. 0 >= column-0 < board-width"
+  (let ((board-width (get-width board)))
+    (if (and (>= column-0 *COLUMN-WEIGHTS-PLATEAU-BORDER*) (< column-0 (- board-width *COLUMN-WEIGHTS-PLATEAU-BORDER*)))
+	1.0
+	0.5)))
 
 (defun board-score (board x y)
   "Evaluate the score of the board. x y: The current move. 
@@ -56,8 +54,7 @@
     calculation.
   Returns an instance of engine:playresult"
   (let ((board-ctrl (make-instance 'board-controller :board board))
-	(column-filter start-column)
-	(column-weights (calc-column-weights (get-width board))))
+	(column-filter start-column))
     (labels ((minmax-inner (color is-opponent cur-depth)
 	       (let ((fn (funcall info-fn)))
 		 (if fn (funcall fn (list (list :plies (get-count board-ctrl))))))
@@ -97,7 +94,7 @@
 				row-scores
 				is-opponent
 				:get-score-fn (lambda (m) (third m))
-				:get-weight-fn (lambda (m) (aref column-weights (first m)))
+				:get-weight-fn (lambda (m) (calc-column-weight (get-board board-ctrl) (first m)))
 				:skip-randomizer (not (equal cur-depth 1))))))
       (let ((result (minmax-inner color nil 1)))
 	(make-instance 'playresult
