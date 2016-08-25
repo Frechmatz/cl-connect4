@@ -7,26 +7,14 @@
 (defun toggle-color (color)
   (if (eq color WHITE) BLACK WHITE))
 
-(defparameter *PLATEAU-WIDTH-PERCENT* 0.2
-  "Width of weight plateau where columns have the same weight")
-
+(defparameter *COLUMN-WEIGHTS-PLATEAU-BORDER* 2)
 (defun calc-column-weights (board-width)
   "Calculate a weight for each column. The nearer to the center the higher the weight"
-  (let ((weights (make-array board-width))
-	;; 1-based center column (width == 7 -> Center = 4)
-	(center-column-1 (ceiling (/ board-width 2)))
-	(plateau-width-dx (round (/ (* board-width *PLATEAU-WIDTH-PERCENT*) 2))))
-    ;;(format t "~%center-column-1: ~a center-width-dx: ~a~%" center-column-1 center-width-dx)
-    ;; column-1: 1-based current column
-    (flet ((distance (column-1)
-	     (let ((d (abs (- center-column-1 column-1))))
-	       ;;(format t "~%Distance is ~a" d)
-	       (if (<= d plateau-width-dx)
-		   0
-		   d))))
+  (let ((weights (make-array board-width)))
+    (flet ((is-plateau (column-0)
+	     (and (>= column-0 *COLUMN-WEIGHTS-PLATEAU-BORDER*) (< column-0 (- board-width *COLUMN-WEIGHTS-PLATEAU-BORDER*)))))
       (dotimes (x board-width)
-	;; 1 / (1 + Distance from center)
-	(setf (aref weights x) (/ 1.0 (+ 1 (distance (+ 1 x)))))))
+	(setf (aref weights x) (if (is-plateau x) 1.0 0.5))))
     weights))
 
 (defun board-score (board x y)

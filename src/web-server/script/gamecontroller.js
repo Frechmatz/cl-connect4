@@ -15,15 +15,21 @@ GameController.prototype.init = function() {
     this.cfiClient.addListener(new ConsoleListener( ['ping', 'pong']));
     this.cfiClient.init();
     this.setHumanPlayersToken(board.getTokenForX());
+    this.processingFinalState = false;
+    
     footer.hideFinalGameStateIndicator();
     footer.stopActivity();
     footer.setLevel(this.level);
-    
-    footer.setFinalStateContinueHandler( function() {
+
+    this.finalStateContinue = function() {
 	this.processingFinalState = false;
 	footer.hideFinalGameStateIndicator();
 	gameConsole.clear();
 	board.clear();
+    };
+    
+    footer.setFinalStateContinueHandler( function() {
+	this.finalStateContinue();
     }.bind(this));
 
     footer.setToggleColorHandler( function() {
@@ -47,15 +53,13 @@ GameController.prototype.init = function() {
     }.bind(this));
     
     this.isBlockButton = function() {
-    	return this.locked || this.processingFinalState;
+    	return this.locked /* || this.processingFinalState */;
     };
 
     document.getElementById('link-new-game').onclick = function(event) {
 	event.preventDefault();
 	if (!this.isBlockButton()) {
-	    board.clear();
-	    footer.hideFinalGameStateIndicator();
-	    gameConsole.clear();
+	    this.finalStateContinue();
 	}
     }.bind(this);
 
@@ -78,8 +82,11 @@ GameController.prototype.setHumanPlayersToken = function(token) {
   Player has clicked into a cell.
 */
 GameController.prototype.cellClickHandler = function(evt) {
-    if (this.locked || this.processingFinalState) {
+    if (this.locked) {
 	return;
+    }
+    if (this.processingFinalState) {
+	return this.finalStateContinue();
     }
     var c = board.getCellCoordinate(evt.currentTarget);
     var targetRow = board.findRow(c.x);

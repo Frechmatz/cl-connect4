@@ -16,7 +16,6 @@
 ** TODO Support of IE10/11
 ** TODO Responsiveness (better adaption of board rendering according to size of view)
 ** TODO Minimal site for mobile devices
-** TODO Better handling of final game state
 ** TODO Better visualization of info --plies messages (numbers shown in console are hard to read)
 ** TODO Splitter between board and console
 ** TODO Resizing problems. Sometimes the console area gets too narrow

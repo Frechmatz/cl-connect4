@@ -6,7 +6,6 @@
 var Footer = function() {
 
     var footerId = "footer";
-    var clickHereMsg = 'Click here to start a new game.';
     this.activityTimerHandle = null;
     this.activityToggle = null;
     this.initialLevelText = null;
@@ -45,13 +44,13 @@ var Footer = function() {
     };
 
     this.indicateComputerHasWon = function() {
-	indicateFinalStateImpl('COMPUTER_HAS_WON', 'The computer has won. ' + clickHereMsg);
+	indicateFinalStateImpl('COMPUTER_HAS_WON', 'The computer has won.');
     };
     this.indicateHumanHasWon = function() {
-	indicateFinalStateImpl('HUMAN_HAS_WON', 'You have won. ' + clickHereMsg);
+	indicateFinalStateImpl('HUMAN_HAS_WON', 'You have won.');
     };
     this.indicateDraw = function() {
-	indicateFinalStateImpl('DRAW', 'Draw. ' + clickHereMsg);
+	indicateFinalStateImpl('DRAW', 'Draw.');
     };
     this.hideFinalGameStateIndicator = function() {
 	indicateFinalStateImpl(null, '');
