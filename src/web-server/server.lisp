@@ -181,8 +181,10 @@
 		  (:a :class "human-players-token-indicator" :href "#" :title "Toggle Color" (:p "Your Color"))
 		  (:a :class "level-indicator" :href "#" :title "Cycle through levels" (:p "Level {level}"))
 		  (:a :class "final-state-click-to-continue" :href "#" (:p "Click to continue"))
-		  (:div :class "activity-indicator" (:p "The Computer is thinking. Please wait..."))
-		  (:a :class "quit-button" :href "#" (:p "Quit"))
+		  ;; initialize dataset attribute "value" for IE11 compatibility
+		  ;; on-load init via JavaScript doesn't work 
+		  (:div :class "activity-indicator" :data-value "OFF" (:p "The Computer is thinking."))
+		  (:a :class "quit-button" :href "#" :data-value "OFF" (:p "Quit"))
 		  )
 	    )))))
 

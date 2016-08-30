@@ -19,7 +19,7 @@ var Parser = function(paramStr) {
     };
 
     this.asInteger = function(param) {
-	var i = Number.parseInt(param);
+	var i = parseInt(param);
 	return isNaN(i) ? null : i;
     };
 };
