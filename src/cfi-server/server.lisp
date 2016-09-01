@@ -44,7 +44,7 @@
 			    (let ((is-stop-server nil) (next-command nil) (is-quit-commands nil))
 			      (bt:with-lock-held ((slot-value server 'server-lock))
 				(setf is-stop-server (not (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state))))
-				(logger:log-message :debug "Popping queue")
+				;;(logger:log-message :debug "Pop queue")
 				(setf next-command (queues:qpop (slot-value server 'command-queue)))
 				(setf is-quit-commands (slot-value server 'quit-flag)))
 			      (if is-stop-server
