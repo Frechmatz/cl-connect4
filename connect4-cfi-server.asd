@@ -16,6 +16,7 @@
 			:components ((:file "packages")
 				     (:file "token")
 				     (:file "decode-placement")
+				     (:file "formatter-util")
 				     (:file "play-result-formatter")
 				     (:file "info-formatter")
 				     (:file "encode-placement")

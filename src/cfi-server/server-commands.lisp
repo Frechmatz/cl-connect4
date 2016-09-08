@@ -34,8 +34,7 @@
 	   (logger:log-message :info "Notified engine to quit processing"))
        is-quitting))
    :default-return-value nil
-   :is-sticky-return-value t
-   ))
+   :is-sticky-return-value t))
   
 (defun create-lazy-info-handler (server)
   (create-lazy-handler
@@ -44,8 +43,7 @@
      (lambda (info)
        (save-send-message-with-lock server (format-info info))))
    :default-return-value nil
-   :is-sticky-return-value nil
-   ))
+   :is-sticky-return-value nil))
 
 ;;
 ;; Handler invoking stuff
@@ -101,8 +99,7 @@
       (parse depth #'parse-integer)
       :start-column (if column (parse column #'parse-integer) nil)
       :is-quit-fn (create-lazy-quit-play-handler server)
-      :info-fn (create-lazy-info-handler server)
-      ))))
+      :info-fn (create-lazy-info-handler server)))))
   
 (add-handler :play #'play-handler)
 

@@ -8,12 +8,16 @@
   (if (eq color WHITE) BLACK WHITE))
 
 (defparameter *COLUMN-WEIGHTS-PLATEAU-BORDER* 2)
-(defun calc-column-weight (board column-0)
+
+(defun calc-column-weight-impl (board-width column-0)
   "Calculate a weight for a column. 0 >= column-0 < board-width"
-  (let ((board-width (get-width board)))
     (if (and (>= column-0 *COLUMN-WEIGHTS-PLATEAU-BORDER*) (< column-0 (- board-width *COLUMN-WEIGHTS-PLATEAU-BORDER*)))
 	1.0
-	0.5)))
+	0.5))
+
+(defun calc-column-weight (board column-0)
+  "Calculate a weight for a column. 0 >= column-0 < board-width"
+  (calc-column-weight-impl (get-width board) column-0))
 
 (defun board-score (board x y)
   "Evaluate the score of the board. x y: The current move. 
@@ -21,20 +25,17 @@
   (let ((l (length (get-connected-pieces board x y))))
     (if (>= l 4)
 	1.0
-	;; Plain:
-	;; 0.0
-	;; For more aggressive play take into account the length of the row.
-	;; Note: Preference of moves near the center of the board
-	;; is handled by the reduce algorithm. It doesn't make
-	;; sense here due to the score propagation of the minmax algorithm
-	(let ((distance (- 4 l)))
-	  (/ 1 (+ 1 distance))))))
+	;; TODO: Current-Move independent evaluation of the board
+	;; see also reduce::reduce-scores that as a workaround
+	;; takes into consideration a column weight.
+	0.0)))
 
 (defun play (board color max-depth
 	     &key
 	       (start-column nil)
 	       (is-quit-fn (lambda() nil))
 	       (info-fn (lambda() nil)))
+  ;; (declare (optimize (debug 3) (speed 0) (space 0)))
   "Calculate a move.
   board: The board
   color: Computers color
@@ -90,17 +91,20 @@
 				       ;; inner call has given up. use previous result
 				       (push (list x y score (get-path board-ctrl)) row-scores)))))
 			   (undo-set-boardfield board-ctrl)))))
-		 (reduce:reduce-scores
+		 (concatenate 'list (reduce:reduce-scores
 				row-scores
 				is-opponent
 				:get-score-fn (lambda (m) (third m))
 				:get-weight-fn (lambda (m) (calc-column-weight (get-board board-ctrl) (first m)))
-				:skip-randomizer (not (equal cur-depth 1))))))
+				:skip-randomizer (not (equal cur-depth 1)))
+			      (list row-scores)))))
       (let ((result (minmax-inner color nil 1)))
 	(make-instance 'playresult
 		       :color color
 		       :column (first result)
 		       :row (second result)
 		       :score (third result)
-		       :move-sequence (reverse (fourth result)))))))
+		       :move-sequence (reverse (fourth result))
+		       :final-scores (mapcar (lambda (i) (list (first i) (third i))) (fifth result))
+		       )))))
 

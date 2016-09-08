@@ -29,6 +29,7 @@
                         :serial t
                         :components ((:file "packages")
 				     (:file "token")
+				     (:file "formatter-util")
 				     (:file "play-result-formatter")
                                      (:file "decode-placement")))
 	       (:module "test"

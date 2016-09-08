@@ -6,7 +6,8 @@
    (column :initarg :column)
    (row :initarg :row)
    (score :initarg :score)
-   (move-sequence :initarg :move-sequence))
+   (move-sequence :initarg :move-sequence)
+   (final-scores :initarg :final-scores :initform nil))
   (:documentation "Representation of the result returned by engine:play"))
 
 (defun play-result-column (result)
@@ -20,6 +21,10 @@
 (defun play-result-score (result)
   "Get score of move"
   (slot-value result 'score))
+
+(defun play-result-final-scores (result)
+  "Get the final scores. A list of (x score) tuples."
+  (slot-value result 'final-scores))
 
 (defun play-result-is-move (result)
   "Check if any move could be played"

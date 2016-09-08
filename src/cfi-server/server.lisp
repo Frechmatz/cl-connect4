@@ -11,13 +11,14 @@
 ;; called if the server has been stopped. Assumes that a lock is
 ;; being held
 (defun save-send-message-no-lock (server msg)
-  (if (or
-       (eql +SERVER-STATE-INITIALIZED+ (slot-value server 'server-state))
-       (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state)))
-      (progn
-	(logger:log-message :debug (format nil "Sending ~a" msg))
-	(message server msg))
-      (logger:log-message :debug (format nil "Could not send ~a" msg))))
+  (if msg 
+      (if (or
+	   (eql +SERVER-STATE-INITIALIZED+ (slot-value server 'server-state))
+	   (eql +SERVER-STATE-RUNNING+ (slot-value server 'server-state)))
+	  (progn
+	    (logger:log-message :debug (format nil "Sending ~a" msg))
+	    (message server msg))
+	  (logger:log-message :debug (format nil "Could not send ~a" msg)))))
   
 (defun save-send-message-with-lock (server msg)
   (bt:with-lock-held ((slot-value server 'server-lock))
