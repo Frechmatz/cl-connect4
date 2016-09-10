@@ -54,7 +54,6 @@
 				     (:file "board-07")
 				     (:file "board-08")
 				     (:file "board-09")
-				     (:file "board-10")
 				     (:file "board-controller")
 				     ))
 	       (:module "test/cfi-server"

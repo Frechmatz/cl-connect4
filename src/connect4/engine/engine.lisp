@@ -59,17 +59,17 @@
     (labels ((minmax-inner (color is-opponent cur-depth)
 	       (let ((fn (funcall info-fn)))
 		 (if fn (funcall fn (list (list :plies (get-count board-ctrl))))))
-	       ;; row-scores: List of (x y final-score <path>)
-	       ;; where <path> is a List of (x y color static-score)
-	       ;; 0 >= static-score <= 1.0 (not depending on current depth)
-	       ;; -1.0 >= final-score <= 1.0
-	       (let ((row-scores ()))
-		 (let ((next-moves (movegenerator:generate-moves
-				    (get-board board-ctrl)
-				    :column-filter column-filter)))
-		   (setf column-filter nil)
-		   (if (not next-moves)
-		       nil
+	       (let ((next-moves (movegenerator:generate-moves
+				  (get-board board-ctrl)
+				  :column-filter column-filter)))
+		 (setf column-filter nil)
+		 (if (not next-moves)
+		     nil
+		     ;; row-scores: List of (x y final-score <path>)
+		     ;; where <path> is a List of (x y color static-score)
+		     ;; 0 >= static-score <= 1.0 (not depending on current depth)
+		     ;; -1.0 >= final-score <= 1.0
+		     (let ((row-scores ()))
 		       (dolist (move next-moves)
 			 (let ((x (first move)) (y (second move)))
 			   (set-boardfield board-ctrl x y color)
@@ -90,14 +90,14 @@
 				       (push (list x y (third minmax-result) (fourth minmax-result)) row-scores)
 				       ;; inner call has given up. use previous result
 				       (push (list x y score (get-path board-ctrl)) row-scores)))))
-			   (undo-set-boardfield board-ctrl)))))
-		 (concatenate 'list (reduce:reduce-scores
-				row-scores
-				is-opponent
-				:get-score-fn (lambda (m) (third m))
-				:get-weight-fn (lambda (m) (calc-column-weight (get-board board-ctrl) (first m)))
-				:skip-randomizer (not (equal cur-depth 1)))
-			      (list row-scores)))))
+			   (undo-set-boardfield board-ctrl)))
+		       (concatenate 'list (reduce:reduce-scores
+					   row-scores
+					   is-opponent
+					   :get-score-fn (lambda (m) (third m))
+					   :get-weight-fn (lambda (m) (calc-column-weight (get-board board-ctrl) (first m)))
+					   :skip-randomizer (not (equal cur-depth 1)))
+				    (list row-scores)))))))
       (let ((result (minmax-inner color nil 1)))
 	(make-instance 'playresult
 		       :color color
