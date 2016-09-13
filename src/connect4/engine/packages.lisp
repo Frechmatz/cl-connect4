@@ -14,6 +14,7 @@
   (:export :play-result-is-move)
   (:export :play-result-is-four-1)
   (:export :play-result-is-four-n)
+  (:export :play-result-final-scores)
   (:export :play-result-players-move-sequence))
 
 

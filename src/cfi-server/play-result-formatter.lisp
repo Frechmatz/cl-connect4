@@ -16,7 +16,8 @@
        (engine:play-result-players-move-sequence result)
        (lambda (i) (format nil "~a" i))
        :item-separator "/"
-       :string-prefix "--four ")))
+       :string-prefix "--four ")
+      ""))
 
 (defun play-result-formatter-score (result)
   (if (engine:play-result-is-move result)
@@ -41,14 +42,24 @@
 	(engine:play-result-players-color result))
        (lambda (i) (format nil "~a;~a" (first i) (second i)))
        :item-separator "/"
-       :string-prefix "--line ")))
+       :string-prefix "--line ")
+      ""))
+
+(defun play-result-formatter-final-scores (result)
+  (declare (optimize (debug 3) (speed 0) (space 0)))
+  (list-to-string
+   (engine:play-result-final-scores result)
+   (lambda (i) (format nil "~a;~a" (first i) (format-score (second i))))
+   :string-prefix "--scores "
+   :item-separator "/"))
 
 (defun format-play-result (board result)
-  (format nil "bestmove ~a ~a ~a ~a"
+  (format nil "bestmove ~a ~a ~a ~a ~a"
 	  (play-result-formatter-move result)
 	  (play-result-formatter-score result)
 	  (play-result-formatter-four result)
 	  (play-result-formatter-line board result)
+	  (play-result-formatter-final-scores result)
 	  ))
 
 

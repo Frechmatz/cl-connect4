@@ -2,7 +2,6 @@
 
 * Unit Tests
 ** TODO Test move generator
-** TODO Write test for column-weight calculation of engine
 ** TODO Write test for start-column argument of play function of engine:play
 
 * Connect4-Console / CFI-Server
@@ -10,7 +9,7 @@
 
 * Web-Server
 ** TODO Rethink Lisp-magic to determine static/ directory 
-** TODO Broadcast shutdown message when server is stopped
+** TODO Broadcast shutdown message when server is being stopped
 
 * Web-Client
 ** TODO Support of IE10/11

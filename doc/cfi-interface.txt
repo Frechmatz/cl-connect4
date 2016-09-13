@@ -3,6 +3,7 @@ Connect 4 Server Interface
 ==========================
 
 Version 1.0 (08/2016; Olli)
+Version 1.1 (09/2016; Olli) Added final scores to bestmove response
 
 Introduction
 ============
@@ -162,7 +163,11 @@ bestmove
 
 For each play command a "bestmove" response is sent back to the client.
 
-Syntax: bestmove column [--score <score>] [--four column {/column}* [--line column;row {/column;row}*} ] ]
+Syntax: bestmove column
+	[--score <score>]
+	[--four column {/column}* ]
+	[--line column;row {/column;row}* ]
+	[--final-scores column;score {/column;score}* ]
 
 column: NULL or the column that the computer has played. A column
 value of NULL signals that no move was available
@@ -175,6 +180,8 @@ sequence of moves. The move sequence includes the current move.
 
 --line In the case of a direct four the server provides the piece placement that
 establishes the line of connected pieces.
+
+--final-scores The scores on which the final reduce has been applied.
 
 Example:
 
@@ -200,6 +207,11 @@ Example:
 
 > play 3 x
 < bestmove 3 --four 3/3/1
+
+Example:
+
+> play ...
+< bestmove 4 --score -0.00 --final-scores 0:-0.00/2:-0.10/4:-0.00/5:-0.00
 
 info
 ----
