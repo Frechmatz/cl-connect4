@@ -33,37 +33,16 @@
 	   moves)
 	  ))))
 
-(defun get-max-weighted-moves (moves get-weight-fn)
-  (if (equal 1 (length moves))
-      moves
-      (let ((comparison-fn #'>))
-	(let ((move (reduce (lambda (best item)
-			      (if (funcall comparison-fn
-					   (funcall get-weight-fn item)
-					   (funcall get-weight-fn best))
-				  item
-				  best))
-			      moves)))
-	  (remove-if-not
-	   (lambda (cur-move) (equal
-			       (funcall get-weight-fn cur-move)
-			       (funcall get-weight-fn move)))
-	   moves)))))
-
-
-(defun reduce-scores (moves is-opponent &key get-score-fn get-weight-fn (skip-randomizer nil))
+(defun reduce-scores (moves is-opponent &key get-score-fn (skip-randomizer nil))
   "Reduce list of possible moves.
   moves: list of moves
   get-score-fn: function that returns the score of a move
-  get-weight-fn: function that returns the weight of a move. The weight is used to
-  distinguish between same scored moves.
   skip-randomizer: nil -> If multiple moves are available choose a random one. t -> choose first one
   returns move with minimum or maximum score"
   (if (not moves)
       nil
       (progn 
 	(let ((resulting-moves (get-reduced-scores moves is-opponent get-score-fn)))
-	  (setf resulting-moves (get-max-weighted-moves resulting-moves get-weight-fn))
 	  (if (not skip-randomizer)
 	      (get-random-entry resulting-moves)
 	      (first resulting-moves))))))
