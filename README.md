@@ -63,6 +63,6 @@ Stop the server:
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/lowres-web-1.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/Connect4-2016-10-03-001-lowres.jpg)
 
-[[Hi-Res](https://raw.github.com/frechmatz/connect4/master/screenshots/highres-web-1.jpg)]
+[[Hi-Res](https://raw.github.com/frechmatz/connect4/master/screenshots/Connect4-2016-10-03-001-hires.jpg)]
