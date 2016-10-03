@@ -8,13 +8,12 @@
   (if (eq color WHITE) BLACK WHITE))
 
 (defun board-score (board x y)
-  "Evaluate the score of the board. x y: The current move. 
+  "Evaluate the score of the board. 
+   x y: The current move. 
    Returns a value 0 >= value <= 1, where 1 signals a winning position"
-  (let ((l (length (get-connected-pieces board x y))))
-    (if (>= l 4)
-	1.0
-	;; TODO: Current-Move independent evaluation of the board
-	0.0)))
+  (if (>= (length (get-connected-pieces board x y)) 4)
+      1.0
+      (get-board-variance board (board:get-field board x y))))
 
 (defun play (board color max-depth
 	     &key
@@ -33,8 +32,8 @@
     to the calling instance to take measures in order to not slow down the 
     calculation.
   info-fn: A function to be called to determine if information about the current 
-    game play status is to be provided. Returns a function or nil. If info-fn
-    returns a function, the returned function will be called back with an 
+    game play status is to be provided. Returns a function or nil. If a
+    function is returned, it will be called with an 
     assoc list representing some statuses/statistics of the current game play.
     This function is called with a very high frequency. It's up
     to the calling instance to take measures in order to not slow down the 

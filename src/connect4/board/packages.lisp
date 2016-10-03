@@ -17,5 +17,7 @@
   (:export :set-field)
   (:export :nclear-field)
   (:export :clear-field)
+  (:export :scan-board)
+  (:export :scan-board-all-directions)
   )
 

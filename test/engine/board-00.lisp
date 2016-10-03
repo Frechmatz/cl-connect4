@@ -38,6 +38,7 @@
 		     (create-board-00)
 		     board:WHITE
 		     6)))
+	       (format t "board-00-c Column: ~a~%" (play-result-column result))
 	       (assert-played-column result '(2))
 	       (assert-is-mate result)))
 

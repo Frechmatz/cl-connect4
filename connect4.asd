@@ -23,6 +23,7 @@
 			:components ((:file "packages")
 				     (:file "playresult")
 				     (:file "board-controller")
+				     (:file "board-variance")
 				     (:file "engine")
 				     ))
    ))

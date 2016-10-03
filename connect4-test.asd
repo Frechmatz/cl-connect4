@@ -24,6 +24,7 @@
                         :components ((:file "packages")
 				     (:file "board-controller")
 				     (:file "playresult")
+				     (:file "board-variance")
                                      (:file "engine")))
 	       (:module "src/cfi-server"
                         :serial t

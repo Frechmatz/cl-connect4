@@ -41,9 +41,8 @@
   returns move with minimum or maximum score"
   (if (not moves)
       nil
-      (progn 
-	(let ((resulting-moves (get-reduced-scores moves is-opponent get-score-fn)))
-	  (if (not skip-randomizer)
-	      (get-random-entry resulting-moves)
-	      (first resulting-moves))))))
+      (let ((resulting-moves (get-reduced-scores moves is-opponent get-score-fn)))
+	(if (not skip-randomizer)
+	    (get-random-entry resulting-moves)
+	    (first resulting-moves)))))
 

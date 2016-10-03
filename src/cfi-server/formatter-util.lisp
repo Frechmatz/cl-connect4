@@ -12,4 +12,4 @@
       ""))
 
 (defun format-score (s)
-  (format nil "~$" s))
+  (format nil "~f" s))
