@@ -22,6 +22,7 @@ cl-who
 hunchentoot
 hunchensocket
 cl-svg
+bordeaux-threads
 ```
 There are no dependencies on third-party JavaScript/CSS libraries
 
@@ -39,7 +40,9 @@ For monochrome output, not using ANSI escape sequences:
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/gameplay.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/lowres-console-1.jpg)
+
+[[Hi-Res](https://raw.github.com/frechmatz/connect4/master/screenshots/highres-console-1.jpg)]
 
 ## Run the Web-Client
 
@@ -60,4 +63,40 @@ Stop the server:
 
 ### Screenshots
 
-![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/client1.jpg)
+![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/Connect4-2016-10-03-001-lowres.jpg)
+
+[[Hi-Res](https://raw.github.com/frechmatz/connect4/master/screenshots/Connect4-2016-10-03-001-hires.png)]
+
+
+## The CFI-Server command line client
+
+Mainly for debugging purposes there is also a command line client for the CFI-Server available.
+It can be used as follows:
+
+```bash
+sbcl
+* (asdf:load-system "connect4-cfi-console")
+* (connect4-cfi-console:lets-go)
+Instantiated server
+Enter Cfi command
+start
+started
+Enter Cfi command
+ping
+pong
+Enter Cfi command
+play 4/4/4/4 x 6
+Enter Cfi command
+bestmove 3 --score -0.0000012109375
+stop
+Stopping server...
+Stopping server...
+Server stopped
+NIL
+*
+```
+
+
+
+
+
