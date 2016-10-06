@@ -1,5 +1,5 @@
 # Connect4
-#### A Common Lisp implementation of the Connect Four game. Play against the computer via the Console or the Web-Browser.
+#### A Common Lisp implementation of the Connect Four game. Comes with a Web and a Console User-Interface.
 
 ## Installation
 
@@ -46,6 +46,8 @@ For monochrome output, not using ANSI escape sequences:
 
 ## Run the Web-Client
 
+The Web-Client communicates via a Web-Socket with its server, using the [[Connect Four Interface (CFI) specification](https://raw.github.com/frechmatz/connect4/master/doc/cfi-interface.txt)]
+
 Start the server:
 ```bash
 sbcl
@@ -66,3 +68,36 @@ Stop the server:
 ![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/Connect4-2016-10-03-001-lowres.jpg)
 
 [[Hi-Res](https://raw.github.com/frechmatz/connect4/master/screenshots/Connect4-2016-10-03-001-hires.png)]
+
+
+## The CFI-Server command line client
+
+Mostly for debugging purposes there is also a command line client for the CFI-Server available.
+
+```bash
+sbcl
+* (asdf:load-system "connect4-cfi-console")
+* (connect4-cfi-console:lets-go)
+Instantiated server
+Enter Cfi command
+start
+started
+Enter Cfi command
+ping
+pong
+Enter Cfi command
+play 4/4/4/4 x 6
+Enter Cfi command
+bestmove 3 --score -0.0000012109375
+stop
+Stopping server...
+Stopping server...
+Server stopped
+NIL
+*
+```
+
+
+
+
+
