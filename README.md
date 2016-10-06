@@ -1,5 +1,5 @@
 # Connect4
-#### A Common Lisp implementation of the Connect Four game. Comes with a Web and a Console User-Interface.
+#### A Common Lisp implementation of the Connect Four game. Comes with a Web and a Console client.
 
 ## Installation
 
