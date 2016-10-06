@@ -1,5 +1,5 @@
 # Connect4
-#### A Common Lisp implementation of the Connect Four game. Play against the computer via the Console or the Web-Browser.
+#### A Common Lisp implementation of the Connect Four game. Comes with a Web and a Console User-Interface.
 
 ## Installation
 
@@ -70,7 +70,7 @@ Stop the server:
 
 ## The CFI-Server command line client
 
-Mainly for debugging purposes there is also a command line client for the CFI-Server available.
+Mostly for debugging purposes there is also a command line client for the CFI-Server available.
 It can be used as follows:
 
 ```bash
