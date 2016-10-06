@@ -46,6 +46,8 @@ For monochrome output, not using ANSI escape sequences:
 
 ## Run the Web-Client
 
+The Web-Client communicates via a Web-Socket with its server, using the [[Connect Four Interface (CFI) specification](https://raw.github.com/frechmatz/connect4/master/doc/cfi-interface.txt)]
+
 Start the server:
 ```bash
 sbcl
