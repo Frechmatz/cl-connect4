@@ -73,7 +73,6 @@ Stop the server:
 ## The CFI-Server command line client
 
 Mostly for debugging purposes there is also a command line client for the CFI-Server available.
-It can be used as follows:
 
 ```bash
 sbcl
