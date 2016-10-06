@@ -3,16 +3,14 @@
 * Unit Tests
 ** TODO Test move generator
 ** TODO Write test for start-column argument of play function of engine:play
-
-* Connect4-Console / CFI-Server
-** TODO Formatting of score value ("-0.0")
+** TODO Test board variance calculation
 
 * Web-Server
 ** TODO Rethink Lisp-magic to determine static/ directory 
 ** TODO Broadcast shutdown message when server is being stopped
 
 * Web-Client
-** TODO Support of IE10/11
+** TODO Support of IE10/11 (CSS dataset-depending rules in footer)
 ** TODO Responsiveness (better adaption of board rendering according to size of view)
 ** TODO Minimal site for mobile devices
 ** TODO Better visualization of info --plies messages (numbers shown in console are hard to read)

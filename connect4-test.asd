@@ -46,7 +46,6 @@
                         :serial t
                         :components ((:file "testutil")
                                      (:file "detect-four")
-                                     (:file "board-score")
 				     (:file "full-board")
                                      (:file "board-00")
                                      (:file "board-01")
