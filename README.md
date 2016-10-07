@@ -3,7 +3,7 @@
 
 ## Installation
 
-Clone the project and add the following systems to your asdf-system path:
+Clone the project and add the following systems to the asdf-system path:
 
 ```bash
 connect4
