@@ -74,7 +74,7 @@ Stop the server:
 
 Mostly for debugging purposes there is also a command line client for the CFI-Server available.
 
-```bash
+```
 sbcl
 * (asdf:load-system "connect4-cfi-console")
 * (connect4-cfi-console:lets-go)
