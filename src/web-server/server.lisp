@@ -47,7 +47,7 @@
 	  (logger:log-message :info (format nil "Root page requested. Query parameters: ~a" (hunchentoot:query-string*)))
 	  (setf (hunchentoot:content-type*) "text/html")
 	  (start-page
-	   :dx (param-as-integer (hunchentoot:query-string*) "dx" :default-value 6 :min-value 2 :max-value 20)
+	   :dx (param-as-integer (hunchentoot:query-string*) "dx" :default-value 10 :min-value 2 :max-value 20)
 	   :dy (param-as-integer (hunchentoot:query-string*) "dy" :default-value 5 :min-value 2 :max-value 20)))
 	(hunchentoot:define-easy-handler (buttons-debug :uri "/buttons/debug.svg") ()
 	  (setf (hunchentoot:content-type*) "image/svg+xml")
