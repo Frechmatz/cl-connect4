@@ -3,7 +3,7 @@
 
 ## Installation
 
-Clone the project and add the following systems to your asdf-system path:
+Clone the project and add the following systems to the asdf-system path:
 
 ```bash
 connect4
@@ -74,7 +74,7 @@ Stop the server:
 
 Mostly for debugging purposes there is also a command line client for the CFI-Server available.
 
-```bash
+```
 sbcl
 * (asdf:load-system "connect4-cfi-console")
 * (connect4-cfi-console:lets-go)
