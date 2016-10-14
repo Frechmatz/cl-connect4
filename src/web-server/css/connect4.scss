@@ -2,17 +2,45 @@
 sass --watch connect4.scss:connect4.css
  */
 
-$section-background-color: blue;
-$section-font-color: yellow;
 
+/*
+   Color definitions
+*/
+$body-background-color: white;
+$page-wrapper-background-color: yellow;
+
+$header-background-color: blue;
+$header-font-color: yellow;
+
+$footer-background-color: blue;
+$footer-font-color: yellow;
+$footer-activity-indicator-0-background-color: yellow;
+$footer-activity-indicator-0-font-color: black;
+$footer-activity-indicator-1-background-color: black;
+$footer-activity-indicator-1-font-color: yellow;
+$footer-quit-background-color: black;
+$footer-quit-font-color: yellow;
+$footer-finalstate-indicator-background-color: white;
+$footer-finalstate-indicator-font-color: black;
+$footer-level-indicator-background-color: yellow;
+$footer-level-indicator-font-color: blue;
+
+$navbar-background-color: blue;
+$navbar-font-color: yellow;
+
+$console-background-color: black;
+$console-font-color: lime;
+
+$cell-color-empty: white;
 $cell-color-o: green;
 $cell-color-x: red;
- 
 $cell-color-o-highlight: palegreen;
-// https://upload.wikimedia.org/wikipedia/commons/f/fd/Color_icon_red.svg
 $cell-color-x-highlight: #fe8484;
 
 $playground-background-color: violet;
+
+/*
+*/
 
 $navbar-width: 60px;
 
@@ -101,24 +129,22 @@ Inner CCFI console
     height: 100%;
 }
 .page-wrapper {
-    background-color: yellow;
+    background-color: $page-wrapper-background-color;
 }
 
 /*       
 Styling Background
 */
 body {
-    background-color: linen;
+    background-color: $body-background-color;
 }
 
 /*
 Styling navbar
 */
 .navbar {
-    background-color: $section-background-color;
-}
-.navbar span {
-    color: yellow;
+    background-color: $navbar-background-color;
+    color: $navbar-font-color;
 }
 
 .navbar ul {
@@ -184,7 +210,8 @@ Styling playground
 Styling: Header
 */
 .header {
-    background-color: $section-background-color;
+    background-color: $header-background-color;
+    color: $header-font-color;
     background-image: url(/static/made-with-lisp-ellipse.png);
     background-repeat: no-repeat;
     background-size: contain;
@@ -194,7 +221,6 @@ Styling: Header
 .header h1 {
     margin: 0;
     margin-left: 5px;
-    color: yellow;
     position: absolute;
     top: 50%;
     -webkit-transform: translate(0, -50%);
@@ -205,7 +231,8 @@ Styling: Header
 Styling: Footer
 */
 .footer {
-    background-color: $section-background-color;
+    background-color: $footer-background-color;
+    color: $footer-font-color;
     display: flex;
     display: -webkit-flex;
     align-items: center;
@@ -232,17 +259,19 @@ Styling: Footer
     padding-right: 6px;
     height: calc( #{$footer-height} - 10px);
     margin-left: 5px;
-    background-color: $playground-background-color;
+    background-color: $footer-level-indicator-background-color;
+    color: $footer-level-indicator-font-color;
 }
-
 
 .footer .final-state-click-to-continue {
     padding-left: 6px;
     padding-right: 6px;
     height: calc( #{$footer-height} - 10px);
     margin-left: 5px;
-    background-color: white;
+    background-color: $footer-finalstate-indicator-background-color;
+    color: $footer-finalstate-indicator-font-color;    
 }
+
 .footer .final-state-click-to-continue[data-value="OFF"] {
     display: none;
 }
@@ -264,8 +293,6 @@ Activity indicator
     padding-left: 6px;
     padding-right: 6px;
     height: calc( #{$footer-height} - 10px);
-    color: $section-font-color;
-    background-color: green;
     margin-left: 5px;
 }
 .footer .activity-indicator[data-value="OFF"] {
@@ -273,13 +300,13 @@ Activity indicator
 }
 .footer .activity-indicator[data-value="1"] {
     display: block;
-    background-color: black;
-    color: yellow;
+    background-color: $footer-activity-indicator-1-background-color;
+    color: $footer-activity-indicator-1-font-color;    
 }
 .footer .activity-indicator[data-value="0"] {
     display: block;
-    background-color: yellow;
-    color: black;
+    background-color: $footer-activity-indicator-0-background-color;
+    color: $footer-activity-indicator-0-font-color;
 }
 
 /*
@@ -289,8 +316,8 @@ Quit-Button
     padding-left: 6px;
     padding-right: 6px;
     height: calc( #{$footer-height} - 10px);
-    color: $section-font-color;
-    background-color: green;
+    color: $footer-quit-font-color;
+    background-color: $footer-quit-background-color;
     margin-left: 5px;
 }
 .footer .quit-button[data-value="OFF"] {
@@ -298,19 +325,14 @@ Quit-Button
 }
 .footer .quit-button[data-value="ON"] {
     display: block;
-    background-color: black;
-    color: yellow;
 }
 
 /*
 Styling: Console
 */
 .console-textarea {
-    background-color: black;
-    color: lime;
-}
-.body .console {
-    background-color: yellow;
+    background-color: $console-background-color;
+    color: $console-font-color;
 }
 
 /*
@@ -347,7 +369,7 @@ Styling: Board
     background-color: $cell-color-x;
 }
 .board-cell[data-token="_"] {
-    background-color: white;
+    background-color: $cell-color-empty;
 }
 .board-cell[data-token="o"] {
     background-color: $cell-color-o;
@@ -373,8 +395,8 @@ Styling of board size form
 
 .set-board-size-form {
     border: solid;
-    background: $section-background-color;
-    color: $section-font-color;
+    background: $navbar-background-color;
+    color: $navbar-font-color;
     border-color: $playground-background-color;
 }
 
@@ -384,7 +406,6 @@ Styling of board size form
 
 .set-board-size-form .title {
     width: 100%;
-    color: $section-font-color;
 }
 
 .set-board-size-form .input-group {

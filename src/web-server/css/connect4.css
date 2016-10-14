@@ -1,0 +1,350 @@
+@charset "UTF-8";
+/*
+sass --watch connect4.scss:connect4.css
+ */
+/*
+   Color definitions
+*/
+/*
+*/
+.page-wrapper {
+  padding: 20px; }
+
+/* 
+Placement of main blocks 
+*/
+.header {
+  height: 20vh;
+  width: 100%; }
+
+.header h1 {
+  font-size: 18vh; }
+
+.footer {
+  height: 10vh;
+  margin-top: 20px;
+  width: 100%; }
+
+.body {
+  width: 100%;
+  margin-top: 20px;
+  /*
+  100%
+  - 2*WrapperPadding
+  - HeaderHeight
+  - FooterHeight
+  - FooterMargin
+  - BodyMargin
+  */
+  height: calc(100vh - 40px - 20vh - 10vh - 20px - 20px); }
+
+/*
+Layout of Body: Navbar, Playground, Console
+*/
+.body {
+  flex-flow: row;
+  display: flex;
+  display: -webkit-flex; }
+
+.body .navbar {
+  width: 60px;
+  margin-right: 20px; }
+
+.body .console {
+  width: 30em;
+  margin-left: 20px; }
+
+.body .playground {
+  flex: 1;
+  -webkit-flex: 1; }
+
+.playground .board {
+  height: 100%; }
+
+/*
+Inner playground
+*/
+.board .board-table {
+  /* Board will be resized via JavaScript */
+  width: 100%;
+  height: 100%; }
+
+/*
+Inner CCFI console
+*/
+.console .console-content {
+  width: 100%;
+  height: 100%; }
+
+.console .console-textarea {
+  width: 100%;
+  height: 100%; }
+
+.page-wrapper {
+  background-color: yellow; }
+
+/*       
+Styling Background
+*/
+body {
+  background-color: white; }
+
+/*
+Styling navbar
+*/
+.navbar {
+  background-color: blue;
+  color: yellow; }
+
+.navbar ul {
+  /* Bullet entfernen und Abstand vom Rand auf. */
+  /* Wichtig für die Unterdivs, da deren Referenzpunkt der Text des List-Items/Links ist*/
+  /* Jetzt kann ich die x-position des Unterdialogs relativ zur Breite der Toolbar setzen */
+  list-style-type: none;
+  padding-left: 0px;
+  margin-left: 0px;
+  /* Bei Float-Positionierung der Toolbar geht der Margin mit rein (weil das Element keinen
+        direkten Nachbarn mehr hat.) */
+  margin-top: 0px;
+  margin-bottom: 0px; }
+
+.navbaritem {
+  display: block;
+  position: relative; }
+
+.navbaritem:hover .navbaritemsubdialog {
+  display: block;
+  position: absolute;
+  left: 60px;
+  top: -5px; }
+
+.navbaritemsubdialog {
+  display: none;
+  z-index: 5000; }
+
+.navbar a {
+  background-repeat: no-repeat;
+  display: block;
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  margin: 5px; }
+
+.navbar a span {
+  display: none; }
+
+.navbar .link-new-game {
+  stroke-width: 20;
+  background-image: url("/buttons/newgame.svg"); }
+
+.navbar .link-toggle-color {
+  background-image: url("/buttons/togglecolor.svg"); }
+
+.navbar .link-set-board-size {
+  background-image: url("/static/setboardsize.svg"); }
+
+/*
+Styling playground 
+*/
+.body .playground {
+  background-color: violet; }
+
+/*
+Styling: Header
+*/
+.header {
+  background-color: blue;
+  color: yellow;
+  background-image: url(/static/made-with-lisp-ellipse.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: right;
+  position: relative; }
+
+.header h1 {
+  margin: 0;
+  margin-left: 5px;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%); }
+
+/*
+Styling: Footer
+*/
+.footer {
+  background-color: blue;
+  color: yellow;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center; }
+
+.footer .human-players-token-indicator {
+  display: block;
+  padding-left: 6px;
+  padding-right: 6px;
+  height: calc( 10vh - 10px);
+  margin-left: 5px; }
+
+.footer .human-players-token-indicator[data-human-players-token="x"] {
+  background-color: red; }
+
+.footer .human-players-token-indicator[data-human-players-token="o"] {
+  background-color: green; }
+
+.footer .level-indicator {
+  display: block;
+  padding-left: 6px;
+  padding-right: 6px;
+  height: calc( 10vh - 10px);
+  margin-left: 5px;
+  background-color: yellow;
+  color: blue; }
+
+.footer .final-state-click-to-continue {
+  padding-left: 6px;
+  padding-right: 6px;
+  height: calc( 10vh - 10px);
+  margin-left: 5px;
+  background-color: white;
+  color: black; }
+
+.footer .final-state-click-to-continue[data-value="OFF"] {
+  display: none; }
+
+.footer .final-state-click-to-continue[data-value="HUMAN_HAS_WON"] {
+  display: block; }
+
+.footer .final-state-click-to-continue[data-value="COMPUTER_HAS_WON"] {
+  display: block; }
+
+.footer .final-state-click-to-continue[data-value="DRAW"] {
+  display: block; }
+
+/*
+Activity indicator
+ */
+.footer .activity-indicator {
+  padding-left: 6px;
+  padding-right: 6px;
+  height: calc( 10vh - 10px);
+  margin-left: 5px; }
+
+.footer .activity-indicator[data-value="OFF"] {
+  display: none; }
+
+.footer .activity-indicator[data-value="1"] {
+  display: block;
+  background-color: black;
+  color: yellow; }
+
+.footer .activity-indicator[data-value="0"] {
+  display: block;
+  background-color: yellow;
+  color: black; }
+
+/*
+Quit-Button
+*/
+.footer .quit-button {
+  padding-left: 6px;
+  padding-right: 6px;
+  height: calc( 10vh - 10px);
+  color: yellow;
+  background-color: black;
+  margin-left: 5px; }
+
+.footer .quit-button[data-value="OFF"] {
+  display: none; }
+
+.footer .quit-button[data-value="ON"] {
+  display: block; }
+
+/*
+Styling: Console
+*/
+.console-textarea {
+  background-color: black;
+  color: lime; }
+
+/*
+Styling: Board
+*/
+.board-table {
+  border-collapse: collapse; }
+
+.board-table th,
+.board-table td {
+  border: 1px solid black;
+  border-collapse: collapse; }
+
+.board-cell-marker[data-value="ON"] {
+  background-color: black;
+  display: block; }
+
+.board-cell-marker[data-value="OFF"] {
+  background-color: black;
+  display: none; }
+
+.board-cell-marker[data-value="x"] {
+  background-color: #fe8484;
+  display: block; }
+
+.board-cell-marker[data-value="o"] {
+  background-color: palegreen;
+  display: block; }
+
+.board-cell[data-token="x"] {
+  background-color: red; }
+
+.board-cell[data-token="_"] {
+  background-color: white; }
+
+.board-cell[data-token="o"] {
+  background-color: green; }
+
+/*
+hover cell styles must be declared after non-hover ones
+data-human-players-token will be set during gameplay
+the purpose of this token is to avoid css injection via javascript
+*/
+.board-cell[data-token="_"][data-human-players-token="x"]:hover {
+  background-color: #fe8484;
+  cursor: s-resize; }
+
+.board-cell[data-token="_"][data-human-players-token="o"]:hover {
+  background-color: palegreen;
+  cursor: s-resize; }
+
+/*
+Styling of board size form 
+*/
+.set-board-size-form {
+  border: solid;
+  background: blue;
+  color: yellow;
+  border-color: violet; }
+
+.set-board-size-form .wrapper {
+  margin: 10px 10px 10px 10px; }
+
+.set-board-size-form .title {
+  width: 100%; }
+
+.set-board-size-form .input-group {
+  display: flex;
+  display: -webkit-flex;
+  padding-bottom: 5px; }
+
+/*
+Set width relative to width of '0' character 
+because we haven't explicitly set a font-size and therefore
+it has the default value of 16px which is way too large
+*/
+.set-board-size-form label {
+  width: 8ch; }
+
+.set-board-size-form .input {
+  width: 20ch; }
+
+/*# sourceMappingURL=connect4.css.map */
