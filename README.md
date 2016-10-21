@@ -53,6 +53,10 @@ Start the server:
 sbcl
 * (asdf:load-system "connect4-web-server")
 * (connect4-web-server:start)
+Hi there. The web server has been started.
+The server can be reached via http://localhost:7999
+The websocket server has been started.
+The websocket server can be reached via http://localhost:7998
 ```
 Enter the following Url into your browser to start a game:
 ```bash
