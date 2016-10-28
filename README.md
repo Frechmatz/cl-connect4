@@ -3,13 +3,14 @@
 
 ## Installation
 
-Clone the project and add the following systems to the asdf-system path:
+Clone the project and add the following systems to the asdf-system path (all pointing to the root of connect4):
 
 ```bash
 connect4
 connect4-console
 connect4-cfi-server
 connect4-web-server
+connect4-cfi-console
 ```
 
 Dependencies (all installable via quicklisp):
@@ -42,7 +43,7 @@ For monochrome output, not using ANSI escape sequences:
 
 ![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/lowres-console-1.jpg)
 
-[[Hi-Res](https://raw.github.com/frechmatz/connect4/master/screenshots/highres-console-1.jpg)]
+[[Hi-Res-Screenshot](https://raw.github.com/frechmatz/connect4/master/screenshots/highres-console-1.jpg)]
 
 ## Run the Web-Client
 
@@ -58,7 +59,7 @@ The server can be reached via http://localhost:7999
 The websocket server has been started.
 The websocket server can be reached via http://localhost:7998
 ```
-Enter the following Url into your browser to start a game:
+Enter the following Url into the browser to start a game:
 ```bash
 http://localhost:7999
 ```
@@ -71,7 +72,7 @@ Stop the server:
 
 ![Screenshot Won](https://raw.github.com/frechmatz/connect4/master/screenshots/Connect4-2016-10-03-001-lowres.jpg)
 
-[[Hi-Res](https://raw.github.com/frechmatz/connect4/master/screenshots/Connect4-2016-10-03-001-hires.png)]
+[[Hi-Res-Screenshot](https://raw.github.com/frechmatz/connect4/master/screenshots/Connect4-2016-10-03-001-hires.png)]
 
 
 ## The CFI-Server command line client
