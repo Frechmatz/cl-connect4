@@ -1,6 +1,6 @@
 
-Connect 4 Server Interface 
-==========================
+Connect Four Server Interface 
+=============================
 
 Version 1.0 (08/2016; Olli)
 Version 1.1 (09/2016; Olli) Added final scores to bestmove response
@@ -9,16 +9,12 @@ Version 1.1.1 (10/2016; Olli) Better examples and wording
 Introduction
 ============
 
-This document specifies the interface of a Connect Four Game Server. The emphasis is
-on easy implementation for both clients and servers. The interface doesn't
-support features such as pondering or a clock.
+This document specifies an interface of a Connect Four Game Server.
 
 Key points:
 
 - The communication between client and server is text based.
-
 - The communication is asynchronous.
-
 - The server doesn't hold a game state.
 
 Token, Coordinate System, Placement
@@ -35,17 +31,17 @@ The two pieces of the game are represented by the tokens 'x' and 'o'.
 Coordinate system
 -----------------
 
-- The bottom left corner of the board has the coordinate (x=0, y=0)
-- The upper left corner has the coordinate (x=0, y=height-1)
-- The bottom right corner has the coordinate (x=width-1, y=0)
-- The upper right corner has the coordinate (x=width-1, y=height-1)
+- The bottom left corner of the board has the coordinate (x=0, y=0).
+- The upper left corner has the coordinate (x=0, y=height-1).
+- The bottom right corner has the coordinate (x=width-1, y=0).
+- The upper right corner has the coordinate (x=width-1, y=height-1).
 
 Piece placement
 ---------------
 
 - The placement consists of a string containing the rows of the board.
 - Rows are separated by the '/' (slash) character.
-- The placement string starts with the bottom row (y = 0)
+- The placement string starts with the bottom row (y = 0).
 - Each row specifies the piece placement from left to right.
 - An occupied field is represented by it's token.
 - Empty fields are represented by a number that is the count of
@@ -59,13 +55,13 @@ The placement string is: 7/7/7/7/7/7
 
 Example:
 
-The board:
+For the  board
 _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ x
 o _ _ x x x _ o
 o o _ o x o _ x
 
-The placement string is: oo1oxo1x/o2xxx1o/7x/8
+the placement string is: oo1oxo1x/o2xxx1o/7x/8
 
 Commands
 ========
@@ -178,7 +174,7 @@ sequence of moves. The move sequence includes the current move.
 --line In the case of a direct four the server provides the piece placement that
 establishes the line of connected pieces.
 
---final-scores The scores on which the final reduce has been applied.
+--final-scores The score of each column the computer has investigated.
 
 Example:
 
@@ -230,4 +226,5 @@ Example:
 
 > play 6/6/6 a 1
 < debug Command PLAY called with invalid arguments.
+
 
