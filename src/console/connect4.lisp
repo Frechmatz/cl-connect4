@@ -57,6 +57,7 @@
 		  (get-help-texts command-table :short t))))
 
 (defun game-command-print-help-text (context command-table)
+  (declare (ignore context))
   (print-help-text command-table)
   t)
 
