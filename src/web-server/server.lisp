@@ -90,28 +90,19 @@
   (if *websocket-server*
       (format t "~%Websocket server already running~%")
       (progn
-	(setf *websocket-server* (make-instance 'hunchensocket:websocket-acceptor :port *websocket-port*))
-	(hunchentoot:start *websocket-server*)
-	(format t "~%The websocket server has been started.")
-	(format t "~%The websocket server can be reached via http://localhost:~a" *websocket-port*)
-	)
-  ))
+	(setf *websocket-server* (connect4-cfi-websocket::start-server :port *websocket-port*)))))
 
 (defun stop-websocket-server ()
   (if (not *websocket-server*)
       (format t "~%Websocket server is not running")
       (let ((srv *websocket-server*))
 	(setf *websocket-server* nil)
-	(hunchentoot:stop srv)
-	(format t "~%The websocket server has been stopped.")
-	)))
-
+	(connect4-cfi-websocket::stop-server srv))))
 
 (defun start ()
   (start-main-server)
   (start-websocket-server))
 
-  
 (defun stop ()
   (stop-main-server)
   (stop-websocket-server))

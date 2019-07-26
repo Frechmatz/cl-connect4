@@ -1,45 +1,52 @@
-#|
-CFI-Server as a websocket
-|#
-
 (in-package :connect4-cfi-websocket)
 
-(defclass connect4-server (cfi-server:cfi-server)
-  ((websocket-client :initform "Olli" :accessor websocket-client :initarg :websocket-client)))
+;;
+;; Class that implements the message interface of cfi-server
+;;
 
-(defclass cfi-resource (hunchensocket:websocket-resource)
-  ((name :initarg :name :initform (error "Name this resource") :reader name))
-  (:default-initargs :client-class 'cfi-client))
+(defclass cl-websocket-connect4-server (cfi-server:cfi-server)
+  ((web-socket-client :initform nil)))
 
-(defclass cfi-client (hunchensocket:websocket-client)
-  ((name :initarg :user-agent :reader name :initform (error "Name this cfi-client!"))
-   (cfi-server :initform nil :accessor cfi-server)))
+(defmethod cfi-server:message ((the-server cl-websocket-connect4-server) message)
+  (clws.handler:send-text-message (slot-value the-server 'web-socket-client) message))
 
-(defvar *the-cfi-resource*
-   (make-instance 'cfi-resource :name "/ccfi"))
+;;
+;; cl-websocket handler class
+;; - Forwards text messages to the CFI-Server
+;; - Sends back messages of the CFI-Server to the socket listener (e.g. a browser)
+;;
 
-(defun find-cfi-resource (request)
-  *the-cfi-resource*)
+(defclass ccfi-handler (clws.handler:connection-handler)
+  ((connect4-server :initform nil)))
 
-(pushnew 'find-cfi-resource hunchensocket:*websocket-dispatch-table*)
+(defmethod clws.handler:on-open-connection ((handler ccfi-handler))
+  ;; Connection has been opened -> Instantiate core connect4-server
+  (let ((c4-server (make-instance 'cl-websocket-connect4-server)))
+    (setf (slot-value c4-server 'web-socket-client) handler)
+    (setf (slot-value handler 'connect4-server) c4-server))
+  (logger:log-message :info "Client connected"))
 
-(defun answer (cur-cfi-client message &rest args)
-  (logger:log-message :info (format nil "Sending message: ~a" message))
-  (hunchensocket:send-text-message cur-cfi-client (apply #'format nil message args)))
-
-(defmethod cfi-server:message ((the-server connect4-server) message)
-  (answer (slot-value the-server 'websocket-client) message))
-
-(defmethod hunchensocket:client-connected ((cur-cfi-resource cfi-resource) cfi-client)
-  (logger:log-message :info  "Client connected")
-  (setf (slot-value cfi-client 'cfi-server) (make-instance 'connect4-server :websocket-client cfi-client)))
-  ;; (cfi-server:put (slot-value cfi-client 'cfi-server) "start"))
-
-(defmethod hunchensocket:client-disconnected ((cur-cfi-resource cfi-resource) cfi-client)
+(defmethod clws.handler:on-close-connection ((handler ccfi-handler) status-code reason)
   (logger:log-message :info "Client disconnected")
-  (cfi-server:put (slot-value cfi-client 'cfi-server) "stop"))
+  (cfi-server:put (slot-value handler 'connect4-server) "stop"))
 
-(defmethod hunchensocket:text-message-received ((cur-cfi-resource cfi-resource) cfi-client message)
+(defmethod clws.handler:on-text-message ((handler ccfi-handler) message)
   (logger:log-message :info  (format nil "Text message received: ~a" message))
-  (cfi-server:put (slot-value cfi-client 'cfi-server) message))
+  (cfi-server:put (slot-value handler 'connect4-server) message))
 
+;;
+;; Start/Stop server
+;;
+
+(defun start-server (&key port)
+  (format t "~%Starting websocket server...")
+  (let ((server (clws.server:make-websocketserver "localhost" port)))
+    (clws.server:register-resource-handler server "/ccfi" 'ccfi-handler '())
+    (clws.server:start server)
+    (format t "~%The websocket server has been started.")
+    (format t "~%The websocket server can be reached via http://localhost:~a" port)
+    server))
+
+(defun stop-server (server)
+  (clws.server:stop server)
+  (format t "~%The websocket server has been stopped."))

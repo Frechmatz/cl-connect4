@@ -21,7 +21,7 @@ alexandria
 queues
 cl-who
 hunchentoot
-hunchensocket
+cl-websocket
 cl-svg
 bordeaux-threads
 ```

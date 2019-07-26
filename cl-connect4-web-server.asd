@@ -8,8 +8,7 @@
 	       :alexandria
 	       :cl-connect4-cfi-server
 	       :cl-who
-	       :hunchensocket
-	       ;;:defrest
+	       :cl-websocket
 	       :cl-svg)
   :components (
 	       (:module "src/logger"
