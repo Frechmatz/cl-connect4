@@ -6,11 +6,11 @@
 Clone the project and add the following systems to the asdf-system path (all pointing to the root of connect4):
 
 ```bash
-connect4
-connect4-console
-connect4-cfi-server
-connect4-web-server
-connect4-cfi-console
+cl-connect4
+cl-connect4-console
+cl-connect4-cfi-server
+cl-connect4-web-server
+cl-connect4-cfi-console
 ```
 
 Dependencies (all installable via quicklisp):
@@ -30,7 +30,7 @@ bordeaux-threads
 
 ```bash
 sbcl
-* (asdf:load-system "connect4-console")
+* (asdf:load-system "cl-connect4-console")
 * (connect4-console:lets-play-colorful)
 ```
 For monochrome output, not using ANSI escape sequences:
@@ -51,7 +51,7 @@ The Web-Client communicates via a Web-Socket with its server, using the CFI prot
 Start the server:
 ```bash
 sbcl
-* (asdf:load-system "connect4-web-server")
+* (asdf:load-system "cl-connect4-web-server")
 * (connect4-web-server:start)
 Hi there. The web server has been started.
 The server can be reached via http://localhost:7999
@@ -80,7 +80,7 @@ Mostly for debugging purposes there is also a command line client for the CFI-Se
 
 ```
 sbcl
-* (asdf:load-system "connect4-cfi-console")
+* (asdf:load-system "cl-connect4-cfi-console")
 * (connect4-cfi-console:lets-go)
 Instantiated server
 Enter Cfi command
