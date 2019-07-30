@@ -48,5 +48,9 @@
     server))
 
 (defun stop-server (server)
+  (clws.server:do-connection-handlers server cur-handler
+    (clws.handler:send-text-message cur-handler "Server is shutting down..."))
   (clws.server:stop server)
   (format t "~%The websocket server has been stopped."))
+
+
