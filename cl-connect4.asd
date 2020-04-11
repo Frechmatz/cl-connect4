@@ -24,6 +24,51 @@
 				     (:file "playresult")
 				     (:file "board-controller")
 				     (:file "board-variance")
-				     (:file "engine")
+				     (:file "engine")))
+	       (:module "src/logger"
+			:serial t
+			:components ((:file "packages")
+				     (:file "logger")
 				     ))
+	       (:module "src/web-server"
+			:serial t
+			:components ((:file "packages")
+				     (:file "websocket")
+				     (:file "query-parser")
+				     (:file "server")
+				     (:file "board-renderer")
+				     (:file "board-renderer-experimental")
+				     (:file "buttons")))
+	       (:module "src/cfi-console"
+			:serial t
+			:components ((:file "packages")
+				     (:file "connect4")))
+
+	       (:module "src/cfi-server"
+			:serial t
+			:components ((:file "packages")
+				     (:file "token")
+				     (:file "decode-placement")
+				     (:file "formatter-util")
+				     (:file "play-result-formatter")
+				     (:file "info-formatter")
+				     (:file "encode-placement")
+				     (:file "lazy-handler")
+				     (:file "server-class")
+				     (:file "server-commands")
+				     (:file "server")))
+	       
+	       (:module "src/console"
+			:serial t
+			:components ((:file "packages")
+				     (:file "context")
+				     (:file "parsers")
+				     (:file "boardformatter")
+				     (:file "messageformatter")
+				     (:file "formatters")
+				     (:file "formatcontext")
+				     (:file "gamecommands")
+				     (:file "connect4")))
+	       
+	       
    ))
