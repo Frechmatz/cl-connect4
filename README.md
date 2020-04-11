@@ -3,40 +3,23 @@
 
 ## Installation
 
-Clone the project and add the following systems to the asdf-system path (all pointing to the root of connect4):
 
 ```bash
-cl-connect4
-cl-connect4-console
-cl-connect4-cfi-server
-cl-connect4-web-server
-cl-connect4-cfi-console
+cd ~/quicklisp/local-projects
+git clone https://github.com/Frechmatz/cl-connect4.git
 ```
 
-Dependencies (all installable via quicklisp):
-
-```bash
-cl-ppcre
-alexandria
-queues
-cl-who
-hunchentoot
-cl-websocket
-cl-svg
-bordeaux-threads
+```
+(ql:quickload "cl-connect4")
 ```
 
 ## Run the Console-Client
 
-```bash
-sbcl
-* (asdf:load-system "cl-connect4-console")
-* (connect4-console:lets-play-colorful)
-```
+    (connect4-console:lets-play-colorful)
+
 For monochrome output, not using ANSI escape sequences:
-```bash
-* (connect4-console:lets-play)
-```
+
+    (connect4-console:lets-play)
 
 ### Screenshots
 
@@ -49,23 +32,15 @@ For monochrome output, not using ANSI escape sequences:
 The Web-Client communicates via a Web-Socket with its server, using the CFI protocol [[Connect Four Interface (CFI) specification](https://raw.github.com/frechmatz/connect4/master/doc/cfi-interface.txt)]
 
 Start the server:
-```bash
-sbcl
-* (asdf:load-system "cl-connect4-web-server")
-* (connect4-web-server:start)
-Hi there. The web server has been started.
-The server can be reached via http://localhost:7999
-The websocket server has been started.
-The websocket server can be reached via http://localhost:7998
-```
+
+    (connect4-web-server:start)
+
 Enter the following Url into the browser to start a game:
-```bash
-http://localhost:7999
-```
-Stop the server: 
-```bash
-* (connect4-web-server:stop)
-```
+    http://localhost:7999
+
+Stop the server:
+
+    (connect4-web-server:stop)
 
 ### Screenshots
 
@@ -78,10 +53,8 @@ Stop the server:
 
 Mostly for debugging purposes there is also a command line client for the CFI-Server available.
 
-```
-sbcl
-* (asdf:load-system "cl-connect4-cfi-console")
-* (connect4-cfi-console:lets-go)
+    (connect4-cfi-console:lets-go)
+
 Instantiated server
 Enter Cfi command
 start
