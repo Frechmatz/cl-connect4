@@ -19,7 +19,7 @@
 ;; Add log appender pointing to log-file inside my log firectory
 (handler-case
     (progn
-      (let ((log-file (merge-pathnames "connect4.log" (user-homedir-pathname))))
+      (let ((log-file (merge-pathnames "connect4.log"  (user-homedir-pathname))))
 	(logger:add-appender (lambda (message)
 			       (let ((stream
 				      (open log-file
