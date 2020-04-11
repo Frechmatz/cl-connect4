@@ -19,16 +19,16 @@
 ;; Add log appender pointing to log-file inside my log firectory
 (handler-case
     (progn
-      (ensure-directories-exist "/Users/olli/var/log")
-      (logger:add-appender (lambda (message)
-			     (let ((stream
-				    (open "/Users/olli/var/log/log.txt"
-					  :direction :output
-					  :if-exists :append
-					  :if-does-not-exist :create)))
-			       (write-line message stream)
-			       (close stream)))))
-    (file-error ()))
+      (let ((log-file (merge-pathnames "connect4.log" (user-homedir-pathname))))
+	(logger:add-appender (lambda (message)
+			       (let ((stream
+				      (open log-file
+					    :direction :output
+					    :if-exists :append
+					    :if-does-not-exist :create)))
+				 (write-line message stream)
+				 (close stream))))))
+  (file-error ()))
 
     
 

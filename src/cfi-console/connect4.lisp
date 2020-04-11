@@ -5,13 +5,14 @@
 (in-package :connect4-cfi-console)
 
 (logger:add-appender (lambda (message)
-		       (let ((stream
-			      (open "/Users/olli/var/log/log.txt"
-				    :direction :output
-				    :if-exists :append
-				    :if-does-not-exist :create)))
-			 (write-line message stream)
-			 (close stream))))
+		       (let ((log-file (merge-pathnames "connect4.log" (user-homedir-pathname))))
+			 (let ((stream
+				(open log-file
+				      :direction :output
+				      :if-exists :append
+				      :if-does-not-exist :create)))
+			   (write-line message stream)
+			   (close stream)))))
 
 (defclass connect4-server (cfi-server:cfi-server)
   ((message-lock :initform (bt:make-lock "message-lock") :accessor message-lock)))
